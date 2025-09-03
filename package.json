@@ -9,7 +9,10 @@
     "lint": "next lint",
     "export": "next export",
     "analyze": "ANALYZE=true next build",
-    "build:prod": "next build && next start"
+    "build:prod": "next build && next start",
+    "build:cloudflare": "NODE_ENV=production next build && cp _headers _redirects out/",
+    "export:cloudflare": "NODE_ENV=production next build && cp _headers _redirects out/",
+    "deploy:cloudflare": "npm run export:cloudflare"
   },
   "dependencies": {
     "@next/font": "14.0.4",

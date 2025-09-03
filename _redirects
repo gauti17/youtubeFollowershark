@@ -1,0 +1,8 @@
+# Legacy HTML redirects
+/youtube-views.html /products/youtube-views/ 301
+/youtube-likes.html /products/youtube-likes/ 301
+/youtube-subscribers.html /products/youtube-subscribers/ 301
+/deutsche-youtube-views.html /products/deutsche-youtube-views/ 301
+
+# API routes should be handled separately or removed for static deployment
+# For dynamic API functionality, consider using Cloudflare Workers or external services
