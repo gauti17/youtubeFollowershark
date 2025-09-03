@@ -1,10 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/cart": "pages/cart.js",
-  "/checkout": "pages/checkout.js",
-  "/shop": "pages/shop.js",
-  "/products/[slug]": "pages/products/[slug].js"
-}
+{"/_app":"pages/_app.js","/_document":"pages/_document.js","/about":"pages/about.html","/api/auth/forgot-password":"pages/api/auth/forgot-password.js","/api/auth/register":"pages/api/auth/register.js","/api/coupons/validate":"pages/api/coupons/validate.js","/api/auth/reset-password":"pages/api/auth/reset-password.js","/api/auth/login":"pages/api/auth/login.js","/api/orders/customer/[customerId]":"pages/api/orders/customer/[customerId].js","/cart":"pages/cart.html","/contact":"pages/contact.html","/auth":"pages/auth.html","/checkout":"pages/checkout.html","/checkout/success":"pages/checkout/success.html","/dashboard":"pages/dashboard.html","/disclaimer":"pages/disclaimer.html","/privacy":"pages/privacy.html","/password-reset":"pages/password-reset.html","/faq":"pages/faq.html","/":"pages/index.html","/refund":"pages/refund.html","/reset-password":"pages/reset-password.html","/_error":"pages/_error.js","/terms":"pages/terms.html","/api/products/setup":"pages/api/products/setup.js","/api/test/woocommerce":"pages/api/test/woocommerce.js","/shop":"pages/shop.html","/success":"pages/success.html","/api/payments/paypal/capture-order":"pages/api/payments/paypal/capture-order.js","/products/[slug]":"pages/products/[slug].js","/api/auth/wp-password-reset":"pages/api/auth/wp-password-reset.js","/api/orders/create":"pages/api/orders/create.js","/api/customers/create":"pages/api/customers/create.js","/api/payments/paypal/webhook":"pages/api/payments/paypal/webhook.js","/api/payments/paypal/create-order":"pages/api/payments/paypal/create-order.js","/404":"pages/404.html"}

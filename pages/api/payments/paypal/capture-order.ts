@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { paypalService } from '../../../../lib/paypalService'
-export const runtime = 'edge'
+// No runtime export needed for Vercel - uses Node.js by default
 import { orderService } from '../../../../lib/orderService'
 
 interface CaptureOrderRequest {

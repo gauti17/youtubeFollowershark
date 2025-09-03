@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-export const runtime = 'edge'
+import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 
-// Edge runtime compatible WooCommerce API helper
-const apiBase = process.env.NEXT_PUBLIC_WOOCOMMERCE_URL + '/wp-json/wc/v3'
-const auth = 'Basic ' + btoa(process.env.WOOCOMMERCE_CONSUMER_KEY + ':' + process.env.WOOCOMMERCE_CONSUMER_SECRET)
+const api = new WooCommerceRestApi({
+  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
+  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
+  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
+  version: 'wc/v3'
+})
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -18,20 +21,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Get coupon from WooCommerce
-    const couponResponse = await fetch(`${apiBase}/coupons?code=${encodeURIComponent(code.toUpperCase())}&per_page=1`, {
-      headers: { 'Authorization': auth }
+    const couponResponse = await api.get(`coupons`, {
+      code: code.toUpperCase(),
+      per_page: 1
     })
 
-    if (!couponResponse.ok) {
-      return res.status(404).json({ error: 'Coupon-Code nicht gefunden' })
-    }
-    
-    const coupons = await couponResponse.json()
-    if (!coupons || coupons.length === 0) {
+    if (!couponResponse.data || couponResponse.data.length === 0) {
       return res.status(404).json({ error: 'Coupon-Code nicht gefunden' })
     }
 
-    const coupon = coupons[0]
+    const coupon = couponResponse.data[0]
 
     // Check if coupon is active
     if (coupon.status !== 'publish') {

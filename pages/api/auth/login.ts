@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-export const runtime = 'edge'
+import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 
-// Edge runtime compatible WooCommerce API helper
-const apiBase = process.env.NEXT_PUBLIC_WOOCOMMERCE_URL + '/wp-json/wc/v3'
-const auth = 'Basic ' + btoa(process.env.WOOCOMMERCE_CONSUMER_KEY + ':' + process.env.WOOCOMMERCE_CONSUMER_SECRET)
+const api = new WooCommerceRestApi({
+  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
+  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
+  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
+  version: 'wc/v3'
+})
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -18,20 +21,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Search for customer by email
-    const customerResponse = await fetch(`${apiBase}/customers?email=${encodeURIComponent(email)}&per_page=1`, {
-      headers: { 'Authorization': auth }
+    const customerResponse = await api.get('customers', {
+      email: email,
+      per_page: 1
     })
-    
-    if (!customerResponse.ok) {
-      return res.status(401).json({ error: 'Ungültige Anmeldedaten' })
-    }
-    
-    const customers = await customerResponse.json()
-    if (!customers || customers.length === 0) {
+
+    if (!customerResponse.data || customerResponse.data.length === 0) {
       return res.status(401).json({ error: 'Ungültige Anmeldedaten' })
     }
 
-    const customer = customers[0]
+    const customer = customerResponse.data[0]
 
     // Note: WooCommerce REST API doesn't support password verification directly
     // In a real implementation, you would need to use WordPress authentication
@@ -49,27 +48,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     }
 
-    // Edge runtime compatible password validation using Web Crypto API
-    const encoder = new TextEncoder()
-    const data = encoder.encode(password)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    const hash = btoa(String.fromCharCode.apply(null, hashArray))
-    const isValidPassword = hash === passwordMeta.value
+    // Basic password validation (in production, use proper hashing)
+    const bcrypt = require('bcryptjs')
+    const isValidPassword = await bcrypt.compare(password, passwordMeta.value)
 
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Ungültige Anmeldedaten' })
     }
 
-    // Create a simple token using Web Crypto API (simplified for edge runtime)
-    const payload = {
-      customerId: customer.id,
-      email: customer.email,
-      firstName: customer.first_name,
-      lastName: customer.last_name,
-      exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 days
-    }
-    const token = btoa(JSON.stringify(payload))
+    // Create a simple JWT or session token (simplified for demo)
+    const jwt = require('jsonwebtoken')
+    const token = jwt.sign(
+      { 
+        customerId: customer.id,
+        email: customer.email,
+        firstName: customer.first_name,
+        lastName: customer.last_name
+      },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '7d' }
+    )
 
     // Return success with customer data
     return res.status(200).json({

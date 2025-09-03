@@ -17,15 +17,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['react-icons', '@paypal/paypal-js'],
   },
-  // Cloudflare Pages configuration
-  ...(process.env.NODE_ENV === 'production' && {
-    output: 'export',
-    distDir: 'out',
-    trailingSlash: true,
-    images: {
-      unoptimized: true,
-    },
-  }),
+  // Remove static export for Vercel deployment - use default Next.js behavior
   async redirects() {
     return [
       // Redirect old HTML files to new routes

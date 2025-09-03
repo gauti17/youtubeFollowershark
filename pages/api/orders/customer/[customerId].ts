@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-export const runtime = 'edge'
+import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 
-// Edge runtime compatible WooCommerce API helper
-const apiBase = process.env.NEXT_PUBLIC_WOOCOMMERCE_URL + '/wp-json/wc/v3'
-const auth = 'Basic ' + btoa(process.env.WOOCOMMERCE_CONSUMER_KEY + ':' + process.env.WOOCOMMERCE_CONSUMER_SECRET)
+const api = new WooCommerceRestApi({
+  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
+  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
+  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
+  version: 'wc/v3'
+})
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -26,32 +29,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const token = authHeader.substring(7)
     
     try {
-      // Simple token validation for edge runtime
-      const decoded = JSON.parse(atob(token))
-      
-      // Check token expiry
-      if (decoded.exp && Date.now() / 1000 > decoded.exp) {
-        return res.status(401).json({ error: 'Token abgelaufen' })
-      }
+      const jwt = require('jsonwebtoken')
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key')
       
       // Verify token belongs to the requested customer
       if (decoded.customerId !== parseInt(customerId as string)) {
         return res.status(403).json({ error: 'Zugriff verweigert' })
       }
-    } catch (tokenError) {
+    } catch (jwtError) {
       return res.status(401).json({ error: 'Ungültiger Token' })
     }
 
     // Fetch orders for the customer
-    const ordersResponse = await fetch(`${apiBase}/orders?customer=${customerId}&per_page=50&orderby=date&order=desc`, {
-      headers: { 'Authorization': auth }
+    const ordersResponse = await api.get('orders', {
+      customer: customerId,
+      per_page: 50,
+      orderby: 'date',
+      order: 'desc'
     })
-    
-    if (!ordersResponse.ok) {
-      return res.status(500).json({ error: 'Fehler beim Abrufen der Bestellungen' })
-    }
-    
-    const orders = await ordersResponse.json() || []
+
+    const orders = ordersResponse.data || []
 
     // Format orders for frontend
     const formattedOrders = orders.map((order: any) => ({

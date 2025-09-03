@@ -1,6 +1,92 @@
 {
   "sortedMiddleware": [],
   "middleware": {},
-  "functions": {},
+  "functions": {
+    "/api/auth/wp-password-reset": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/auth/wp-password-reset.js"
+      ],
+      "name": "pages/api/auth/wp-password-reset",
+      "page": "/api/auth/wp-password-reset",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/wp\\-password\\-reset$",
+          "originalSource": "/api/auth/wp-password-reset"
+        }
+      ],
+      "wasm": [],
+      "assets": []
+    },
+    "/api/orders/create": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/orders/create.js"
+      ],
+      "name": "pages/api/orders/create",
+      "page": "/api/orders/create",
+      "matchers": [
+        {
+          "regexp": "^/api/orders/create$",
+          "originalSource": "/api/orders/create"
+        }
+      ],
+      "wasm": [],
+      "assets": []
+    },
+    "/api/customers/create": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/customers/create.js"
+      ],
+      "name": "pages/api/customers/create",
+      "page": "/api/customers/create",
+      "matchers": [
+        {
+          "regexp": "^/api/customers/create$",
+          "originalSource": "/api/customers/create"
+        }
+      ],
+      "wasm": [],
+      "assets": []
+    },
+    "/api/payments/paypal/webhook": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/payments/paypal/webhook.js"
+      ],
+      "name": "pages/api/payments/paypal/webhook",
+      "page": "/api/payments/paypal/webhook",
+      "matchers": [
+        {
+          "regexp": "^/api/payments/paypal/webhook$",
+          "originalSource": "/api/payments/paypal/webhook"
+        }
+      ],
+      "wasm": [],
+      "assets": []
+    },
+    "/api/payments/paypal/create-order": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/payments/paypal/create-order.js"
+      ],
+      "name": "pages/api/payments/paypal/create-order",
+      "page": "/api/payments/paypal/create-order",
+      "matchers": [
+        {
+          "regexp": "^/api/payments/paypal/create\\-order$",
+          "originalSource": "/api/payments/paypal/create-order"
+        }
+      ],
+      "wasm": [],
+      "assets": []
+    }
+  },
   "version": 2
 }

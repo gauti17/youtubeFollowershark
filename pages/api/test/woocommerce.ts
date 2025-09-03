@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { wooCommerceAPI } from '../../../lib/woocommerce'
 
-export const runtime = 'edge'
+// No runtime export needed for Vercel - uses Node.js by default
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {

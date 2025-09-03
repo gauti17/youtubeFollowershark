@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-export const runtime = 'edge'
+import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 
-// Edge runtime compatible WooCommerce API helper
-const apiBase = process.env.NEXT_PUBLIC_WOOCOMMERCE_URL + '/wp-json/wc/v3'
-const auth = 'Basic ' + btoa(process.env.WOOCOMMERCE_CONSUMER_KEY + ':' + process.env.WOOCOMMERCE_CONSUMER_SECRET)
+const api = new WooCommerceRestApi({
+  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
+  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
+  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
+  version: 'wc/v3'
+})
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -24,15 +27,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // First, check if customer exists
-    const customersResponse = await fetch(`${apiBase}/customers?email=${encodeURIComponent(email)}&per_page=1`, {
-      headers: { 'Authorization': auth }
+    const customersResponse = await api.get('customers', {
+      email: email,
+      per_page: 1
     })
-    
-    if (!customersResponse.ok) {
-      throw new Error('Failed to check customer')
-    }
-    
-    const customers = await customersResponse.json() || []
+
+    const customers = customersResponse.data || []
     
     if (customers.length === 0) {
       // Don't reveal that email doesn't exist for security reasons
@@ -65,55 +65,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('WooCommerce password reset email sent via WordPress API')
       } else {
         // If WordPress API fails, fall back to storing our own reset token
-        // Generate password reset token using crypto API
-        const encoder = new TextEncoder()
-        const data = encoder.encode(`${customer.id}:${Date.now()}:${Math.random()}`)
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-        const hashArray = Array.from(new Uint8Array(hashBuffer))
-        const resetToken = btoa(String.fromCharCode.apply(null, hashArray)).replace(/[+/]/g, '').slice(0, 32)
+        // Generate password reset token
+        const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
         const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
         
-        await fetch(`${apiBase}/customers/${customer.id}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': auth,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            meta_data: [
-              {
-                key: 'password_reset_token',
-                value: resetToken
-              },
-              {
-                key: 'password_reset_expiry',
-                value: expiryTime.toString()
-              }
-            ]
-          })
-        })
-        
-        console.log('Fallback: Reset token stored in WooCommerce customer meta')
-        console.log('Reset URL for manual sending:', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`)
-      }
-    } catch (wpError) {
-      console.error('WordPress API error:', wpError)
-      
-      // Fallback: Store reset token in WooCommerce
-      const encoder = new TextEncoder()
-      const data = encoder.encode(`${customer.id}:${Date.now()}:${Math.random()}`)
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-      const hashArray = Array.from(new Uint8Array(hashBuffer))
-      const resetToken = btoa(String.fromCharCode.apply(null, hashArray)).replace(/[+/]/g, '').slice(0, 32)
-      const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
-      
-      await fetch(`${apiBase}/customers/${customer.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': auth,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+        await api.put(`customers/${customer.id}`, {
           meta_data: [
             {
               key: 'password_reset_token',
@@ -125,6 +81,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
           ]
         })
+        
+        console.log('Fallback: Reset token stored in WooCommerce customer meta')
+        console.log('Reset URL for manual sending:', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`)
+      }
+    } catch (wpError) {
+      console.error('WordPress API error:', wpError)
+      
+      // Fallback: Store reset token in WooCommerce
+      const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
+      const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
+      
+      await api.put(`customers/${customer.id}`, {
+        meta_data: [
+          {
+            key: 'password_reset_token',
+            value: resetToken
+          },
+          {
+            key: 'password_reset_expiry',
+            value: expiryTime.toString()
+          }
+        ]
       })
       
       console.log('Fallback: Reset token stored after WP API error')
