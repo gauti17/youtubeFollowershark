@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Allow all bots to access the site
+Allow: /products/
+Allow: /shop/
+Allow: /about/
+Allow: /contact/
+Allow: /faq/
+
+# Block access to API routes and private directories
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /checkout/
+Disallow: /password-reset/
+Disallow: /reset-password/
+
+# Sitemap location
+Sitemap: https://youshark.de/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

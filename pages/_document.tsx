@@ -95,7 +95,7 @@ export default class MyDocument extends Document {
           <link rel="prefetch" href="/_next/static/chunks/framework.js" />
           
           {/* Viewport meta should not be in _document.tsx - moved to _app.tsx if needed */}
-          <meta name="theme-color" content="#FF6B35" />
+          <meta name="theme-color" content="#FF0000" />
           
           {/* Performance hints */}
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
