@@ -17,9 +17,14 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['react-icons', '@paypal/paypal-js'],
   },
-  // Cloudflare Workers configuration
+  // Cloudflare Pages configuration
   ...(process.env.NODE_ENV === 'production' && {
-    output: 'standalone',
+    output: 'export',
+    distDir: 'out',
+    trailingSlash: true,
+    images: {
+      unoptimized: true,
+    },
   }),
   async redirects() {
     return [

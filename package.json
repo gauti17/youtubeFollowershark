@@ -10,8 +10,8 @@
     "export": "next export",
     "analyze": "ANALYZE=true next build",
     "build:prod": "next build && next start",
-    "build:cloudflare": "rm -rf .next .vercel && NODE_ENV=production npx @cloudflare/next-on-pages",
-    "deploy:cloudflare": "npm run build:cloudflare && npx wrangler pages deploy .vercel/output/static --project-name youshark-app",
+    "build:cloudflare": "rm -rf .next out && NODE_ENV=production next build && cp _headers _redirects out/",
+    "deploy:cloudflare": "npm run build:cloudflare && npx wrangler pages deploy out --project-name youshark-app",
     "dev:cloudflare": "npx wrangler dev",
     "preview:cloudflare": "npm run build:cloudflare && npm run dev:cloudflare"
   },
