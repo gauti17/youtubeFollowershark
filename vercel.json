@@ -1,26 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/youtube-views.html",
-      "destination": "/products/youtube-views",
-      "permanent": true
-    },
-    {
-      "source": "/youtube-likes.html", 
-      "destination": "/products/youtube-likes",
-      "permanent": true
-    },
-    {
-      "source": "/youtube-subscribers.html",
-      "destination": "/products/youtube-subscribers",
-      "permanent": true
-    },
-    {
-      "source": "/deutsche-youtube-views.html",
-      "destination": "/products/deutsche-youtube-views",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
