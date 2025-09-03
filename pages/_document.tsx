@@ -94,8 +94,7 @@ export default class MyDocument extends Document {
           {/* Prefetch critical resources */}
           <link rel="prefetch" href="/_next/static/chunks/framework.js" />
           
-          {/* Viewport meta for mobile optimization */}
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+          {/* Viewport meta should not be in _document.tsx - moved to _app.tsx if needed */}
           <meta name="theme-color" content="#FF6B35" />
           
           {/* Performance hints */}

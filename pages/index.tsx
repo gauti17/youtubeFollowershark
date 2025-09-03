@@ -1428,13 +1428,12 @@ const HomePage: React.FC = () => {
   
   // Generate structured data for homepage
   const websiteStructuredData = generateStructuredData('website', {})
-  const organizationStructuredData = generateStructuredData('organization', {})
 
   return (
     <>
       <SEO
         {...pageSEOConfigs.home}
-        structuredData={[websiteStructuredData, organizationStructuredData]}
+        structuredData={websiteStructuredData}
       />
       <Layout>
       <HeroSection>
