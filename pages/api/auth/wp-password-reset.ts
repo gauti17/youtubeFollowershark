@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+export const runtime = 'edge'
 // Alternative password reset endpoint that works directly with WordPress
 // This endpoint handles the password reset token sent by WordPress/WooCommerce
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
