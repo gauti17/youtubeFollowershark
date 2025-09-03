@@ -280,7 +280,7 @@ const DisclaimerPage: React.FC = () => {
             Bei Fragen zu diesem Haftungsausschluss kontaktieren Sie uns:
           </Paragraph>
           <ContactInfo>
-            <strong>E-Mail:</strong> support@youshark.com<br />
+            <strong>E-Mail:</strong> support@youshark.de<br />
             <strong>Betreff:</strong> Disclaimer-Anfrage<br />
             <strong>Antwortzeit:</strong> Innerhalb von 48 Stunden
           </ContactInfo>

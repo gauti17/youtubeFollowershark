@@ -1360,7 +1360,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     "category": `YouTube ${product.category}`,
     "offers": {
       "@type": "Offer",
-      "url": `https://youshark.com/products/${product.slug}`,
+      "url": `https://youshark.de/products/${product.slug}`,
       "priceCurrency": "EUR",
       "price": product.basePrice * 1000,
       "availability": "https://schema.org/InStock",

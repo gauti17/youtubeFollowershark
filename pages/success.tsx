@@ -290,7 +290,7 @@ const SuccessPage: React.FC = () => {
             <p><strong>Benötigen Sie Hilfe?</strong></p>
             <p>
               Unser Support-Team ist 24/7 für Sie da: 
-              <a href="mailto:support@youshark.com"> support@youshark.com</a>
+              <a href="mailto:support@youshark.de"> support@youshark.de</a>
             </p>
             <p>Durchschnittliche Antwortzeit: &lt; 2 Stunden</p>
           </SupportInfo>

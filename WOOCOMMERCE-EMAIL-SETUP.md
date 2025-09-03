@@ -48,7 +48,7 @@ Willkommen bei YouShark - Ihr Kundenaccount wurde erstellt
 
 <p>Bei Fragen stehen wir Ihnen gerne zur Verfügung:</p>
 <ul>
-<li>E-Mail: support@youshark.com</li>
+<li>E-Mail: support@youshark.de</li>
 <li>Antwortzeit: Innerhalb von 2 Stunden</li>
 </ul>
 
@@ -69,7 +69,7 @@ Willkommen bei YouShark - Ihr Kundenaccount wurde erstellt
 **Email Settings:**
 1. Go to **WooCommerce → Settings → Emails**
 2. Configure your **"From" name**: `YouShark Support`
-3. Configure your **"From" address**: `support@youshark.com`
+3. Configure your **"From" address**: `support@youshark.de`
 4. Set up **SMTP** for reliable email delivery (recommended: SendGrid, Mailgun, or SES)
 
 ### 4. Testing the Email Flow

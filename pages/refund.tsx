@@ -143,7 +143,7 @@ const RefundPage: React.FC = () => {
           
           <SubSectionTitle>3.1 Antrag stellen</SubSectionTitle>
           <List>
-            <li>Rückerstattungsantrag per E-Mail an support@youshark.com</li>
+            <li>Rückerstattungsantrag per E-Mail an support@youshark.de</li>
             <li>Betreff: "Rückerstattungsantrag - Bestellnummer [NUMMER]"</li>
             <li>Detaillierte Begründung des Antrags</li>
             <li>Screenshots als Nachweis (falls zutreffend)</li>
@@ -237,7 +237,7 @@ const RefundPage: React.FC = () => {
             Für alle Fragen zu Rückerstattungen kontaktieren Sie uns:
           </Paragraph>
           <ContactInfo>
-            <strong>E-Mail:</strong> support@youshark.com<br />
+            <strong>E-Mail:</strong> support@youshark.de<br />
             <strong>Betreff:</strong> Rückerstattungsantrag<br />
             <strong>Antwortzeit:</strong> Innerhalb von 48 Stunden<br />
             <strong>Verfügbarkeit:</strong> Montag - Freitag, 9:00 - 18:00 Uhr

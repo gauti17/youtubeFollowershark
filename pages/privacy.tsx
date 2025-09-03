@@ -82,8 +82,8 @@ const PrivacyPage: React.FC = () => {
           <SectionTitle>1. Verantwortlicher</SectionTitle>
           <ContactInfo>
             <strong>youshark</strong><br />
-            E-Mail: support@youshark.com<br />
-            Website: https://youshark.com
+            E-Mail: support@youshark.de<br />
+            Website: https://youshark.de
           </ContactInfo>
         </Section>
 
@@ -230,7 +230,7 @@ const PrivacyPage: React.FC = () => {
             Bei Fragen zum Datenschutz oder zur Ausübung Ihrer Rechte kontaktieren Sie uns:
           </Paragraph>
           <ContactInfo>
-            <strong>E-Mail:</strong> support@youshark.com<br />
+            <strong>E-Mail:</strong> support@youshark.de<br />
             <strong>Betreff:</strong> Datenschutz<br />
             <strong>Antwortzeit:</strong> Innerhalb von 48 Stunden
           </ContactInfo>

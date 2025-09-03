@@ -436,8 +436,8 @@ const ContactPage: React.FC = () => {
               <ContactTitle>E-Mail Support</ContactTitle>
               <ContactDetail>Schnelle Hilfe per E-Mail</ContactDetail>
               <ContactDetail>
-                <ContactLink href="mailto:support@youshark.com">
-                  support@youshark.com
+                <ContactLink href="mailto:support@youshark.de">
+                  support@youshark.de
                 </ContactLink>
               </ContactDetail>
               <ContactDetail style={{ marginTop: '8px', fontSize: '14px', color: '#9ca3af' }}>

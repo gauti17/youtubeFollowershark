@@ -87,8 +87,8 @@ const TermsPage: React.FC = () => {
           </Paragraph>
           <ContactInfo>
             <strong>youshark</strong><br />
-            E-Mail: support@youshark.com<br />
-            Website: https://youshark.com
+            E-Mail: support@youshark.de<br />
+            Website: https://youshark.de
           </ContactInfo>
         </Section>
 
@@ -241,7 +241,7 @@ const TermsPage: React.FC = () => {
             Bei Fragen zu diesen AGB oder unseren Services kontaktieren Sie uns:
           </Paragraph>
           <ContactInfo>
-            <strong>E-Mail:</strong> support@youshark.com<br />
+            <strong>E-Mail:</strong> support@youshark.de<br />
             <strong>Betreff:</strong> AGB-Anfrage<br />
             <strong>Antwortzeit:</strong> Innerhalb von 48 Stunden
           </ContactInfo>

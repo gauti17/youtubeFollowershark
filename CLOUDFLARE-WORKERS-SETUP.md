@@ -129,7 +129,7 @@ NODE_ENV = production
 
 ### 3. Custom Domain (Optional)
 - Go to **Custom domains** tab
-- Add your domain (e.g., `youshark.com`)
+- Add your domain (e.g., `youshark.de`)
 - DNS records will be automatically configured
 
 ## API Route Compatibility

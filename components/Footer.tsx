@@ -117,7 +117,7 @@ const Footer: React.FC = () => {
         
         <FooterSection>
           <h4>Kontakt</h4>
-          <p>E-Mail: support@youshark.com</p>
+          <p>E-Mail: support@youshark.de</p>
           <p>24/7 Kundensupport</p>
           <p>Antwortzeit: &lt; 2 Stunden</p>
         </FooterSection>
