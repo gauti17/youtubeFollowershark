@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { paypalService } from '../../../../lib/paypalService'
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 import { orderService } from '../../../../lib/orderService'
 
 interface CaptureOrderRequest {

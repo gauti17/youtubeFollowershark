@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { productService } from '../../../lib/productService'
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 import { wooCommerceAPI } from '../../../lib/woocommerce'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

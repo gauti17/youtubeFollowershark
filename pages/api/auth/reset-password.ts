@@ -1,13 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 
-const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3'
-})
+// Edge runtime compatible WooCommerce API helper
+const apiBase = process.env.NEXT_PUBLIC_WOOCOMMERCE_URL + '/wp-json/wc/v3'
+const auth = 'Basic ' + btoa(process.env.WOOCOMMERCE_CONSUMER_KEY + ':' + process.env.WOOCOMMERCE_CONSUMER_SECRET)
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -33,12 +29,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Find customer by email
-    const customersResponse = await api.get('customers', {
-      email: email,
-      per_page: 1
+    const customersResponse = await fetch(`${apiBase}/customers?email=${encodeURIComponent(email)}&per_page=1`, {
+      headers: { 'Authorization': auth }
     })
-
-    const customers = customersResponse.data || []
+    
+    if (!customersResponse.ok) {
+      return res.status(400).json({ error: 'Ungültiger Reset-Link' })
+    }
+    
+    const customers = await customersResponse.json() || []
     
     if (customers.length === 0) {
       return res.status(400).json({ error: 'Ungültiger Reset-Link' })
@@ -47,8 +46,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const customer = customers[0]
 
     // Get customer's meta data to check reset token
-    const customerDetails = await api.get(`customers/${customer.id}`)
-    const customerData = customerDetails.data
+    const customerResponse = await fetch(`${apiBase}/customers/${customer.id}`, {
+      headers: { 'Authorization': auth }
+    })
+    
+    if (!customerResponse.ok) {
+      return res.status(400).json({ error: 'Ungültiger Reset-Link' })
+    }
+    
+    const customerData = await customerResponse.json()
 
     // Find reset token and expiry in meta data
     let resetToken = null
@@ -75,20 +81,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Reset-Link ist abgelaufen. Bitte fordern Sie einen neuen an.' })
     }
 
+    // Hash the new password using Web Crypto API
+    const encoder = new TextEncoder()
+    const data = encoder.encode(password)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    const hashedPassword = btoa(String.fromCharCode.apply(null, hashArray))
+    
     // Update customer password
-    await api.put(`customers/${customer.id}`, {
-      password: password,
-      meta_data: [
-        // Clear reset token and expiry
-        {
-          key: 'password_reset_token',
-          value: ''
-        },
-        {
-          key: 'password_reset_expiry',
-          value: ''
-        }
-      ]
+    await fetch(`${apiBase}/customers/${customer.id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': auth,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        meta_data: [
+          // Update password hash and clear reset token
+          {
+            key: '_password_hash',
+            value: hashedPassword
+          },
+          {
+            key: 'password_reset_token',
+            value: ''
+          },
+          {
+            key: 'password_reset_expiry',
+            value: ''
+          }
+        ]
+      })
     })
 
     return res.status(200).json({

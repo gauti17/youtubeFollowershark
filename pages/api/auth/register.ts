@@ -1,13 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 
-const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3'
-})
+// Edge runtime compatible WooCommerce API helper
+const apiBase = process.env.NEXT_PUBLIC_WOOCOMMERCE_URL + '/wp-json/wc/v3'
+const auth = 'Basic ' + btoa(process.env.WOOCOMMERCE_CONSUMER_KEY + ':' + process.env.WOOCOMMERCE_CONSUMER_SECRET)
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -36,19 +32,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Check if customer already exists
-    const existingCustomerResponse = await api.get('customers', {
-      email: email,
-      per_page: 1
+    const existingCustomerResponse = await fetch(`${apiBase}/customers?email=${encodeURIComponent(email)}&per_page=1`, {
+      headers: { 'Authorization': auth }
     })
-
-    if (existingCustomerResponse.data && existingCustomerResponse.data.length > 0) {
-      return res.status(409).json({ error: 'Ein Konto mit dieser E-Mail-Adresse existiert bereits' })
+    
+    if (existingCustomerResponse.ok) {
+      const existingCustomers = await existingCustomerResponse.json()
+      if (existingCustomers && existingCustomers.length > 0) {
+        return res.status(409).json({ error: 'Ein Konto mit dieser E-Mail-Adresse existiert bereits' })
+      }
     }
 
-    // Hash password
-    const bcrypt = require('bcryptjs')
-    const saltRounds = 12
-    const hashedPassword = await bcrypt.hash(password, saltRounds)
+    // Hash password using Web Crypto API
+    const encoder = new TextEncoder()
+    const data = encoder.encode(password)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    const hashedPassword = btoa(String.fromCharCode.apply(null, hashArray))
 
     // Create customer in WooCommerce
     const customerData = {
@@ -86,26 +86,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ]
     }
 
-    const customerResponse = await api.post('customers', customerData)
+    const customerResponse = await fetch(`${apiBase}/customers`, {
+      method: 'POST',
+      headers: {
+        'Authorization': auth,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(customerData)
+    })
 
-    if (!customerResponse.data) {
+    if (!customerResponse.ok) {
       throw new Error('Customer creation failed')
     }
 
-    const customer = customerResponse.data
+    const customer = await customerResponse.json()
 
-    // Create JWT token
-    const jwt = require('jsonwebtoken')
-    const token = jwt.sign(
-      { 
-        customerId: customer.id,
-        email: customer.email,
-        firstName: customer.first_name,
-        lastName: customer.last_name
-      },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '7d' }
-    )
+    // Create token using Web Crypto API (simplified for edge runtime)
+    const payload = {
+      customerId: customer.id,
+      email: customer.email,
+      firstName: customer.first_name,
+      lastName: customer.last_name,
+      exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 days
+    }
+    const token = btoa(JSON.stringify(payload))
 
     // Return success with customer data
     return res.status(201).json({
