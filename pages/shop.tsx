@@ -4,6 +4,8 @@ import Layout from '../components/Layout'
 import styled from 'styled-components'
 import { products, Product } from '../data/products'
 import { formatPrice } from '../lib/formatUtils'
+import SEO from '../components/SEO'
+import { pageSEOConfigs, generateStructuredData } from '../lib/seo'
 
 const ShopContainer = styled.div`
   min-height: 90vh;
@@ -356,6 +358,23 @@ const ShopPage: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
+  // SEO configuration for shop page
+  const shopSEO = useMemo(() => ({
+    ...pageSEOConfigs.shop,
+    url: 'https://youshark.de/shop',
+    image: '/images/youshark-og-image.jpg',
+    type: 'website' as const,
+    canonical: 'https://youshark.de/shop'
+  }), [])
+
+  // Generate structured data for the shop page
+  const shopStructuredData = useMemo(() => {
+    return generateStructuredData('website', {
+      name: 'YouShark Shop',
+      description: pageSEOConfigs.shop.description
+    })
+  }, [])
+
   const categories = [
     { id: 'all', name: 'Alle Services' },
     { id: 'views', name: 'Views' },
@@ -392,11 +411,16 @@ const ShopPage: React.FC = () => {
   }
 
   return (
-    <Layout 
-      title="Shop - youshark YouTube Growth Services" 
-      description="Entdecken Sie alle YouTube Growth Services von youshark. Views, Likes, Abonnenten und mehr - alles für Ihren YouTube-Erfolg!"
-      keywords="youtube services, youtube growth, buy youtube views, buy youtube likes, buy youtube subscribers, german youtube views"
-    >
+    <>
+      <SEO 
+        {...shopSEO}
+        structuredData={shopStructuredData}
+      />
+      <Layout 
+        title={shopSEO.title}
+        description={shopSEO.description}
+        keywords={shopSEO.keywords?.join(', ') || ''}
+      >
       <ShopContainer>
         <Container>
           <ShopHeader>
@@ -504,6 +528,7 @@ const ShopPage: React.FC = () => {
         </Container>
       </ShopContainer>
     </Layout>
+    </>
   )
 }
 

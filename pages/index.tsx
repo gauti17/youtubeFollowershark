@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Layout from '../components/Layout'
+import SEO from '../components/SEO'
 import styled from 'styled-components'
 import { products } from '../data/products'
 import { formatPrice, formatNumber } from '../lib/formatUtils'
 import { ProductCardSkeleton } from '../components/Loading'
+import { pageSEOConfigs, generateStructuredData } from '../lib/seo'
 
 const HeroSection = styled.section`
   padding: 20px 16px 80px 16px;
@@ -1424,12 +1426,17 @@ const HomePage: React.FC = () => {
     return formatPrice(product.basePrice)
   }
   
+  // Generate structured data for homepage
+  const websiteStructuredData = generateStructuredData('website', {})
+  const organizationStructuredData = generateStructuredData('organization', {})
+
   return (
-    <Layout 
-      title="youshark - YouTube Growth Services" 
-      description="Steigere deine YouTube-Präsenz und Reichweite mit schnellen Lösungen – alles mit wenigen Klicks! So geht YouTube-Marketing 2025!"
-      keywords="youtube, growth, marketing, likes, views, subscribers, german views, watchtime, youshark"
-    >
+    <>
+      <SEO
+        {...pageSEOConfigs.home}
+        structuredData={[websiteStructuredData, organizationStructuredData]}
+      />
+      <Layout>
       <HeroSection>
         <Container>
           <TrustRating>
@@ -1809,7 +1816,8 @@ const HomePage: React.FC = () => {
           </TrustBadges>
         </Container>
       </TrustSection>
-    </Layout>
+      </Layout>
+    </>
   )
 }
 

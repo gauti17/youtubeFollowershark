@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import Layout from '../components/Layout'
 import styled from 'styled-components'
+import SEO from '../components/SEO'
+import { pageSEOConfigs, generateStructuredData } from '../lib/seo'
 
 const Container = styled.div`
   max-width: 800px;
@@ -352,6 +354,23 @@ const FAQPage: React.FC = () => {
   const [openItems, setOpenItems] = useState<number[]>([])
   const [searchTerm, setSearchTerm] = useState('')
 
+  // SEO configuration for FAQ page
+  const faqSEO = useMemo(() => ({
+    ...pageSEOConfigs.faq,
+    url: 'https://youshark.de/faq',
+    image: '/images/youshark-og-image.jpg',
+    type: 'website' as const,
+    canonical: 'https://youshark.de/faq'
+  }), [])
+
+  // Generate structured data for the FAQ page
+  const faqStructuredData = useMemo(() => {
+    return generateStructuredData('website', {
+      name: 'YouShark FAQ',
+      description: pageSEOConfigs.faq.description
+    })
+  }, [])
+
   const toggleFAQ = (index: number) => {
     if (openItems.includes(index)) {
       setOpenItems(openItems.filter(i => i !== index))
@@ -383,10 +402,16 @@ const FAQPage: React.FC = () => {
   }, {} as { [key: string]: Array<FAQItemProps & { originalIndex: number }> })
 
   return (
-    <Layout 
-      title="Häufig gestellte Fragen (FAQ) - youshark"
-      description="Finden Sie Antworten auf die häufigsten Fragen zu youshark YouTube Marketing Services, Preisen, Lieferzeiten und Sicherheit."
-    >
+    <>
+      <SEO 
+        {...faqSEO}
+        structuredData={faqStructuredData}
+      />
+      <Layout 
+        title={faqSEO.title}
+        description={faqSEO.description}
+        keywords={faqSEO.keywords?.join(', ') || ''}
+      >
       <Container>
         <PageTitle>Häufig gestellte Fragen</PageTitle>
         <PageDescription>
@@ -438,6 +463,7 @@ const FAQPage: React.FC = () => {
         </ContactCTA>
       </Container>
     </Layout>
+    </>
   )
 }
 

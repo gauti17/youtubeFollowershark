@@ -101,6 +101,31 @@ export default class MyDocument extends Document {
           {/* Performance hints */}
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="format-detection" content="telephone=no" />
+          
+          {/* Basic SEO Meta Tags */}
+          <meta name="robots" content="index,follow" />
+          <meta name="googlebot" content="index,follow" />
+          <link rel="canonical" href="https://youshark.de" />
+          
+          {/* Language and Geographic Targeting */}
+          <meta name="language" content="German" />
+          <meta name="geo.region" content="DE" />
+          <meta name="geo.placename" content="Germany" />
+          
+          {/* Favicon and App Icons */}
+          <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+          <link rel="manifest" href="/site.webmanifest" />
+          
+          {/* Additional SEO Tags */}
+          <meta name="author" content="YouShark" />
+          <meta name="publisher" content="YouShark" />
+          <meta name="copyright" content="© 2024 YouShark. All rights reserved." />
+          <meta name="revisit-after" content="1 days" />
+          <meta name="distribution" content="web" />
+          <meta name="rating" content="general" />
         </Head>
         <body>
           <Main />

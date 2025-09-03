@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Layout from '../components/Layout'
 import styled from 'styled-components'
+import SEO from '../components/SEO'
+import { pageSEOConfigs, generateStructuredData } from '../lib/seo'
 
 const Container = styled.div`
   max-width: 1200px;
@@ -215,11 +217,34 @@ const CTAButton = styled.a`
 `
 
 const AboutPage: React.FC = () => {
+  // SEO configuration for about page
+  const aboutSEO = useMemo(() => ({
+    ...pageSEOConfigs.about,
+    url: 'https://youshark.de/about',
+    image: '/images/youshark-og-image.jpg',
+    type: 'website' as const,
+    canonical: 'https://youshark.de/about'
+  }), [])
+
+  // Generate structured data for the about page
+  const aboutStructuredData = useMemo(() => {
+    return generateStructuredData('organization', {
+      name: 'YouShark',
+      description: pageSEOConfigs.about.description
+    })
+  }, [])
+
   return (
-    <Layout 
-      title="Über uns - youshark - Premium YouTube Marketing Services"
-      description="Erfahren Sie mehr über youshark - Ihr vertrauensvoller Partner für YouTube Views, Likes und Abonnenten. Seit Jahren helfen wir Content Creators beim Wachstum."
-    >
+    <>
+      <SEO 
+        {...aboutSEO}
+        structuredData={aboutStructuredData}
+      />
+      <Layout 
+        title={aboutSEO.title}
+        description={aboutSEO.description}
+        keywords={aboutSEO.keywords?.join(', ') || ''}
+      >
       <Container>
         <Header>
           <PageTitle>Über YouShark</PageTitle>
@@ -400,6 +425,7 @@ const AboutPage: React.FC = () => {
         </CTASection>
       </Container>
     </Layout>
+    </>
   )
 }
 

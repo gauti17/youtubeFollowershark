@@ -1,13 +1,14 @@
 import React, { useState, memo, useMemo, useCallback } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
-import Head from 'next/head'
 import Layout from '../../components/Layout'
 import styled from 'styled-components'
 import { Product, getProductBySlug, getAllProductSlugs, products, calculatePrice as calculatePriceWithDiscount, getQuantityDiscount } from '../../data/products'
 import { useCart } from '../../lib/CartContext'
 import { YouTubeUrlValidator } from '../../lib/urlValidator'
 import { formatNumber } from '../../lib/formatUtils'
+import SEO from '../../components/SEO'
+import { productSEOConfigs, generateStructuredData } from '../../lib/seo'
 
 interface ProductPageProps {
   product: Product
@@ -1375,29 +1376,48 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     }
   }
 
+  // Generate SEO configuration for this product
+  const productSEO = useMemo(() => {
+    const seoConfig = productSEOConfigs[product.slug as keyof typeof productSEOConfigs] || {
+      title: `${product.name} kaufen - ${product.description} | YouShark`,
+      description: `Kaufe ${product.name} für deinen YouTube Kanal. ${product.description} Sichere Lieferung, günstige Preise und 24/7 Support.`,
+      keywords: [
+        `${product.name} kaufen`,
+        `YouTube ${product.category} kaufen`,
+        `Echte ${product.category}`,
+        'YouTube Marketing',
+        'Social Media Marketing'
+      ]
+    }
+
+    return {
+      ...seoConfig,
+      url: `https://youshark.de/products/${product.slug}`,
+      image: '/images/youshark-og-image.jpg',
+      type: 'product' as const,
+      canonical: `https://youshark.de/products/${product.slug}`
+    }
+  }, [product.slug, product.name, product.description, product.category])
+
+  // Generate structured data for this product
+  const productStructuredData = useMemo(() => {
+    return generateStructuredData('product', {
+      name: product.name,
+      description: product.description,
+      price: product.basePrice
+    })
+  }, [product.name, product.description, product.basePrice])
+
   return (
     <>
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-        <meta name="robots" content="index, follow" />
-        <meta name="author" content="YouShark" />
-        <link rel="canonical" href={`https://youshark.com/products/${product.slug}`} />
-        <meta property="og:type" content="product" />
-        <meta property="og:title" content={seoContent.title} />
-        <meta property="og:description" content={seoContent.content.intro} />
-        <meta property="og:url" content={`https://youshark.com/products/${product.slug}`} />
-        <meta property="og:site_name" content="YouShark" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={seoContent.title} />
-        <meta name="twitter:description" content={seoContent.content.intro} />
-      </Head>
+      <SEO 
+        {...productSEO}
+        structuredData={productStructuredData}
+      />
       <Layout
-        title={seoContent.title}
-        description={seoContent.content.intro}
-        keywords={`${product.name}, youtube ${product.category} kaufen, echte ${product.category}, youtube marketing, social media marketing, youshark, ${product.category} service, youtube wachstum`}
+        title={productSEO.title}
+        description={productSEO.description}
+        keywords={productSEO.keywords?.join(', ') || ''}
       >
       <Container>
         <LeftColumn>
