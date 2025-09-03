@@ -11,8 +11,9 @@
     "analyze": "ANALYZE=true next build",
     "build:prod": "next build && next start",
     "build:cloudflare": "NODE_ENV=production next build && cp _headers _redirects out/",
-    "export:cloudflare": "NODE_ENV=production next build && cp _headers _redirects out/",
-    "deploy:cloudflare": "npm run export:cloudflare"
+    "deploy:cloudflare": "npm run build:cloudflare && npx wrangler pages deploy out --project-name youshark-app",
+    "dev:cloudflare": "wrangler pages dev out --local --port 3000",
+    "preview:cloudflare": "npm run build:cloudflare && npm run dev:cloudflare"
   },
   "dependencies": {
     "@next/font": "14.0.4",
@@ -32,6 +33,7 @@
     "styled-components": "^6.1.6"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.15",
     "@next/bundle-analyzer": "^15.5.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
@@ -41,7 +43,8 @@
     "@types/styled-components": "^5.1.34",
     "eslint": "8.56.0",
     "eslint-config-next": "14.0.4",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "wrangler": "^4.33.2"
   },
   "description": "YouShark - YouTube growth services platform built with Next.js",
   "keywords": [
