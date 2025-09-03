@@ -1,30 +1,24 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "outputDirectory": ".next",
-  "functions": {
-    "pages/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [
+  "redirects": [
     {
       "source": "/youtube-views.html",
-      "destination": "/products/youtube-views"
+      "destination": "/products/youtube-views",
+      "permanent": true
     },
     {
       "source": "/youtube-likes.html", 
-      "destination": "/products/youtube-likes"
+      "destination": "/products/youtube-likes",
+      "permanent": true
     },
     {
       "source": "/youtube-subscribers.html",
-      "destination": "/products/youtube-subscribers"
+      "destination": "/products/youtube-subscribers",
+      "permanent": true
     },
     {
       "source": "/deutsche-youtube-views.html",
-      "destination": "/products/deutsche-youtube-views"
+      "destination": "/products/deutsche-youtube-views",
+      "permanent": true
     }
   ],
   "headers": [
@@ -46,15 +40,6 @@
         {
           "key": "Strict-Transport-Security",
           "value": "max-age=31536000; includeSubDomains"
-        }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
         }
       ]
     }
