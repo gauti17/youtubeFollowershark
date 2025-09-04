@@ -224,7 +224,8 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
               // Get fresh order data for validation
               const currentOrderData = getOrderData ? getOrderData() : orderData
               const { customerInfo } = currentOrderData
-              console.log('PayPal validation - fresh customerInfo:', customerInfo)
+              console.log('PayPal validation - fresh orderData:', currentOrderData)
+              console.log('PayPal validation - customerInfo:', customerInfo)
               
               if (!customerInfo.email || !customerInfo.firstName || !customerInfo.country) {
                 console.error('PayPal validation failed:', {

@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { paypalService } from '../../../../lib/paypalService'
-export const runtime = 'edge'
 import { products } from '../../../../data/products'
 
 interface CreateOrderRequest {
