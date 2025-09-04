@@ -99,7 +99,12 @@ class WooCommerceAPI {
     data?: any
   ): Promise<T> {
     // Use parameter format since pretty permalinks are not working
-    const url = `${this.config.baseUrl}/?rest_route=/wc/v3${endpoint}`
+    // Handle query parameters properly with &
+    const baseRestRoute = `${this.config.baseUrl}/?rest_route=/wc/v3`
+    const [path, queryString] = endpoint.split('?')
+    const url = queryString 
+      ? `${baseRestRoute}${path}&${queryString}`
+      : `${baseRestRoute}${endpoint}`
     
     const options: RequestInit = {
       method,
