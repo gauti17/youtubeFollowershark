@@ -98,24 +98,13 @@ class WooCommerceAPI {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
     data?: any
   ): Promise<T> {
-    // Use parameter format with OAuth-style authentication
-    const baseRestRoute = `${this.config.baseUrl}/?rest_route=/wc/v3`
-    const [path, queryString] = endpoint.split('?')
-    
-    // Add OAuth parameters for authentication
-    const authParams = `consumer_key=${this.config.consumerKey}&consumer_secret=${this.config.consumerSecret}`
-    
-    // Construct final URL with authentication
-    let url: string
-    if (queryString) {
-      url = `${baseRestRoute}${path}&${queryString}&${authParams}`
-    } else {
-      url = `${baseRestRoute}${endpoint}&${authParams}`
-    }
+    // Use standard wp-json endpoint with Basic Authentication
+    const url = `${this.config.baseUrl}/wp-json/wc/v3${endpoint}`
     
     const options: RequestInit = {
       method,
       headers: {
+        'Authorization': this.getAuthHeader(),
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
