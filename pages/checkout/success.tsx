@@ -3,6 +3,7 @@ import Layout from '../../components/Layout'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { formatPrice as formatPriceUtil } from '../../lib/formatUtils'
+import { products, Product } from '../../data/products'
 
 const SuccessContainer = styled.div`
   min-height: 100vh;
@@ -224,6 +225,233 @@ const InfoBox = styled.div`
   }
 `
 
+const RecommendationSection = styled.div`
+  margin: 50px 0 30px 0;
+  padding: 40px 30px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+`
+
+const SectionTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 10px;
+  font-family: 'Inter', sans-serif;
+`
+
+const SectionSubtitle = styled.p`
+  font-size: 16px;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 30px;
+  font-family: 'Inter', sans-serif;
+`
+
+const ProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+`
+
+const ProductCard = styled.div`
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f1f5f9;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border-color: #FF6B35;
+  }
+`
+
+const ProductIcon = styled.div`
+  font-size: 32px;
+  margin-bottom: 16px;
+  text-align: center;
+`
+
+const ProductTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+`
+
+const ProductDescription = styled.p`
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+`
+
+const ProductFeatures = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  
+  li {
+    font-size: 13px;
+    color: #4a5568;
+    margin-bottom: 4px;
+    position: relative;
+    padding-left: 16px;
+    font-family: 'Inter', sans-serif;
+    
+    &:before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #10b981;
+      font-weight: bold;
+    }
+  }
+`
+
+const ProductPrice = styled.div`
+  text-align: center;
+  margin-bottom: 16px;
+  
+  .from {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #FF6B35;
+    font-family: 'Inter', sans-serif;
+  }
+`
+
+const ProductButton = styled(Link)`
+  display: block;
+  text-align: center;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+  }
+`
+
+const TestimonialsSection = styled.div`
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  margin: 30px 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+`
+
+const TestimonialGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const TestimonialCard = styled.div`
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 16px;
+  border-left: 4px solid #FF6B35;
+  
+  .quote {
+    font-size: 15px;
+    color: #374151;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-style: italic;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .author {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .rating {
+    color: #fbbf24;
+    margin-bottom: 8px;
+  }
+`
+
+const SupportSection = styled.div`
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: white;
+  padding: 40px 30px;
+  border-radius: 20px;
+  margin: 30px 0;
+  text-align: center;
+`
+
+const SupportGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+`
+
+const SupportItem = styled.div`
+  text-align: center;
+  
+  .icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .description {
+    font-size: 14px;
+    color: #cbd5e1;
+    font-family: 'Inter', sans-serif;
+  }
+`
+
 const SuccessPage: React.FC = () => {
   const [orderInfo, setOrderInfo] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -256,6 +484,30 @@ const SuccessPage: React.FC = () => {
   const formatPrice = (price: number) => {
     return formatPriceUtil(price)
   }
+
+  // Get recommended products (exclude current if available)
+  const getRecommendedProducts = (): Product[] => {
+    return products.slice(0, 3) // Show first 3 products
+  }
+
+  // Sample testimonials
+  const testimonials = [
+    {
+      quote: "Sehr schnelle Lieferung und echte Views! Mein Video hat dadurch viel mehr Aufmerksamkeit bekommen. Kann YouTubeShark nur weiterempfehlen!",
+      author: "Sarah M.",
+      rating: "⭐⭐⭐⭐⭐"
+    },
+    {
+      quote: "Professioneller Service und faire Preise. Die Abonnenten sind echt und bleiben auch dabei. Genau das was ich gesucht habe!",
+      author: "Michael K.",
+      rating: "⭐⭐⭐⭐⭐"
+    },
+    {
+      quote: "Super Support und schnelle Abwicklung. Habe bereits mehrmals bestellt und bin immer zufrieden gewesen. Top Service!",
+      author: "Lisa T.",
+      rating: "⭐⭐⭐⭐⭐"
+    }
+  ]
 
   if (isLoading) {
     return (
@@ -351,6 +603,92 @@ const SuccessPage: React.FC = () => {
             </SecondaryButton>
           </ButtonGroup>
         </SuccessCard>
+
+        {/* Recommended Products Section */}
+        <RecommendationSection>
+          <SectionTitle>🛒 Kunden kauften auch</SectionTitle>
+          <SectionSubtitle>
+            Steigern Sie Ihren YouTube-Erfolg mit unseren beliebtesten Services
+          </SectionSubtitle>
+          
+          <ProductGrid>
+            {getRecommendedProducts().map((product) => (
+              <ProductCard key={product.id}>
+                <ProductIcon>{product.icon}</ProductIcon>
+                <ProductTitle>{product.name}</ProductTitle>
+                <ProductDescription>{product.description}</ProductDescription>
+                
+                <ProductFeatures>
+                  {product.features.slice(0, 3).map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ProductFeatures>
+                
+                <ProductPrice>
+                  <div className="from">Ab</div>
+                  <div className="price">{formatPrice(product.basePrice * product.quantityOptions[0])}</div>
+                </ProductPrice>
+                
+                <ProductButton href={`/product/${product.slug}`}>
+                  Jetzt bestellen
+                </ProductButton>
+              </ProductCard>
+            ))}
+          </ProductGrid>
+        </RecommendationSection>
+
+        {/* Customer Testimonials */}
+        <TestimonialsSection>
+          <SectionTitle>💬 Das sagen unsere Kunden</SectionTitle>
+          <SectionSubtitle>
+            Überzeugen Sie sich von der Qualität unserer Services
+          </SectionSubtitle>
+          
+          <TestimonialGrid>
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard key={index}>
+                <div className="rating">{testimonial.rating}</div>
+                <div className="quote">"{testimonial.quote}"</div>
+                <div className="author">- {testimonial.author}</div>
+              </TestimonialCard>
+            ))}
+          </TestimonialGrid>
+        </TestimonialsSection>
+
+        {/* Support Section */}
+        <SupportSection>
+          <SectionTitle style={{color: 'white'}}>🚀 Warum YouTubeShark?</SectionTitle>
+          <SectionSubtitle style={{color: '#cbd5e1'}}>
+            Professionelle YouTube Services mit garantierten Ergebnissen
+          </SectionSubtitle>
+          
+          <SupportGrid>
+            <SupportItem>
+              <span className="icon">⚡</span>
+              <div className="title">Schnelle Lieferung</div>
+              <div className="description">Ihre Services starten innerhalb von 30 Minuten</div>
+            </SupportItem>
+            
+            <SupportItem>
+              <span className="icon">🔒</span>
+              <div className="title">100% Sicher</div>
+              <div className="description">SSL-verschlüsselt und YouTube-konform</div>
+            </SupportItem>
+            
+            <SupportItem>
+              <span className="icon">💎</span>
+              <div className="title">Premium Qualität</div>
+              <div className="description">Echte, aktive Nutzer - keine Bots</div>
+            </SupportItem>
+            
+            <SupportItem>
+              <span className="icon">🎯</span>
+              <div className="title">24/7 Support</div>
+              <div className="description">Unser Team hilft Ihnen jederzeit weiter</div>
+            </SupportItem>
+          </SupportGrid>
+        </SupportSection>
+
       </SuccessContainer>
     </Layout>
   )
