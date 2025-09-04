@@ -1,12 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
-
-const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3'
-})
+import { wooCommerceAPI } from '../../../lib/woocommerce'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

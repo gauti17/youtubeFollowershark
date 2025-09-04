@@ -1,12 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
-
-const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3'
-})
+import { wooCommerceAPI } from '../../../lib/woocommerce'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -21,16 +14,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Search for customer by email
-    const customerResponse = await api.get('customers', {
+    const customers = await wooCommerceAPI.get('customers', {
       email: email,
       per_page: 1
     })
 
-    if (!customerResponse.data || customerResponse.data.length === 0) {
+    if (!customers || customers.length === 0) {
       return res.status(401).json({ error: 'Ungültige Anmeldedaten' })
     }
 
-    const customer = customerResponse.data[0]
+    const customer = customers[0]
 
     // Note: WooCommerce REST API doesn't support password verification directly
     // In a real implementation, you would need to use WordPress authentication

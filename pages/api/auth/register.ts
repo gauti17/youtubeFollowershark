@@ -1,12 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
-
-const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3'
-})
+import { wooCommerceAPI } from '../../../lib/woocommerce'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -35,12 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Check if customer already exists
-    const existingCustomerResponse = await api.get('customers', {
+    const existingCustomers = await wooCommerceAPI.get('customers', {
       email: email,
       per_page: 1
     })
 
-    if (existingCustomerResponse.data && existingCustomerResponse.data.length > 0) {
+    if (existingCustomers && existingCustomers.length > 0) {
       return res.status(409).json({ error: 'Ein Konto mit dieser E-Mail-Adresse existiert bereits' })
     }
 
@@ -85,13 +78,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ]
     }
 
-    const customerResponse = await api.post('customers', customerData)
+    const customer = await wooCommerceAPI.post('customers', customerData)
 
-    if (!customerResponse.data) {
+    if (!customer) {
       throw new Error('Customer creation failed')
     }
-
-    const customer = customerResponse.data
 
     // Create JWT token
     const jwt = require('jsonwebtoken')
@@ -125,11 +116,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Registration error:', error)
     
     // Handle specific WooCommerce errors
-    if (error.response?.data?.message) {
-      return res.status(400).json({ error: error.response.data.message })
+    if (error.message?.includes('WooCommerce API Error')) {
+      return res.status(400).json({ error: error.message })
     }
     
-    if (error.response?.status === 401) {
+    if (error.message?.includes('401')) {
       return res.status(401).json({ error: 'API-Authentifizierung fehlgeschlagen' })
     }
     
