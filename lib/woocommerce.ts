@@ -98,7 +98,8 @@ class WooCommerceAPI {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
     data?: any
   ): Promise<T> {
-    const url = `${this.config.baseUrl}/wp-json/wc/v3${endpoint}`
+    // Use parameter format since pretty permalinks are not working
+    const url = `${this.config.baseUrl}/?rest_route=/wc/v3${endpoint}`
     
     const options: RequestInit = {
       method,
