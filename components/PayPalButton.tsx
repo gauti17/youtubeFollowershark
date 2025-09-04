@@ -53,6 +53,7 @@ interface PayPalButtonProps {
     }
     totalAmount: string
   }
+  getOrderData?: () => any // Function to get fresh order data
   onSuccess?: (data: any) => void
   onError?: (error: any) => void
   onCancel?: () => void
@@ -103,6 +104,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
   currency = 'EUR',
   disabled = false,
   orderData,
+  getOrderData,
   onSuccess,
   onError,
   onCancel
@@ -219,9 +221,17 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
               setIsProcessing(true)
               setError(null)
 
-              // Validate required customer information
-              const { customerInfo } = orderData
+              // Get fresh order data for validation
+              const currentOrderData = getOrderData ? getOrderData() : orderData
+              const { customerInfo } = currentOrderData
+              console.log('PayPal validation - fresh customerInfo:', customerInfo)
+              
               if (!customerInfo.email || !customerInfo.firstName || !customerInfo.country) {
+                console.error('PayPal validation failed:', {
+                  email: customerInfo.email,
+                  firstName: customerInfo.firstName, 
+                  country: customerInfo.country
+                })
                 throw new Error('Bitte füllen Sie alle erforderlichen Felder aus: Name, E-Mail und Land.')
               }
 
@@ -236,7 +246,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(orderData),
+                body: JSON.stringify(currentOrderData),
               })
 
               const data = await response.json()

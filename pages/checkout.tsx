@@ -997,8 +997,9 @@ const CheckoutPage: React.FC = () => {
               <PayPalButton
                 amount={finalTotal.toFixed(2)}
                 currency="EUR"
-                disabled={!isFormValid() || isProcessing}
+                disabled={isProcessing}
                 orderData={getPayPalOrderData()}
+                getOrderData={getPayPalOrderData}
                 onSuccess={handlePayPalSuccess}
                 onError={handlePayPalError}
                 onCancel={handlePayPalCancel}
