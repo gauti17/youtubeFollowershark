@@ -20,12 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // First, check if customer exists
-    const customersResponse = await api.get('customers', {
+    const customers = await wooCommerceAPI.get('customers', {
       email: email,
       per_page: 1
     })
-
-    const customers = customersResponse.data || []
     
     if (customers.length === 0) {
       // Don't reveal that email doesn't exist for security reasons
@@ -62,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
         const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
         
-        await api.put(`customers/${customer.id}`, {
+        await wooCommerceAPI.put(`customers/${customer.id}`, {
           meta_data: [
             {
               key: 'password_reset_token',
@@ -85,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
       const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
       
-      await api.put(`customers/${customer.id}`, {
+      await wooCommerceAPI.put(`customers/${customer.id}`, {
         meta_data: [
           {
             key: 'password_reset_token',

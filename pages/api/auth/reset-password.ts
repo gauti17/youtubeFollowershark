@@ -25,12 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Find customer by email
-    const customersResponse = await api.get('customers', {
+    const customers = await wooCommerceAPI.get('customers', {
       email: email,
       per_page: 1
-    })
-
-    const customers = customersResponse.data || []
+    }) || []
     
     if (customers.length === 0) {
       return res.status(400).json({ error: 'Ungültiger Reset-Link' })
@@ -39,8 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const customer = customers[0]
 
     // Get customer's meta data to check reset token
-    const customerDetails = await api.get(`customers/${customer.id}`)
-    const customerData = customerDetails.data
+    const customerData = await wooCommerceAPI.get(`customers/${customer.id}`)
 
     // Find reset token and expiry in meta data
     let resetToken = null
@@ -68,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Update customer password
-    await api.put(`customers/${customer.id}`, {
+    await wooCommerceAPI.put(`customers/${customer.id}`, {
       password: password,
       meta_data: [
         // Clear reset token and expiry
