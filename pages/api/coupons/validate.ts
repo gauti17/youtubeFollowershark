@@ -1,12 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
-
-const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3'
-})
+import { wooCommerceAPI } from '../../../lib/woocommerce'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -21,16 +14,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Get coupon from WooCommerce
-    const couponResponse = await api.get(`coupons`, {
+    const coupons = await wooCommerceAPI.get(`coupons`, {
       code: code.toUpperCase(),
       per_page: 1
     })
 
-    if (!couponResponse.data || couponResponse.data.length === 0) {
+    if (!coupons || coupons.length === 0) {
       return res.status(404).json({ error: 'Coupon-Code nicht gefunden' })
     }
 
-    const coupon = couponResponse.data[0]
+    const coupon = coupons[0]
 
     // Check if coupon is active
     if (coupon.status !== 'publish') {
