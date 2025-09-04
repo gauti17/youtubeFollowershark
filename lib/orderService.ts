@@ -158,9 +158,16 @@ export class OrderService {
       const discount = this.calculateDiscount(subtotal, options.discountCode)
       const finalTotal = subtotal - discount
 
+      // Determine order status based on payment method
+      let orderStatus = 'processing' // Default status
+      if (options.paymentMethod === 'bacs' || options.paymentMethod === 'bank_transfer' || 
+          options.paymentMethodTitle?.toLowerCase().includes('bank')) {
+        orderStatus = 'on-hold' // Bank transfer orders should be on hold until payment confirmed
+      }
+
       const orderData: WooCommerceOrder = {
         customer_id: customerResult.customerId, // Link order to customer
-        status: 'processing', // Set to processing since we handle our own fulfillment
+        status: orderStatus,
         billing: billingAddress,
         shipping: billingAddress, // Same as billing for digital services
         line_items: lineItems,
