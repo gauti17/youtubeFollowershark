@@ -114,8 +114,9 @@ export class CustomerService {
       // Handle specific WooCommerce errors
       const errorMessage = error.message || error.toString()
       
-      // Handle duplicate email error
-      if (errorMessage.includes('email') && (errorMessage.includes('exists') || errorMessage.includes('already'))) {
+      // Handle duplicate email error (WordPress user exists but not WooCommerce customer)
+      if (errorMessage.includes('email') && (errorMessage.includes('exists') || errorMessage.includes('already')) || 
+          errorMessage.includes('registration-error-email-exists')) {
         // Try to find the existing customer
         const existingCustomer = await this.customerExists(formData.email)
         if (existingCustomer.exists) {
@@ -123,6 +124,14 @@ export class CustomerService {
             success: true,
             customerId: existingCustomer.customerId,
             customerExists: true
+          }
+        } else {
+          // WordPress user exists but no WooCommerce customer profile
+          // This is a known limitation - we cannot automatically convert WordPress users to WooCommerce customers via API
+          // Return a more informative error message
+          return {
+            success: false,
+            error: 'Ein WordPress-Benutzer mit dieser E-Mail-Adresse existiert bereits. Bitte verwenden Sie eine andere E-Mail-Adresse oder loggen Sie sich ein.'
           }
         }
       }
