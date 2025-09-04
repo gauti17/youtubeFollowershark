@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { customerService } from '../../../lib/customerService'
-export const runtime = 'edge'
+// Uses Node.js runtime for WooCommerce API compatibility
 import { CheckoutFormData } from '../../../lib/orderService'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { orderService } from '../../../lib/orderService'
-export const runtime = 'edge'
+// Uses Node.js runtime for WooCommerce API compatibility
 import { CartItem } from '../../../lib/CartContext'
 
 interface CreateOrderRequest {
