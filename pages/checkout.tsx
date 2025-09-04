@@ -459,7 +459,9 @@ const CouponInput = styled.input`
   }
 `
 
-const CouponButton = styled.button<{ loading?: boolean }>`
+const CouponButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'loading'
+})<{ loading?: boolean }>`
   padding: 12px 16px;
   background: #FF6B35;
   color: white;

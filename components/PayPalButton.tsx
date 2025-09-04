@@ -108,6 +108,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
   onCancel
 }) => {
   const paypalRef = useRef<HTMLDivElement>(null)
+  const buttonRendered = useRef(false)
   const { clearCart } = useCart()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
@@ -115,6 +116,8 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
   const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
+    let cleanup: (() => void) | undefined
+
     const loadPayPalScript = async () => {
       try {
         setIsLoading(true)
@@ -123,6 +126,18 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
         // Check if PayPal script is already loaded
         if (window.paypal) {
           renderPayPalButton()
+          return
+        }
+
+        // Check if script is already being loaded
+        const existingScript = document.querySelector(`script[src*="paypal.com/sdk/js"]`)
+        if (existingScript) {
+          // Wait for existing script to load
+          existingScript.addEventListener('load', () => {
+            if (window.paypal) {
+              renderPayPalButton()
+            }
+          })
           return
         }
 
@@ -147,12 +162,9 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
 
         document.head.appendChild(script)
 
-        return () => {
-          // Cleanup script on unmount
-          const existingScript = document.querySelector(`script[src*="paypal.com/sdk/js"]`)
-          if (existingScript) {
-            document.head.removeChild(existingScript)
-          }
+        cleanup = () => {
+          // Reset button rendered flag on cleanup
+          buttonRendered.current = false
         }
       } catch (err) {
         setError('Unerwarteter Fehler beim Laden von PayPal.')
@@ -161,12 +173,13 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
     }
 
     const renderPayPalButton = () => {
-      if (!paypalRef.current || !window.paypal) return
+      if (!paypalRef.current || !window.paypal || buttonRendered.current) return
 
       // Clear existing buttons
       paypalRef.current.innerHTML = ''
 
       try {
+        buttonRendered.current = true
         window.paypal.Buttons({
           style: {
             layout: 'vertical',
@@ -295,6 +308,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
       loadPayPalScript()
     }
 
+    return cleanup
   }, [amount, currency, disabled, orderData, onSuccess, onError, onCancel, clearCart, router])
 
   return (
