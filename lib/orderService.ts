@@ -159,7 +159,7 @@ export class OrderService {
       const finalTotal = subtotal - discount
 
       // Determine order status based on payment method
-      let orderStatus = 'processing' // Default status
+      let orderStatus: 'pending' | 'processing' | 'on-hold' | 'completed' | 'cancelled' | 'refunded' | 'failed' = 'processing' // Default status
       if (options.paymentMethod === 'bacs' || options.paymentMethod === 'bank_transfer' || 
           options.paymentMethodTitle?.toLowerCase().includes('bank')) {
         orderStatus = 'on-hold' // Bank transfer orders should be on hold until payment confirmed

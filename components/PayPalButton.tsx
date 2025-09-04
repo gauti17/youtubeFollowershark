@@ -122,6 +122,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
       try {
         setIsLoading(true)
         setError(null)
+        buttonRendered.current = false // Reset button rendered flag
 
         // Check if PayPal script is already loaded
         if (window.paypal) {
@@ -132,11 +133,30 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
         // Check if script is already being loaded
         const existingScript = document.querySelector(`script[src*="paypal.com/sdk/js"]`)
         if (existingScript) {
+          // Check if script is already loaded
+          if ((existingScript as any).readyState === 'complete' || window.paypal) {
+            if (window.paypal) {
+              renderPayPalButton()
+            } else {
+              setError('PayPal SDK konnte nicht geladen werden.')
+              setIsLoading(false)
+            }
+            return
+          }
+          
           // Wait for existing script to load
           existingScript.addEventListener('load', () => {
             if (window.paypal) {
               renderPayPalButton()
+            } else {
+              setError('PayPal SDK konnte nicht geladen werden.')
+              setIsLoading(false)
             }
+          })
+          
+          existingScript.addEventListener('error', () => {
+            setError('Fehler beim Laden der PayPal SDK.')
+            setIsLoading(false)
           })
           return
         }
@@ -173,7 +193,10 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
     }
 
     const renderPayPalButton = () => {
-      if (!paypalRef.current || !window.paypal || buttonRendered.current) return
+      if (!paypalRef.current || !window.paypal) return
+      
+      // Don't render if already rendered (unless forced)
+      if (buttonRendered.current) return
 
       // Clear existing buttons
       paypalRef.current.innerHTML = ''
@@ -195,6 +218,18 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
             try {
               setIsProcessing(true)
               setError(null)
+
+              // Validate required customer information
+              const { customerInfo } = orderData
+              if (!customerInfo.email || !customerInfo.firstName || !customerInfo.country) {
+                throw new Error('Bitte füllen Sie alle erforderlichen Felder aus: Name, E-Mail und Land.')
+              }
+
+              // Basic email validation
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+              if (!emailRegex.test(customerInfo.email)) {
+                throw new Error('Bitte geben Sie eine gültige E-Mail-Adresse ein.')
+              }
 
               const response = await fetch('/api/payments/paypal/create-order', {
                 method: 'POST',
@@ -309,7 +344,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
     }
 
     return cleanup
-  }, [amount, currency, disabled, orderData, onSuccess, onError, onCancel, clearCart, router])
+  }, [amount, currency, disabled])
 
   return (
     <>
