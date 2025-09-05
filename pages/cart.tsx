@@ -27,11 +27,25 @@ const Container = styled.div`
     gap: 30px;
     max-width: 800px;
   }
+  
+  @media (max-width: 768px) {
+    padding: 0 16px;
+    gap: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 12px;
+    gap: 16px;
+  }
 `
 
 const CartHeader = styled.div`
   text-align: center;
   margin-bottom: 50px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
+  }
 `
 
 const CartTitle = styled.h1`
@@ -50,6 +64,10 @@ const CartSubtitle = styled.p`
   font-size: 18px;
   color: #4a5568;
   font-family: 'Inter', sans-serif;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `
 
 const CartItemsSection = styled.div`
@@ -125,6 +143,11 @@ const CartItemCard = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
 `
 
 const ItemHeader = styled.div`
@@ -144,6 +167,13 @@ const ItemInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  flex: 1;
+  min-width: 0; /* Important for flex item text overflow */
+  
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    gap: 12px;
+  }
   
   .icon {
     font-size: 32px;
@@ -151,34 +181,57 @@ const ItemInfo = styled.div`
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    flex-shrink: 0;
+    
+    @media (max-width: 768px) {
+      font-size: 28px;
+    }
   }
   
   .details {
+    flex: 1;
+    min-width: 0; /* Important for text overflow in flex container */
+    
     h3 {
       font-size: 18px;
       font-weight: 600;
       color: #1a1a1a;
       margin-bottom: 4px;
       font-family: 'Inter', sans-serif;
+      
+      @media (max-width: 768px) {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
     }
     
     .url {
       font-size: 14px;
       color: #718096;
+      font-family: monospace;
       word-break: break-word;
       overflow-wrap: break-word;
-      font-family: monospace;
       max-width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       
+      /* Desktop: Show ellipsis for long URLs */
+      @media (min-width: 769px) {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px;
+      }
+      
+      /* Mobile: Allow text wrapping with better line breaks */
       @media (max-width: 768px) {
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        word-break: break-word;
+        font-size: 12px;
         line-height: 1.4;
+        word-break: break-all;
+        overflow-wrap: anywhere;
+        white-space: normal;
+        /* Limit URL display on mobile */
+        display: block;
+        max-height: 2.8em; /* Show ~2 lines max */
+        overflow: hidden;
       }
     }
   }
