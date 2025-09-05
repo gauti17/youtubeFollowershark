@@ -55,6 +55,15 @@ const CheckoutHeader = styled.div`
     color: #111827;
     margin-bottom: 8px;
     font-family: 'Inter', sans-serif;
+    
+    @media (max-width: 768px) {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
   }
 `
 
@@ -98,12 +107,22 @@ const PaymentSection = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
   
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
   h2 {
     font-size: 24px;
     font-weight: 700;
     color: #111827;
     margin-bottom: 24px;
     font-family: 'Inter', sans-serif;
+    
+    @media (max-width: 768px) {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
   }
 `
 
@@ -122,6 +141,10 @@ const PaymentMethod = styled.div<{ selected: boolean }>`
   transition: all 0.2s ease;
   background: ${props => props.selected ? '#f3f4f6' : 'white'};
   
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+  
   &:hover {
     border-color: ${props => props.selected ? '#7c3aed' : '#d1d5db'};
   }
@@ -132,10 +155,20 @@ const PaymentMethod = styled.div<{ selected: boolean }>`
     justify-content: space-between;
     margin-bottom: 12px;
     
+    @media (max-width: 480px) {
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
     .method-info {
       display: flex;
       align-items: center;
       gap: 12px;
+      flex: 1;
+      
+      @media (max-width: 480px) {
+        align-items: flex-start;
+      }
       
       .icon {
         width: 32px;
@@ -145,15 +178,22 @@ const PaymentMethod = styled.div<{ selected: boolean }>`
         justify-content: center;
         border-radius: 6px;
         font-size: 18px;
+        flex-shrink: 0;
       }
       
       .details {
+        flex: 1;
+        
         h4 {
           font-size: 16px;
           font-weight: 600;
           color: #111827;
           margin: 0 0 4px 0;
           font-family: 'Inter', sans-serif;
+          
+          @media (max-width: 480px) {
+            font-size: 15px;
+          }
         }
         
         p {
@@ -161,6 +201,11 @@ const PaymentMethod = styled.div<{ selected: boolean }>`
           color: #6b7280;
           margin: 0;
           font-family: 'Inter', sans-serif;
+          
+          @media (max-width: 480px) {
+            font-size: 13px;
+            line-height: 1.4;
+          }
         }
       }
     }
@@ -171,6 +216,8 @@ const PaymentMethod = styled.div<{ selected: boolean }>`
       border: 2px solid #d1d5db;
       border-radius: 50%;
       position: relative;
+      flex-shrink: 0;
+      margin-top: 2px;
       
       ${props => props.selected && `
         border-color: #7c3aed;
@@ -195,6 +242,11 @@ const PaymentMethod = styled.div<{ selected: boolean }>`
     color: #6b7280;
     line-height: 1.5;
     font-family: 'Inter', sans-serif;
+    
+    @media (max-width: 480px) {
+      font-size: 13px;
+      margin-top: 8px;
+    }
   }
 `
 
@@ -205,12 +257,21 @@ const BillingSection = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
   h3 {
     font-size: 18px;
     font-weight: 700;
     color: #111827;
     margin-bottom: 16px;
     font-family: 'Inter', sans-serif;
+    
+    @media (max-width: 768px) {
+      font-size: 16px;
+    }
   }
 `
 
@@ -269,6 +330,15 @@ const OrderSummary = styled.div`
   height: fit-content;
   position: sticky;
   top: 20px;
+  
+  @media (max-width: 1024px) {
+    position: static;
+    margin-top: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
 `
 
 const SummaryHeader = styled.div`
@@ -425,6 +495,13 @@ const SecurityNote = styled.div`
   font-family: 'Inter', sans-serif;
   text-align: center;
   
+  @media (max-width: 768px) {
+    font-size: 12px;
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1.4;
+  }
+  
   .icon {
     color: #10b981;
   }
@@ -442,6 +519,11 @@ const CouponInputGroup = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 12px;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 12px;
+  }
 `
 
 const CouponInput = styled.input`
@@ -997,7 +1079,7 @@ const CheckoutPage: React.FC = () => {
               <PayPalButton
                 amount={finalTotal.toFixed(2)}
                 currency="EUR"
-                disabled={isProcessing}
+                disabled={isProcessing || !isFormValid()}
                 orderData={getPayPalOrderData()}
                 getOrderData={getPayPalOrderData}
                 onSuccess={handlePayPalSuccess}

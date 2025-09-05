@@ -19,6 +19,8 @@ const HeroSection = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 
   @media (min-width: 640px) {
     padding: 40px 24px 100px 24px;
@@ -75,6 +77,10 @@ const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 const TrustRating = styled.div`
@@ -1435,7 +1441,7 @@ const HomePage: React.FC = () => {
         {...pageSEOConfigs.home}
         structuredData={websiteStructuredData}
       />
-      <Layout>
+      <Layout noSEO>
       <HeroSection>
         <Container>
           <TrustRating>

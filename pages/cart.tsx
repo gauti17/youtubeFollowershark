@@ -165,8 +165,21 @@ const ItemInfo = styled.div`
     .url {
       font-size: 14px;
       color: #718096;
-      word-break: break-all;
+      word-break: break-word;
+      overflow-wrap: break-word;
       font-family: monospace;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
+      @media (max-width: 768px) {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        word-break: break-word;
+        line-height: 1.4;
+      }
     }
   }
 `

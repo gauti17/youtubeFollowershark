@@ -46,7 +46,8 @@ export class YouTubeUrlValidator {
       /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
       /youtu\.be\/([a-zA-Z0-9_-]{11})/,
       /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-      /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/
+      /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/ // YouTube Shorts URLs
     ]
 
     const hasVideoPattern = videoPatterns.some(pattern => 
@@ -56,7 +57,7 @@ export class YouTubeUrlValidator {
     if (!hasVideoPattern) {
       return { 
         isValid: false, 
-        error: 'URL muss ein gültiges YouTube-Video sein (z.B. youtube.com/watch?v=... oder youtu.be/...)' 
+        error: 'URL muss ein gültiges YouTube-Video sein (z.B. youtube.com/watch?v=..., youtu.be/... oder youtube.com/shorts/...)' 
       }
     }
 
@@ -167,7 +168,8 @@ export class YouTubeUrlValidator {
       /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
       /youtu\.be\/([a-zA-Z0-9_-]{11})/,
       /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-      /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/
+      /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/ // YouTube Shorts URLs
     ]
 
     for (const pattern of patterns) {
@@ -207,20 +209,25 @@ export class YouTubeUrlValidator {
   static cleanUrl(url: string): string {
     let cleanUrl = url.trim()
     
-    // Remove tracking parameters
-    const urlObj = new URL(cleanUrl)
-    const paramsToKeep = ['v', 'list'] // Keep essential YouTube parameters
-    
-    const newSearchParams = new URLSearchParams()
-    paramsToKeep.forEach(param => {
-      const value = urlObj.searchParams.get(param)
-      if (value) {
-        newSearchParams.set(param, value)
-      }
-    })
-    
-    urlObj.search = newSearchParams.toString()
-    return urlObj.toString()
+    try {
+      // Remove tracking parameters
+      const urlObj = new URL(cleanUrl)
+      const paramsToKeep = ['v', 'list'] // Keep essential YouTube parameters
+      
+      const newSearchParams = new URLSearchParams()
+      paramsToKeep.forEach(param => {
+        const value = urlObj.searchParams.get(param)
+        if (value) {
+          newSearchParams.set(param, value)
+        }
+      })
+      
+      urlObj.search = newSearchParams.toString()
+      return urlObj.toString()
+    } catch (error) {
+      // If URL parsing fails, return the original cleaned URL
+      return cleanUrl
+    }
   }
 }
 

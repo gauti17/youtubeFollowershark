@@ -49,10 +49,15 @@ export const calculatePrice = (
   discountAmount: number; 
   total: number; 
 } => {
-  const subtotal = (basePrice + targetPrice) * quantity + speedPrice;
+  // Calculate subtotal for discountable items (base + target price only)
+  const discountableSubtotal = (basePrice + targetPrice) * quantity;
   const discount = getQuantityDiscount(quantity);
-  const discountAmount = (subtotal * discount) / 100;
-  const total = subtotal - discountAmount;
+  const discountAmount = (discountableSubtotal * discount) / 100;
+  const discountedSubtotal = discountableSubtotal - discountAmount;
+  
+  // Add speed price after discount (speed price is not discounted)
+  const subtotal = discountableSubtotal + speedPrice;
+  const total = discountedSubtotal + speedPrice;
   
   return {
     subtotal,
@@ -92,7 +97,7 @@ export const products: Product[] = [
     ],
     quantityOptions: [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000],
     inputType: 'video',
-    inputPlaceholder: 'https://www.youtube.com/watch?v=...',
+    inputPlaceholder: 'https://www.youtube.com/watch?v=... oder /shorts/...',
     category: 'views',
     targetOptions: [
       {
@@ -134,7 +139,7 @@ export const products: Product[] = [
     ],
     quantityOptions: [50, 100, 250, 500, 1000, 2500, 5000, 10000],
     inputType: 'video',
-    inputPlaceholder: 'https://www.youtube.com/watch?v=...',
+    inputPlaceholder: 'https://www.youtube.com/watch?v=... oder /shorts/...',
     category: 'likes'
   },
   {
@@ -196,7 +201,7 @@ export const products: Product[] = [
     ],
     quantityOptions: [250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000],
     inputType: 'video',
-    inputPlaceholder: 'https://www.youtube.com/watch?v=...',
+    inputPlaceholder: 'https://www.youtube.com/watch?v=... oder /shorts/...',
     category: 'views'
   }
 ]

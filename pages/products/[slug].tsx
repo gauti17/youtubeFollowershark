@@ -73,6 +73,16 @@ const ProductDetailsBox = styled.div`
   &:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.06);
   }
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 16px;
+    border-radius: 8px;
+  }
 `
 
 const ProductHeader = styled.div`
@@ -108,6 +118,16 @@ const ProductTitle = styled.h1`
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.2;
   letter-spacing: -0.02em;
+  
+  @media (max-width: 768px) {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 20px;
+    line-height: 1.4;
+  }
 `
 
 const DiscountTag = styled.div`
@@ -220,6 +240,11 @@ const RadioGroup = styled.div`
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  
+  @media (max-width: 480px) {
+    gap: 10px;
+  }
 `
 
 const RadioOption = styled.label<{ selected: boolean }>`
@@ -296,6 +321,10 @@ const QuantityButton = styled.button<{ selected: boolean }>`
 
 const SpeedOptions = styled.div`
   margin-bottom: 20px;
+  
+  @media (max-width: 480px) {
+    margin-bottom: 16px;
+  }
 `
 
 const SpeedOption = styled.label<{ selected: boolean }>`
@@ -307,6 +336,11 @@ const SpeedOption = styled.label<{ selected: boolean }>`
   cursor: pointer;
   background: ${props => props.selected ? '#f8fafc' : 'white'};
   position: relative;
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+    border-radius: 4px;
+  }
   
   input {
     display: none;
@@ -323,6 +357,12 @@ const SpeedOption = styled.label<{ selected: boolean }>`
     border: 2px solid ${props => props.selected ? '#8b5cf6' : '#d1d5db'};
     border-radius: 50%;
     background: ${props => props.selected ? '#8b5cf6' : 'white'};
+    
+    @media (max-width: 480px) {
+      right: 10px;
+      width: 14px;
+      height: 14px;
+    }
   }
   
   ${props => props.selected && `
@@ -336,6 +376,12 @@ const SpeedOption = styled.label<{ selected: boolean }>`
       height: 6px;
       background: white;
       border-radius: 50%;
+      
+      @media (max-width: 480px) {
+        right: 16px;
+        width: 5px;
+        height: 5px;
+      }
     }
   `}
 `
@@ -404,12 +450,17 @@ const VideoInput = styled.input<{ $hasError?: boolean; $isValid?: boolean }>`
     props.$hasError ? '#ef4444' : 
     props.$isValid ? '#10b981' : '#d1d5db'};
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 16px; /* Increased for iOS zoom prevention */
   box-sizing: border-box;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 400;
   letter-spacing: -0.01em;
   transition: all 0.2s ease;
+  
+  @media (max-width: 480px) {
+    padding: 12px 12px 12px 40px;
+    border-radius: 6px;
+  }
   
   &:focus {
     outline: none;
@@ -424,6 +475,10 @@ const VideoInput = styled.input<{ $hasError?: boolean; $isValid?: boolean }>`
   
   &::placeholder {
     color: #9ca3af;
+    
+    @media (max-width: 480px) {
+      font-size: 14px;
+    }
   }
 `
 
@@ -454,6 +509,20 @@ const AddToCartButton = styled.button`
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   letter-spacing: -0.01em;
   box-shadow: 0 4px 6px rgba(139, 92, 246, 0.2);
+  min-height: 44px;
+  
+  @media (max-width: 768px) {
+    padding: 18px 24px;
+    font-size: 17px;
+    min-height: 48px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    gap: 8px;
+  }
   
   &:hover {
     background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
@@ -936,6 +1005,20 @@ const SEOTitle = styled.h2`
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   letter-spacing: -0.02em;
   line-height: 1.2;
+  
+  @media (max-width: 768px) {
+    font-size: 24px;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    padding: 0 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 20px;
+    margin-bottom: 16px;
+    line-height: 1.4;
+    padding: 0 12px;
+  }
 `
 
 const SEODescription = styled.div`
@@ -1414,11 +1497,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
         {...productSEO}
         structuredData={productStructuredData}
       />
-      <Layout
-        title={productSEO.title}
-        description={productSEO.description}
-        keywords={productSEO.keywords?.join(', ') || ''}
-      >
+      <Layout noSEO>
       <Container>
         <LeftColumn>
           <Breadcrumb>
@@ -1559,7 +1638,12 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
 
           <OptionSection>
             <SectionTitle>Anzahl</SectionTitle>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '16px',
+              justifyContent: 'center'
+            }}>
               <button 
                 onClick={() => setOrderQuantity(Math.max(1, orderQuantity - 1))}
                 disabled={orderQuantity <= 1}
@@ -1567,25 +1651,28 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                   background: '#f7fafc',
                   border: '1px solid #e2e8f0',
                   borderRadius: '8px',
-                  width: '36px',
-                  height: '36px',
+                  width: '44px',
+                  height: '44px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: orderQuantity <= 1 ? 'not-allowed' : 'pointer',
-                  fontSize: '18px',
+                  fontSize: '20px',
                   fontWeight: '600',
-                  color: '#4a5568'
+                  color: '#4a5568',
+                  minHeight: '44px', // Better touch target
+                  touchAction: 'manipulation'
                 }}
               >
                 -
               </button>
               <span style={{ 
-                fontSize: '18px', 
+                fontSize: '20px', 
                 fontWeight: '600', 
                 color: '#2d3748',
-                minWidth: '40px',
-                textAlign: 'center'
+                minWidth: '50px',
+                textAlign: 'center',
+                padding: '0 8px'
               }}>
                 {orderQuantity}
               </span>
@@ -1595,15 +1682,17 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                   background: '#f7fafc',
                   border: '1px solid #e2e8f0',
                   borderRadius: '8px',
-                  width: '36px',
-                  height: '36px',
+                  width: '44px',
+                  height: '44px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  fontSize: '18px',
+                  fontSize: '20px',
                   fontWeight: '600',
-                  color: '#4a5568'
+                  color: '#4a5568',
+                  minHeight: '44px', // Better touch target
+                  touchAction: 'manipulation'
                 }}
               >
                 +
