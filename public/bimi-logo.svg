@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
   <title>youshark</title>
-  <desc>youshark - Premium YouTube Growth Services</desc>
+  <desc>youshark - Digital Marketing Platform</desc>
   
   <!-- Background circle for better visibility in emails -->
   <circle cx="250" cy="250" r="240" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
   
-  <!-- Main brand text matching header design -->
-  <text x="250" y="280" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
-        font-size="64" font-weight="750" text-anchor="middle" letter-spacing="-2px">
-    <tspan fill="#1a1a1a">you</tspan><tspan fill="#FF6B35">shark</tspan><tspan fill="#FF6B35" font-size="72" dx="2">.</tspan>
-  </text>
+  <!-- Shark silhouette icon -->
+  <g transform="translate(250, 180)">
+    <!-- Shark body -->
+    <ellipse cx="0" cy="0" rx="60" ry="20" fill="#FF6B35"/>
+    
+    <!-- Shark head/nose -->
+    <ellipse cx="-50" cy="0" rx="20" ry="15" fill="#FF6B35"/>
+    
+    <!-- Main dorsal fin -->
+    <path d="M10 -20 L30 -35 L35 -30 L40 -25 L35 -15 L30 -12 L20 -10 Z" fill="#FF6B35"/>
+    
+    <!-- Tail fin -->
+    <path d="M45 -8 L65 -15 L70 -10 L68 0 L65 8 L50 5 L45 0 Z" fill="#FF6B35"/>
+    <path d="M50 0 L62 8 L58 12 L50 8 Z" fill="#FF6B35"/>
+    
+    <!-- Side fins -->
+    <path d="M-10 8 L5 20 L10 18 L8 12 L0 10 Z" fill="#FF6B35"/>
+    <path d="M20 8 L30 18 L28 22 L20 15 Z" fill="#FF6B35"/>
+    
+    <!-- Eye -->
+    <circle cx="-35" cy="-5" r="3" fill="#ffffff"/>
+    <circle cx="-33" cy="-5" r="1.5" fill="#1a1a1a"/>
+  </g>
   
-  <!-- Subtle shark fin accent -->
-  <path d="M150 160 C150 140, 165 125, 180 125 C195 125, 210 140, 210 160 L195 175 C180 175, 165 175, 150 175 Z" 
-        fill="#FF6B35" opacity="0.3"/>
-  <path d="M350 160 C350 140, 335 125, 320 125 C305 125, 290 140, 290 160 L305 175 C320 175, 335 175, 350 175 Z" 
-        fill="#FF6B35" opacity="0.3"/>
-  
-  <!-- Small tagline -->
-  <text x="250" y="320" font-family="Inter, sans-serif" font-size="18" text-anchor="middle" fill="#666" font-weight="500">
-    YouTube Growth Services
+  <!-- Main brand text -->
+  <text x="250" y="300" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+        font-size="54" font-weight="750" text-anchor="middle" letter-spacing="-1.5px">
+    <tspan fill="#1a1a1a">you</tspan><tspan fill="#FF6B35">shark</tspan><tspan fill="#FF6B35" font-size="62" dx="2">.</tspan>
   </text>
 </svg>
