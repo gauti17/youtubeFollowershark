@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
-  <title>YouShark</title>
+  <title>youshark</title>
   
   <!-- Background -->
   <circle cx="200" cy="200" r="190" fill="#fff" stroke="#e5e7eb" stroke-width="2"/>
   
-  <!-- Main container -->
-  <rect x="75" y="125" width="250" height="150" rx="20" fill="#FF0000"/>
+  <!-- Main brand text matching header -->
+  <text x="200" y="230" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+        font-size="52" font-weight="750" text-anchor="middle" letter-spacing="-1px">
+    <tspan fill="#1a1a1a">you</tspan><tspan fill="#FF6B35">shark</tspan><tspan fill="#FF6B35" font-size="58" dx="1">.</tspan>
+  </text>
   
-  <!-- YouTube button -->
-  <rect x="125" y="162.5" width="150" height="75" rx="8" fill="#fff"/>
-  <path d="M165 180 L165 220 L235 200 Z" fill="#FF0000"/>
+  <!-- Subtle accents -->
+  <path d="M120 140 C120 125 130 115 140 115 C150 115 160 125 160 140 L150 150 C140 150 130 150 120 150 Z" 
+        fill="#FF6B35" opacity="0.3"/>
+  <path d="M280 140 C280 125 270 115 260 115 C250 115 240 125 240 140 L250 150 C260 150 270 150 280 150 Z" 
+        fill="#FF6B35" opacity="0.3"/>
   
-  <!-- Shark fins -->
-  <path d="M50 150 C50 135 65 120 80 120 C95 120 110 135 110 150 L95 165 C80 165 65 165 50 165 Z" fill="#FF0000"/>
-  <path d="M350 150 C350 135 335 120 320 120 C305 120 290 135 290 150 L305 165 C320 165 335 165 350 165 Z" fill="#FF0000"/>
-  
-  <!-- Brand text -->
-  <text x="200" y="310" font-family="Arial,sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#1f2937">YouShark</text>
+  <!-- Tagline -->
+  <text x="200" y="270" font-family="Inter,sans-serif" font-size="14" text-anchor="middle" fill="#666" font-weight="500">
+    YouTube Growth Services
+  </text>
 </svg>

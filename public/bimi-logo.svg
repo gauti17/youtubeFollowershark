@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
-  <title>YouShark Logo</title>
-  <desc>YouShark - Premium YouTube Growth Services</desc>
+  <title>youshark</title>
+  <desc>youshark - Premium YouTube Growth Services</desc>
   
   <!-- Background circle for better visibility in emails -->
   <circle cx="250" cy="250" r="240" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
   
-  <!-- Main logo container -->
-  <rect x="100" y="150" width="300" height="200" rx="24" fill="#FF0000"/>
+  <!-- Main brand text matching header design -->
+  <text x="250" y="280" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+        font-size="64" font-weight="750" text-anchor="middle" letter-spacing="-2px">
+    <tspan fill="#1a1a1a">you</tspan><tspan fill="#FF6B35">shark</tspan><tspan fill="#FF6B35" font-size="72" dx="2">.</tspan>
+  </text>
   
-  <!-- YouTube play button background -->
-  <rect x="150" y="200" width="200" height="100" rx="12" fill="white"/>
+  <!-- Subtle shark fin accent -->
+  <path d="M150 160 C150 140, 165 125, 180 125 C195 125, 210 140, 210 160 L195 175 C180 175, 165 175, 150 175 Z" 
+        fill="#FF6B35" opacity="0.3"/>
+  <path d="M350 160 C350 140, 335 125, 320 125 C305 125, 290 140, 290 160 L305 175 C320 175, 335 175, 350 175 Z" 
+        fill="#FF6B35" opacity="0.3"/>
   
-  <!-- YouTube play triangle -->
-  <path d="M200 225 L200 275 L275 250 Z" fill="#FF0000"/>
-  
-  <!-- Shark fin elements for branding -->
-  <path d="M80 180 C80 160, 100 140, 120 140 C140 140, 160 160, 160 180 L140 200 C120 200, 100 200, 80 200 Z" fill="#FF0000"/>
-  <path d="M420 180 C420 160, 400 140, 380 140 C360 140, 340 160, 340 180 L360 200 C380 200, 400 200, 420 200 Z" fill="#FF0000"/>
-  
-  <!-- Brand text -->
-  <text x="250" y="320" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1f2937">YouShark</text>
-  <text x="250" y="345" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#6b7280">YouTube Growth Services</text>
+  <!-- Small tagline -->
+  <text x="250" y="320" font-family="Inter, sans-serif" font-size="18" text-anchor="middle" fill="#666" font-weight="500">
+    YouTube Growth Services
+  </text>
 </svg>
