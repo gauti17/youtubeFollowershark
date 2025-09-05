@@ -12,6 +12,12 @@ const CartContainer = styled.div`
   min-height: 80vh;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   padding: 40px 0 80px 0;
+  overflow-x: hidden;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    padding: 20px 0 60px 0;
+  }
 `
 
 const Container = styled.div`
@@ -21,6 +27,8 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 400px;
   gap: 40px;
+  width: 100%;
+  box-sizing: border-box;
   
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
@@ -31,6 +39,7 @@ const Container = styled.div`
   @media (max-width: 768px) {
     padding: 0 16px;
     gap: 20px;
+    max-width: 100%;
   }
   
   @media (max-width: 480px) {
@@ -77,6 +86,20 @@ const CartItemsSection = styled.div`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
   height: fit-content;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 16px;
+    border-radius: 12px;
+  }
 `
 
 const EmptyCart = styled.div`
@@ -133,6 +156,10 @@ const CartItemCard = styled.div`
   margin-bottom: 20px;
   transition: all 0.3s ease;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
   
   &:hover {
     border-color: rgba(255, 107, 53, 0.2);
@@ -147,6 +174,12 @@ const CartItemCard = styled.div`
   @media (max-width: 768px) {
     padding: 16px;
     margin-bottom: 16px;
+    border-radius: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+    margin-bottom: 12px;
   }
 `
 
@@ -155,11 +188,19 @@ const ItemHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+  
+  @media (max-width: 480px) {
     gap: 10px;
+    margin-bottom: 12px;
   }
 `
 
@@ -232,6 +273,12 @@ const ItemInfo = styled.div`
         display: block;
         max-height: 2.8em; /* Show ~2 lines max */
         overflow: hidden;
+        max-width: 100%;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 11px;
+        max-height: 2.2em; /* Even more compact on very small screens */
       }
     }
   }
@@ -355,6 +402,24 @@ const OrderSummary = styled.div`
   height: fit-content;
   position: sticky;
   top: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  
+  @media (max-width: 1024px) {
+    position: static;
+    margin-top: 0;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 16px;
+    border-radius: 12px;
+  }
 `
 
 const SummaryTitle = styled.h3`
@@ -546,7 +611,13 @@ const CartPage: React.FC = () => {
       title="Warenkorb - youshark" 
       description="Überprüfen Sie Ihre YouTube Growth Services Bestellung und gehen Sie zur Kasse."
     >
-      <CartContainer>
+      <div style={{ 
+        overflowX: 'hidden', 
+        width: '100%', 
+        maxWidth: '100vw',
+        boxSizing: 'border-box' 
+      }}>
+        <CartContainer>
         <CartHeader>
           <CartTitle>Ihr Warenkorb</CartTitle>
           <CartSubtitle>
@@ -697,7 +768,8 @@ const CartPage: React.FC = () => {
             </OrderSummary>
           )}
         </Container>
-      </CartContainer>
+        </CartContainer>
+      </div>
     </Layout>
   )
 }
