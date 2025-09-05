@@ -14,7 +14,16 @@ BIMI allows verified senders to display their logo next to their emails in suppo
 
 ## Files Created
 
-- `/public/bimi-logo.svg` - BIMI-compliant logo (500x500px SVG)
+- `/public/bimi-logo.svg` - BIMI-compliant logo (500x500px SVG with proper baseProfile)
+- `/public/bimi-logo-optimized.svg` - Optimized BIMI logo (400x400px, recommended for use)
+
+## SVG Compliance Fixed
+
+The logos now include:
+- `version="1.2"` - Required SVG version for BIMI
+- `baseProfile="tiny-ps"` - BIMI-supported SVG base profile
+- Standard font families (Arial) for better compatibility
+- Proper encoding and namespace declarations
 
 ## DNS Records Required
 
@@ -25,7 +34,7 @@ Add the following DNS TXT record to your domain:
 ```
 Name: default._bimi.youshark.de
 Type: TXT
-Value: v=BIMI1; l=https://youshark.de/bimi-logo.svg;
+Value: v=BIMI1; l=https://youshark.de/bimi-logo-optimized.svg;
 ```
 
 ### For email subdomain (if using):
@@ -33,7 +42,34 @@ Value: v=BIMI1; l=https://youshark.de/bimi-logo.svg;
 ```
 Name: default._bimi.mail.youshark.de
 Type: TXT
-Value: v=BIMI1; l=https://youshark.de/bimi-logo.svg;
+Value: v=BIMI1; l=https://youshark.de/bimi-logo-optimized.svg;
+```
+
+## BIMI Certificate (Optional but Recommended)
+
+For full BIMI support including logos in Gmail, you may need a Verified Mark Certificate (VMC):
+
+### Without Certificate (Basic BIMI):
+- Works with some email providers
+- Limited logo display
+- DNS record only needed
+
+### With VMC Certificate (Full BIMI):
+- Full Gmail support
+- Enhanced brand protection
+- Requires verified trademark
+- Cost: $1,500-$2,500/year
+
+#### VMC Providers:
+- DigiCert
+- Entrust
+- Sectigo
+
+#### DNS with VMC Certificate:
+```
+Name: default._bimi.youshark.de
+Type: TXT
+Value: v=BIMI1; l=https://youshark.de/bimi-logo-optimized.svg; a=https://youshark.de/bimi-certificate.pem;
 ```
 
 ## DMARC Configuration
