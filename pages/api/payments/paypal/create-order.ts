@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { paypalService } from '../../../../lib/paypalService'
-import { products } from '../../../../data/products'
+import { products, calculatePrice } from '../../../../data/products'
 
 interface CreateOrderRequest {
   items: Array<{
@@ -17,6 +17,10 @@ interface CreateOrderRequest {
     email: string
     firstName: string
     lastName: string
+    country: string
+    city: string
+    postalCode: string
+    phone?: string
   }
   totalAmount: string
 }
@@ -48,6 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const processedItems = []
     let calculatedTotal = 0
 
+    console.log(`[PayPal Create Order] Processing ${items.length} items`)
+
     for (const item of items) {
       const product = products.find(p => p.id === item.productId)
       if (!product) {
@@ -55,42 +61,63 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: `Product not found: ${item.productId}` })
       }
 
-      // Calculate item price (including discounts, speed options, etc.)
-      let itemPrice = product.basePrice
-      
-      // Apply product discount
-      if (product.discount) {
-        itemPrice = itemPrice * (1 - product.discount / 100)
-      }
+      console.log(`[PayPal Create Order] Processing product: ${product.name}`)
 
-      // Add speed option price
+      // Get pricing options
+      let speedPrice = 0
+      let targetPrice = 0
+
+      // Get speed option price
       if (item.selectedOptions.speed && product.speedOptions) {
         const speedOption = product.speedOptions.find(opt => opt.id === item.selectedOptions.speed)
         if (speedOption) {
-          itemPrice += speedOption.price / item.quantity // Distribute speed price across quantity
+          speedPrice = speedOption.price
+          console.log(`[PayPal Create Order] Speed option: ${speedOption.name} (+€${speedPrice})`)
         }
       }
 
-      // Add target option price  
+      // Get target option price  
       if (item.selectedOptions.target && product.targetOptions) {
         const targetOption = product.targetOptions.find(opt => opt.id === item.selectedOptions.target)
         if (targetOption) {
-          itemPrice += targetOption.price
+          targetPrice = targetOption.price
+          console.log(`[PayPal Create Order] Target option: ${targetOption.name} (+€${targetPrice})`)
         }
       }
 
       const actualQuantity = item.selectedOptions.selectedQuantity || item.quantity
-      const itemTotal = itemPrice * actualQuantity
+      console.log(`[PayPal Create Order] Quantity: ${actualQuantity}`)
+
+      // Use the same pricing calculation as frontend
+      const pricing = calculatePrice(product.basePrice, actualQuantity, speedPrice, targetPrice)
+      const itemTotal = pricing.total
+
+      console.log(`[PayPal Create Order] Pricing calculation:`, {
+        basePrice: product.basePrice,
+        quantity: actualQuantity,
+        speedPrice,
+        targetPrice,
+        subtotal: pricing.subtotal,
+        discount: pricing.discount,
+        discountAmount: pricing.discountAmount,
+        total: pricing.total
+      })
+
+      // For PayPal, we need to break down the item into unit price
+      // Since PayPal expects unit_amount * quantity = total, we calculate unit price
+      const unitPrice = (itemTotal / actualQuantity).toFixed(2)
 
       processedItems.push({
         name: product.name,
         quantity: actualQuantity.toString(),
-        unitAmount: itemPrice.toFixed(2),
+        unitAmount: unitPrice,
         sku: product.slug
       })
 
       calculatedTotal += itemTotal
     }
+
+    console.log(`[PayPal Create Order] Calculated total: €${calculatedTotal.toFixed(2)}`)
 
     // Verify total matches
     const totalDifference = Math.abs(calculatedTotal - parseFloat(totalAmount))

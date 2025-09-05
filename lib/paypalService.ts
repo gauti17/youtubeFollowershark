@@ -87,6 +87,13 @@ export class PayPalService {
         })
       }
 
+      console.log(`[PayPal Service] Creating order with data:`, {
+        amount: orderData.amount,
+        currency: orderData.currency,
+        orderNumber: orderData.orderNumber,
+        itemsCount: orderData.items.length
+      })
+
       const response = await fetch(`${this.baseUrl}/v2/checkout/orders`, {
         method: 'POST',
         headers: {
@@ -97,10 +104,21 @@ export class PayPalService {
       })
 
       if (!response.ok) {
-        throw new Error(`PayPal API error: ${response.status}`)
+        const errorText = await response.text()
+        console.error(`[PayPal Service] Order creation failed:`, {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText,
+          requestData: createOrderRequest
+        })
+        throw new Error(`PayPal API error: ${response.status} - ${errorText}`)
       }
 
       const result = await response.json()
+      console.log(`[PayPal Service] Order created successfully:`, {
+        orderId: result.id,
+        status: result.status
+      })
 
       return {
         success: true,
@@ -193,19 +211,42 @@ export class PayPalService {
    * Get PayPal access token for API calls
    */
   private async getAccessToken(): Promise<string> {
-    const auth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64')
-    
-    const response = await fetch(`${this.baseUrl}/v1/oauth2/token`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'grant_type=client_credentials'
-    })
+    try {
+      console.log(`[PayPal Service] Getting access token from ${this.baseUrl}`)
+      const auth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64')
+      
+      const response = await fetch(`${this.baseUrl}/v1/oauth2/token`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials'
+      })
 
-    const data = await response.json()
-    return `Bearer ${data.access_token}`
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`[PayPal Service] Token request failed:`, {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        })
+        throw new Error(`PayPal token request failed: ${response.status} - ${errorText}`)
+      }
+
+      const data = await response.json()
+      
+      if (!data.access_token) {
+        console.error(`[PayPal Service] No access token in response:`, data)
+        throw new Error('PayPal did not return access token')
+      }
+
+      console.log(`[PayPal Service] Access token obtained successfully`)
+      return `Bearer ${data.access_token}`
+    } catch (error) {
+      console.error(`[PayPal Service] Error getting access token:`, error)
+      throw error
+    }
   }
 
   /**
