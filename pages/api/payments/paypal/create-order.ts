@@ -48,9 +48,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log(`[PayPal Create Order] Processing order for ${customerInfo.email} with ${items.length} items, total: ${totalAmount}€`)
 
-    // Validate and process items
-    const processedItems = []
+    // Generate unique order number
+    const orderNumber = `YS${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`
+    console.log(`[PayPal Create Order] Generated order number: ${orderNumber}`)
+
+    // For PayPal, create a single consolidated item to avoid rounding issues
+    // This prevents ITEM_TOTAL_MISMATCH errors caused by unit price calculations
     let calculatedTotal = 0
+    let orderDescription = []
 
     console.log(`[PayPal Create Order] Processing ${items.length} items`)
 
@@ -103,19 +108,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         total: pricing.total
       })
 
-      // For PayPal, we need to break down the item into unit price
-      // Since PayPal expects unit_amount * quantity = total, we calculate unit price
-      const unitPrice = (itemTotal / actualQuantity).toFixed(2)
-
-      processedItems.push({
-        name: product.name,
-        quantity: actualQuantity.toString(),
-        unitAmount: unitPrice,
-        sku: product.slug
-      })
-
+      // Add to order description for the consolidated item
+      orderDescription.push(`${actualQuantity}x ${product.name}`)
       calculatedTotal += itemTotal
     }
+
+    // Create a single consolidated item for PayPal to avoid rounding issues
+    const processedItems = [{
+      name: `youshark Order - ${orderDescription.join(', ')}`,
+      quantity: "1",
+      unitAmount: calculatedTotal.toFixed(2),
+      sku: orderNumber
+    }]
 
     console.log(`[PayPal Create Order] Calculated total: €${calculatedTotal.toFixed(2)}`)
 
@@ -135,10 +139,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     console.log(`[PayPal Create Order] Items processed successfully, calculated total: ${calculatedTotal.toFixed(2)}€`)
-
-    // Generate unique order number
-    const orderNumber = `YS${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`
-    console.log(`[PayPal Create Order] Generated order number: ${orderNumber}`)
 
     // Create PayPal order
     console.log(`[PayPal Create Order] Creating PayPal order...`)
