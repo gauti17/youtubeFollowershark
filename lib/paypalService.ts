@@ -43,17 +43,40 @@ export class PayPalService {
     try {
       const accessToken = await this.getAccessToken()
       
+      // Use the provided amount that was already validated in the API endpoint
+      // Don't recalculate here as it can cause price discrepancies
+      const finalItemTotal = parseFloat(orderData.amount).toFixed(2)
+      
+      // For debugging, log the item calculation vs provided amount
+      const calculatedItemTotal = orderData.items.reduce((total, item) => {
+        const itemTotal = parseFloat(item.unitAmount) * parseInt(item.quantity)
+        return total + itemTotal
+      }, 0)
+      
+      console.log(`[PayPal Service] Amount validation:`, {
+        providedAmount: orderData.amount,
+        finalAmountUsed: finalItemTotal,
+        recalculatedItemTotal: calculatedItemTotal.toFixed(2),
+        matchesProvided: Math.abs(calculatedItemTotal - parseFloat(orderData.amount)) < 0.01,
+        itemsBreakdown: orderData.items.map(item => ({
+          name: item.name,
+          unitAmount: item.unitAmount,
+          quantity: item.quantity,
+          itemTotal: (parseFloat(item.unitAmount) * parseInt(item.quantity)).toFixed(2)
+        }))
+      })
+      
       const createOrderRequest = {
         intent: 'CAPTURE',
         purchase_units: [{
           reference_id: orderData.orderNumber,
           amount: {
             currency_code: orderData.currency,
-            value: orderData.amount,
+            value: finalItemTotal,
             breakdown: {
               item_total: {
                 currency_code: orderData.currency,
-                value: orderData.amount
+                value: finalItemTotal
               }
             }
           },
