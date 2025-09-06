@@ -32,10 +32,19 @@ export default class MyDocument extends Document {
     return (
       <Html lang="de">
         <Head>
-          <meta name="theme-color" content="#FF0000" />
+          <meta name="theme-color" content="#FF6B35" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="format-detection" content="telephone=no" />
-          <link rel="icon" href="/favicon.ico" />
+          
+          {/* Favicon links */}
+          <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+          
+          {/* Web manifest */}
+          <link rel="manifest" href="/site.webmanifest" />
         </Head>
         <body>
           <Main />

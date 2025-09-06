@@ -15,11 +15,11 @@
         },
         {
             "src": "/apple-touch-icon.png",
-            "sizes": "150x150",
+            "sizes": "180x180",
             "type": "image/png"
         }
     ],
-    "theme_color": "#FF0000",
+    "theme_color": "#FF6B35",
     "background_color": "#ffffff",
     "display": "standalone",
     "start_url": "/",
