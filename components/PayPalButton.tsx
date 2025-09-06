@@ -103,10 +103,10 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
   const [isProcessing, setIsProcessing] = useState(false)
 
   const paypalOptions = {
-    'client-id': process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
+    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
     currency: currency,
-    intent: 'capture',
-    'disable-funding': 'credit,card'
+    intent: 'capture' as const,
+    disableFunding: ['credit', 'card']
   }
 
   const createOrder = async () => {
@@ -242,7 +242,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
     }
   }
 
-  if (!paypalOptions['client-id']) {
+  if (!paypalOptions.clientId) {
     return <ErrorMessage>PayPal Client ID nicht konfiguriert</ErrorMessage>
   }
 
