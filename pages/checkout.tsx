@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { orderService } from '../lib/orderService'
 import { ButtonWithSpinner, LoadingOverlay, FormSkeleton } from '../components/Loading'
 import PayPalButton from '../components/PayPalButton'
+import { useSmartFeedback } from '../components/SmartFeedback'
 
 const CheckoutContainer = styled.div`
   min-height: 100vh;
@@ -526,6 +527,24 @@ const CouponInputGroup = styled.div`
   }
 `
 
+const FieldError = styled.div`
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 2px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  opacity: 0;
+  transform: translateY(-4px);
+  animation: errorSlideIn 0.3s ease-out forwards;
+  
+  @keyframes errorSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`
+
 const CouponInput = styled.input`
   flex: 1;
   padding: 12px 16px;
@@ -604,6 +623,7 @@ const AppliedCoupon = styled.div`
 const CheckoutPage: React.FC = () => {
   const { items, total, clearCart } = useCart()
   const router = useRouter()
+  const { showFeedback, isMobile } = useSmartFeedback()
   const [selectedPayment, setSelectedPayment] = useState('paypal')
   const [couponCode, setCouponCode] = useState('')
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null)
@@ -617,9 +637,42 @@ const CheckoutPage: React.FC = () => {
     city: '',
     postalCode: ''
   })
+  const [formErrors, setFormErrors] = useState({
+    fullName: '',
+    email: '',
+    country: ''
+  })
 
   const formatPrice = (price: number) => {
     return formatPriceUtil(price)
+  }
+
+  const validateForm = () => {
+    const newErrors = {
+      fullName: '',
+      email: '',
+      country: ''
+    }
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Name ist erforderlich'
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'E-Mail ist erforderlich'
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = 'Ungültige E-Mail-Adresse'
+      }
+    }
+
+    if (!formData.country.trim()) {
+      newErrors.country = 'Land ist erforderlich'
+    }
+
+    setFormErrors(newErrors)
+    return Object.values(newErrors).every(error => !error)
   }
 
   const formatNumber = (num: number) => {
@@ -685,8 +738,12 @@ const CheckoutPage: React.FC = () => {
     
     try {
       // Validate form data
-      if (!formData.fullName || !formData.email || !formData.country) {
-        alert('Bitte füllen Sie alle Pflichtfelder aus.')
+      if (!validateForm()) {
+        if (isMobile) {
+          // Errors are already shown inline for mobile
+        } else {
+          showFeedback('Bitte füllen Sie alle Pflichtfelder aus.', 'warning')
+        }
         setIsProcessing(false)
         return
       }
@@ -733,7 +790,7 @@ const CheckoutPage: React.FC = () => {
         
         // Show account creation message if applicable
         if (result.customerCreated) {
-          alert('🎉 Bestellung erfolgreich!\n\nEin Kundenaccount wurde automatisch für Sie erstellt. Sie erhalten in wenigen Minuten eine E-Mail mit Ihren Zugangsdaten.')
+          showFeedback('🎉 Bestellung erfolgreich! Ein Kundenaccount wurde automatisch für Sie erstellt. Sie erhalten in wenigen Minuten eine E-Mail mit Ihren Zugangsdaten.', 'success', 5000)
         }
         
         // Clear cart
@@ -747,7 +804,7 @@ const CheckoutPage: React.FC = () => {
       
     } catch (error) {
       console.error('Checkout error:', error)
-      alert('Es gab einen Fehler bei der Bestellung. Bitte versuchen Sie es erneut.')
+      showFeedback('Es gab einen Fehler bei der Bestellung. Bitte versuchen Sie es erneut.', 'error')
     } finally {
       setIsProcessing(false)
     }
@@ -765,14 +822,23 @@ const CheckoutPage: React.FC = () => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }))
+    
+    // Clear error for this field when user starts typing
+    if (formErrors[name as keyof typeof formErrors]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
   }
 
   const getPayPalOrderData = () => {
-    return {
+    const orderData = {
       items: items.map(item => ({
         productId: item.productId,
         quantity: item.quantity,
@@ -788,6 +854,22 @@ const CheckoutPage: React.FC = () => {
       },
       totalAmount: finalTotal.toFixed(2)
     }
+    
+    console.log('[Checkout] PayPal Order Data Generated:', {
+      email: orderData.customerInfo.email,
+      fullFormData: formData,
+      items: orderData.items,
+      itemsDetailed: items.map(item => ({
+        id: item.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        selectedOptions: item.selectedOptions,
+        hasBaseServiceQuantity: !!item.selectedOptions.baseServiceQuantity
+      })),
+      timestamp: new Date().toISOString()
+    })
+    
+    return orderData
   }
 
   const handlePayPalSuccess = (data: any) => {
@@ -870,6 +952,9 @@ const CheckoutPage: React.FC = () => {
                     placeholder="Max Mustermann"
                     required
                   />
+                  {formErrors.fullName && (
+                    <FieldError>{formErrors.fullName}</FieldError>
+                  )}
                 </FormGroup>
                 
                 <FormGroup>
@@ -884,6 +969,9 @@ const CheckoutPage: React.FC = () => {
                     placeholder="max@beispiel.de"
                     required
                   />
+                  {formErrors.email && (
+                    <FieldError>{formErrors.email}</FieldError>
+                  )}
                 </FormGroup>
               </FormRow>
 
@@ -902,6 +990,9 @@ const CheckoutPage: React.FC = () => {
                     <option value="Österreich">Österreich</option>
                     <option value="Schweiz">Schweiz</option>
                   </select>
+                  {formErrors.country && (
+                    <FieldError>{formErrors.country}</FieldError>
+                  )}
                 </FormGroup>
                 
                 <FormGroup>

@@ -48,26 +48,33 @@ export class OrderService {
         wooCommerceProductId = 0
       }
 
-      // item.price contains the price per service unit
-      // item.quantity is the order multiplier (1, 2, 3, etc.)
-      // item.selectedOptions.selectedQuantity contains the total service quantity
+      // item.price contains the total cart item price
+      // According to user feedback: "consider the line item total * 1 as price"
+      // The cart item price is already the final calculated total, so use it directly
       
       const actualQuantity = item.selectedOptions.selectedQuantity || item.quantity
-      const totalPrice = item.price * item.quantity // Calculate total price
-      const unitPrice = item.price / (item.selectedOptions.selectedQuantity || 1) // Calculate unit price
+      const totalPrice = item.price // item.price is already the total for this cart item
+      
+      console.log(`[OrderService] Line item pricing for ${product.name}:`, {
+        itemPrice: item.price,
+        quantity: item.quantity,
+        totalPrice: totalPrice,
+        selectedQuantity: actualQuantity
+      })
 
       const lineItem: OrderLineItem = {
         name: `${product.name} - ${actualQuantity.toLocaleString('de-DE')} Stück`,
-        quantity: item.quantity, // Use the actual order quantity
-        price: item.price.toFixed(2), // Price per unit
-        total: totalPrice.toFixed(2), // Total price (price × quantity)
+        quantity: 1, // Always use quantity of 1 as per user requirement "line item total * 1"
+        price: totalPrice.toFixed(2), // Use the total cart price as the unit price
+        total: totalPrice.toFixed(2), // Same as price since quantity is 1
         meta_data: [
           { key: '_service_type', value: product.category },
           { key: '_youtube_url', value: item.selectedOptions.url || '' },
           { key: '_speed_option', value: item.selectedOptions.speed || '' },
           { key: '_target_option', value: item.selectedOptions.target || '' },
           { key: '_selected_quantity', value: actualQuantity },
-          { key: '_unit_price', value: unitPrice.toFixed(4) },
+          { key: '_cart_quantity', value: item.quantity },
+          { key: '_total_price', value: totalPrice.toFixed(2) },
           { key: '_product_slug', value: product.slug },
           { key: '_order_timestamp', value: item.timestamp },
           { key: '_virtual_service', value: 'yes' }

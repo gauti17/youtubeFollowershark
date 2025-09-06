@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Layout from '../components/Layout'
 import styled from 'styled-components'
+import { useToast } from '../components/Toast'
 
 const Container = styled.div`
   max-width: 1200px;
@@ -243,6 +244,7 @@ const SuccessMessage = styled.div`
 `
 
 const ContactPage: React.FC = () => {
+  const { showFeedback, isMobile } = useSmartFeedback()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -453,7 +455,7 @@ const ContactPage: React.FC = () => {
               <ContactDetail style={{ marginTop: '12px' }}>
                 <ContactLink href="#" onClick={(e) => {
                   e.preventDefault();
-                  alert('Live Chat wird in Kürze verfügbar sein!');
+                  showFeedback('Live Chat wird in Kürze verfügbar sein!', 'info');
                 }}>
                   Chat starten
                 </ContactLink>

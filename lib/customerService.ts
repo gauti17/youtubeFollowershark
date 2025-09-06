@@ -40,9 +40,14 @@ export class CustomerService {
    */
   async createCustomer(formData: CheckoutFormData): Promise<CustomerCreateResult> {
     try {
+      console.log(`[CustomerService] Starting customer creation process for email: ${formData.email}`)
+      
       // First check if customer already exists
       const existingCustomer = await this.customerExists(formData.email)
+      console.log(`[CustomerService] Existing customer check result:`, existingCustomer)
+      
       if (existingCustomer.exists) {
+        console.log(`[CustomerService] Customer already exists with ID: ${existingCustomer.customerId}`)
         return {
           success: true,
           customerId: existingCustomer.customerId,
@@ -114,12 +119,19 @@ export class CustomerService {
       // Handle specific WooCommerce errors
       const errorMessage = error.message || error.toString()
       
+      console.log(`[CustomerService] Customer creation failed with error: ${errorMessage}`)
+      
       // Handle duplicate email error (WordPress user exists but not WooCommerce customer)
       if (errorMessage.includes('email') && (errorMessage.includes('exists') || errorMessage.includes('already')) || 
           errorMessage.includes('registration-error-email-exists')) {
+        console.log(`[CustomerService] Detected duplicate email error, checking for existing WooCommerce customer`)
+        
         // Try to find the existing customer
         const existingCustomer = await this.customerExists(formData.email)
+        console.log(`[CustomerService] Double-check existing customer result:`, existingCustomer)
+        
         if (existingCustomer.exists) {
+          console.log(`[CustomerService] Found existing WooCommerce customer, using ID: ${existingCustomer.customerId}`)
           return {
             success: true,
             customerId: existingCustomer.customerId,
@@ -127,11 +139,13 @@ export class CustomerService {
           }
         } else {
           // WordPress user exists but no WooCommerce customer profile
-          // This is a known limitation - we cannot automatically convert WordPress users to WooCommerce customers via API
+          console.log(`[CustomerService] WordPress user exists but no WooCommerce customer profile found`)
+          console.log(`[CustomerService] This indicates the email ${formData.email} has a WordPress user but not a WooCommerce customer`)
+          
           // Return a more informative error message
           return {
             success: false,
-            error: 'Ein WordPress-Benutzer mit dieser E-Mail-Adresse existiert bereits. Bitte verwenden Sie eine andere E-Mail-Adresse oder loggen Sie sich ein.'
+            error: `Ein WordPress-Benutzer mit der E-Mail-Adresse "${formData.email}" existiert bereits, aber kein WooCommerce-Kundenprofil. Bitte verwenden Sie eine andere E-Mail-Adresse oder kontaktieren Sie den Support.`
           }
         }
       }

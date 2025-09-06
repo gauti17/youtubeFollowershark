@@ -407,7 +407,7 @@ const FAQPage: React.FC = () => {
         {...faqSEO}
         structuredData={faqStructuredData}
       />
-      <Layout 
+      <Layout noSEO 
         title={faqSEO.title}
         description={faqSEO.description}
         keywords={faqSEO.keywords?.join(', ') || ''}

@@ -1,31 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useCart } from '../lib/CartContext'
 import styled from 'styled-components'
-import dynamic from 'next/dynamic'
-
-// Lazy load PayPal script only when needed
-const loadPayPalScript = () => {
-  return new Promise<void>((resolve, reject) => {
-    if (typeof window !== 'undefined' && window.paypal) {
-      resolve()
-      return
-    }
-
-    const script = document.createElement('script')
-    script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=EUR&disable-funding=credit,card`
-    script.async = true
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error('PayPal SDK failed to load'))
-    document.body.appendChild(script)
-  })
-}
-
-declare global {
-  interface Window {
-    paypal?: any
-  }
-}
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 
 interface PayPalButtonProps {
   amount: string
@@ -40,6 +17,7 @@ interface PayPalButtonProps {
         target?: string
         url?: string
         selectedQuantity?: number
+        baseServiceQuantity?: number
       }
     }>
     customerInfo: {
@@ -53,7 +31,7 @@ interface PayPalButtonProps {
     }
     totalAmount: string
   }
-  getOrderData?: () => any // Function to get fresh order data
+  getOrderData?: () => any
   onSuccess?: (data: any) => void
   onError?: (error: any) => void
   onCancel?: () => void
@@ -70,24 +48,6 @@ const PayPalContainer = styled.div<{ $disabled: boolean }>`
   }
 `
 
-const LoadingOverlay = styled.div<{ $show: boolean }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
-  display: ${props => props.$show ? 'flex' : 'none'};
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  font-size: 14px;
-  color: #4a5568;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  z-index: 10;
-`
-
 const ErrorMessage = styled.div`
   background: #fef2f2;
   border: 1px solid #fecaca;
@@ -97,6 +57,34 @@ const ErrorMessage = styled.div`
   font-size: 14px;
   margin-bottom: 16px;
   font-family: 'Inter', sans-serif;
+`
+
+const LoadingMessage = styled.div`
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+
+const Spinner = styled.div`
+  width: 16px;
+  height: 16px;
+  border: 2px solid #0369a1;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 `
 
 const PayPalButton: React.FC<PayPalButtonProps> = ({
@@ -109,264 +97,184 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
   onError,
   onCancel
 }) => {
-  const paypalRef = useRef<HTMLDivElement>(null)
-  const buttonRendered = useRef(false)
-  const { clearCart } = useCart()
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(true)
+  const { clearCart } = useCart()
   const [error, setError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  useEffect(() => {
-    let cleanup: (() => void) | undefined
+  const paypalOptions = {
+    'client-id': process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
+    currency: currency,
+    intent: 'capture',
+    'disable-funding': 'credit,card'
+  }
 
-    const loadPayPalScript = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
-        buttonRendered.current = false // Reset button rendered flag
+  const createOrder = async () => {
+    try {
+      setIsProcessing(true)
+      setError(null)
 
-        // Check if PayPal script is already loaded
-        if (window.paypal) {
-          renderPayPalButton()
-          return
-        }
+      // Get fresh order data for validation
+      const currentOrderData = getOrderData ? getOrderData() : orderData
+      const { customerInfo } = currentOrderData
 
-        // Check if script is already being loaded
-        const existingScript = document.querySelector(`script[src*="paypal.com/sdk/js"]`)
-        if (existingScript) {
-          // Check if script is already loaded
-          if ((existingScript as any).readyState === 'complete' || window.paypal) {
-            if (window.paypal) {
-              renderPayPalButton()
-            } else {
-              setError('PayPal SDK konnte nicht geladen werden.')
-              setIsLoading(false)
-            }
-            return
-          }
-          
-          // Wait for existing script to load
-          existingScript.addEventListener('load', () => {
-            if (window.paypal) {
-              renderPayPalButton()
-            } else {
-              setError('PayPal SDK konnte nicht geladen werden.')
-              setIsLoading(false)
-            }
-          })
-          
-          existingScript.addEventListener('error', () => {
-            setError('Fehler beim Laden der PayPal SDK.')
-            setIsLoading(false)
-          })
-          return
-        }
+      console.log('PayPal - Creating order with data:', JSON.stringify(currentOrderData, null, 2))
 
-        // Load PayPal script
-        const script = document.createElement('script')
-        script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=${currency}&intent=capture&disable-funding=credit,card`
-        script.async = true
-        
-        script.onload = () => {
-          if (window.paypal) {
-            renderPayPalButton()
-          } else {
-            setError('PayPal SDK konnte nicht geladen werden.')
-            setIsLoading(false)
-          }
-        }
-
-        script.onerror = () => {
-          setError('Fehler beim Laden der PayPal SDK.')
-          setIsLoading(false)
-        }
-
-        document.head.appendChild(script)
-
-        cleanup = () => {
-          // Reset button rendered flag on cleanup
-          buttonRendered.current = false
-        }
-      } catch (err) {
-        setError('Unerwarteter Fehler beim Laden von PayPal.')
-        setIsLoading(false)
+      // Validate required fields
+      if (!customerInfo.email || !customerInfo.firstName || !customerInfo.country) {
+        throw new Error('Bitte füllen Sie alle erforderlichen Felder aus: Name, E-Mail und Land.')
       }
-    }
 
-    const renderPayPalButton = () => {
-      if (!paypalRef.current || !window.paypal) return
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(customerInfo.email)) {
+        throw new Error('Bitte geben Sie eine gültige E-Mail-Adresse ein.')
+      }
+
+      const response = await fetch('/api/payments/paypal/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(currentOrderData),
+      })
+
+      const responseText = await response.text()
+      console.log('PayPal - API response:', responseText.substring(0, 500))
       
-      // Don't render if already rendered (unless forced)
-      if (buttonRendered.current) return
-
-      // Clear existing buttons
-      paypalRef.current.innerHTML = ''
-
+      let data
       try {
-        buttonRendered.current = true
-        window.paypal.Buttons({
-          style: {
-            layout: 'vertical',
-            color: 'gold',
-            shape: 'rect',
-            label: 'paypal',
-            height: 55,
-            tagline: false
-          },
-
-          // Create order on PayPal
-          createOrder: async () => {
-            try {
-              setIsProcessing(true)
-              setError(null)
-
-              // Get fresh order data for validation
-              const currentOrderData = getOrderData ? getOrderData() : orderData
-              const { customerInfo } = currentOrderData
-              console.log('PayPal validation - fresh orderData:', currentOrderData)
-              console.log('PayPal validation - customerInfo:', customerInfo)
-              
-              if (!customerInfo.email || !customerInfo.firstName || !customerInfo.country) {
-                console.error('PayPal validation failed:', {
-                  email: customerInfo.email,
-                  firstName: customerInfo.firstName, 
-                  country: customerInfo.country
-                })
-                throw new Error('Bitte füllen Sie alle erforderlichen Felder aus: Name, E-Mail und Land.')
-              }
-
-              // Basic email validation
-              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-              if (!emailRegex.test(customerInfo.email)) {
-                throw new Error('Bitte geben Sie eine gültige E-Mail-Adresse ein.')
-              }
-
-              const response = await fetch('/api/payments/paypal/create-order', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(currentOrderData),
-              })
-
-              const data = await response.json()
-
-              if (!response.ok || !data.success) {
-                throw new Error(data.error || 'Fehler beim Erstellen der PayPal-Bestellung')
-              }
-
-              return data.orderId
-            } catch (err) {
-              console.error('PayPal create order error:', err)
-              setError(err instanceof Error ? err.message : 'Fehler beim Erstellen der Bestellung')
-              setIsProcessing(false)
-              throw err
-            }
-          },
-
-          // Handle successful payment
-          onApprove: async (data: any) => {
-            try {
-              setIsProcessing(true)
-              setError(null)
-
-              const response = await fetch('/api/payments/paypal/capture-order', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  orderId: data.orderID,
-                  orderData
-                }),
-              })
-
-              const result = await response.json()
-
-              if (!response.ok || !result.success) {
-                throw new Error(result.error || 'Fehler bei der Zahlungsabwicklung')
-              }
-
-              // Clear cart
-              clearCart()
-
-              // Store order info for success page
-              localStorage.setItem('lastOrderId', result.wooCommerceOrderId?.toString() || '')
-              localStorage.setItem('lastOrderNumber', `WC-${result.wooCommerceOrderId}` || '')
-              localStorage.setItem('paypalTransactionId', result.paypalTransactionId || '')
-              localStorage.setItem('paypalOrderId', result.paypalOrderId || '')
-              localStorage.setItem('paymentAmount', result.amount?.value || orderData.totalAmount)
-              localStorage.setItem('paymentCurrency', result.amount?.currency_code || currency)
-              localStorage.setItem('customerEmail', orderData.customerInfo.email)
-
-              // Call success callback
-              if (onSuccess) {
-                onSuccess(result)
-              }
-
-              // Redirect to success page
-              router.push('/checkout/success')
-
-            } catch (err) {
-              console.error('PayPal capture error:', err)
-              setError(err instanceof Error ? err.message : 'Fehler bei der Zahlungsabwicklung')
-              
-              if (onError) {
-                onError(err)
-              }
-            } finally {
-              setIsProcessing(false)
-            }
-          },
-
-          // Handle payment cancellation
-          onCancel: (data: any) => {
-            console.log('PayPal payment cancelled:', data)
-            setIsProcessing(false)
-            
-            if (onCancel) {
-              onCancel()
-            }
-          },
-
-          // Handle payment errors
-          onError: (err: any) => {
-            console.error('PayPal error:', err)
-            setError('Ein Fehler ist bei der PayPal-Zahlung aufgetreten.')
-            setIsProcessing(false)
-            
-            if (onError) {
-              onError(err)
-            }
-          }
-        }).render(paypalRef.current)
-
-        setIsLoading(false)
-      } catch (err) {
-        console.error('PayPal button render error:', err)
-        setError('Fehler beim Rendern der PayPal-Schaltfläche.')
-        setIsLoading(false)
+        data = JSON.parse(responseText)
+      } catch (parseError) {
+        console.error('PayPal - Failed to parse JSON response:', parseError)
+        throw new Error('Server returned invalid response')
       }
-    }
 
-    if (!disabled) {
-      loadPayPalScript()
-    }
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Fehler beim Erstellen der PayPal-Bestellung')
+      }
 
-    return cleanup
-  }, [amount, currency, disabled])
+      console.log('PayPal - Order created successfully:', data.orderId)
+      return data.orderId
+
+    } catch (err) {
+      console.error('PayPal create order error:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Fehler beim Erstellen der Bestellung'
+      setError(errorMessage)
+      setIsProcessing(false)
+      throw err
+    }
+  }
+
+  const onApprove = async (data: any) => {
+    try {
+      setIsProcessing(true)
+      setError(null)
+
+      console.log('PayPal - Payment approved, capturing order:', data.orderID)
+
+      const response = await fetch('/api/payments/paypal/capture-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId: data.orderID,
+          orderData
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Fehler bei der Zahlungsabwicklung')
+      }
+
+      console.log('PayPal - Payment captured successfully:', result)
+
+      // Clear cart and store order info
+      clearCart()
+      
+      localStorage.setItem('lastOrderId', result.wooCommerceOrderId?.toString() || '')
+      localStorage.setItem('lastOrderNumber', `WC-${result.wooCommerceOrderId}` || '')
+      localStorage.setItem('paypalTransactionId', result.paypalTransactionId || '')
+      localStorage.setItem('paypalOrderId', result.paypalOrderId || '')
+      localStorage.setItem('paymentAmount', result.amount?.value || orderData.totalAmount)
+      localStorage.setItem('paymentCurrency', result.amount?.currency_code || currency)
+      localStorage.setItem('customerEmail', orderData.customerInfo.email)
+
+      if (onSuccess) {
+        onSuccess(result)
+      }
+
+      // Redirect to success page
+      router.push('/checkout/success')
+
+    } catch (err) {
+      console.error('PayPal capture error:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Fehler bei der Zahlungsabwicklung'
+      setError(errorMessage)
+      
+      if (onError) {
+        onError(err)
+      }
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const onErrorHandler = (err: any) => {
+    console.error('PayPal error:', err)
+    setError('Ein Fehler ist bei der PayPal-Zahlung aufgetreten.')
+    setIsProcessing(false)
+    
+    if (onError) {
+      onError(err)
+    }
+  }
+
+  const onCancelHandler = () => {
+    console.log('PayPal payment cancelled')
+    setIsProcessing(false)
+    
+    if (onCancel) {
+      onCancel()
+    }
+  }
+
+  if (!paypalOptions['client-id']) {
+    return <ErrorMessage>PayPal Client ID nicht konfiguriert</ErrorMessage>
+  }
 
   return (
     <>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       
-      <PayPalContainer $disabled={disabled || isLoading}>
-        <div ref={paypalRef} />
-        
-        <LoadingOverlay $show={isLoading || isProcessing}>
-          {isLoading ? 'PayPal wird geladen...' : 'Zahlung wird verarbeitet...'}
-        </LoadingOverlay>
+      {isProcessing && (
+        <LoadingMessage>
+          <Spinner />
+          Zahlung wird verarbeitet...
+        </LoadingMessage>
+      )}
+      
+      <PayPalContainer $disabled={disabled || isProcessing}>
+        <PayPalScriptProvider options={paypalOptions}>
+          <PayPalButtons
+            disabled={disabled || isProcessing}
+            style={{
+              layout: 'vertical',
+              color: 'gold',
+              shape: 'pill',
+              label: 'paypal',
+              height: 55,
+              tagline: false
+            }}
+            createOrder={createOrder}
+            onApprove={onApprove}
+            onError={onErrorHandler}
+            onCancel={onCancelHandler}
+          />
+        </PayPalScriptProvider>
       </PayPalContainer>
     </>
   )

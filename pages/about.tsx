@@ -240,7 +240,7 @@ const AboutPage: React.FC = () => {
         {...aboutSEO}
         structuredData={aboutStructuredData}
       />
-      <Layout 
+      <Layout noSEO 
         title={aboutSEO.title}
         description={aboutSEO.description}
         keywords={aboutSEO.keywords?.join(', ') || ''}

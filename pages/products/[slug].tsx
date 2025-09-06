@@ -9,6 +9,8 @@ import { YouTubeUrlValidator } from '../../lib/urlValidator'
 import { formatNumber } from '../../lib/formatUtils'
 import SEO from '../../components/SEO'
 import { productSEOConfigs, generateStructuredData } from '../../lib/seo'
+import { useSmartFeedback } from '../../components/SmartFeedback'
+import DynamicButton from '../../components/DynamicButton'
 
 interface ProductPageProps {
   product: Product
@@ -1140,6 +1142,7 @@ const FAQAnswer = styled.div`
 
 const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   const { addItem } = useCart()
+  const { showFeedback, isMobile } = useSmartFeedback()
   const [quantity, setQuantity] = useState(product.quantityOptions[0]) // Service quantity (100, 200, etc.)
   const [orderQuantity, setOrderQuantity] = useState(1) // Order multiplier (1, 2, 3, etc.)
   const [speedOption, setSpeedOption] = useState(product.speedOptions[0].id)
@@ -1147,6 +1150,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   const [inputValue, setInputValue] = useState('')
   const [urlError, setUrlError] = useState<string>('')
   const [isUrlValid, setIsUrlValid] = useState(false)
+  const [buttonState, setButtonState] = useState<'default' | 'loading' | 'success' | 'error'>('default')
   
   // Memoize scroll functions
   const scrollLeft = useCallback(() => {
@@ -1193,18 +1197,38 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     }, 500)
   }, [validateUrl])
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    // Set loading state for mobile
+    if (isMobile) {
+      setButtonState('loading')
+    }
+
     // Validate URL before adding to cart
     if (!inputValue.trim()) {
-      alert('Bitte geben Sie eine YouTube-URL ein.')
+      if (isMobile) {
+        setButtonState('error')
+        setUrlError('Bitte geben Sie eine YouTube-URL ein.')
+        setTimeout(() => setButtonState('default'), 2000)
+      } else {
+        showFeedback('Bitte geben Sie eine YouTube-URL ein.', 'warning')
+      }
       return
     }
 
     const validation = YouTubeUrlValidator.validateYouTubeUrl(inputValue.trim(), product.inputType)
     if (!validation.isValid) {
-      alert(`Ungültige URL: ${validation.error}`)
+      if (isMobile) {
+        setButtonState('error')
+        setUrlError(`Ungültige URL: ${validation.error}`)
+        setTimeout(() => setButtonState('default'), 2000)
+      } else {
+        showFeedback(`Ungültige URL: ${validation.error}`, 'error')
+      }
       return
     }
+
+    // Clear any previous errors
+    setUrlError('')
 
     // Calculate final price with selected options
     let basePrice = product.basePrice
@@ -1228,8 +1252,37 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
       }
     }
     
-    // Use the same calculation as the display price
-    const finalPrice = parseFloat(prices.total)
+    // Use the unit price (before order quantity multiplication) for cart item
+    const cartSpeedOption = product.speedOptions.find(opt => opt.id === speedOption)
+    const cartTargetOption = product.targetOptions?.find(opt => opt.id === targetOption)
+    const speedPrice = cartSpeedOption ? cartSpeedOption.price : 0
+    const targetPrice = cartTargetOption ? cartTargetOption.price : 0
+    
+    // Calculate unit price using same logic as pricing display but without order quantity multiplication
+    const priceBreakdown = calculatePriceWithDiscount(
+      product.basePrice,
+      quantity,
+      0, // Don't include speed price in discount calculation
+      targetPrice
+    )
+    const unitPrice = priceBreakdown.total + speedPrice
+    
+    console.log(`[ProductPage] Adding to cart - ${product.name}:`, {
+      orderQuantity: orderQuantity,
+      serviceQuantity: quantity,
+      totalServiceQuantity: quantity * orderQuantity,
+      unitPrice: unitPrice,
+      displayTotal: parseFloat(prices.total),
+      speedOption: speedOption,
+      targetOption: targetOption,
+      priceBreakdownDetails: {
+        basePrice: product.basePrice,
+        serviceQuantity: quantity,
+        targetPrice: targetPrice,
+        speedPrice: speedPrice,
+        pricingTotal: priceBreakdown.total
+      }
+    })
     
     // Get option names for display
     const speedName = product.speedOptions.find(option => option.id === speedOption)?.name || ''
@@ -1238,17 +1291,23 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     addItem({
       productId: product.id,
       quantity: orderQuantity, // Use the order quantity multiplier
-      price: finalPrice, // Total price for this configuration
+      price: unitPrice, // Unit price - will be multiplied by cart with quantity
       selectedOptions: {
         speed: speedName,
         target: targetName,
         url: inputValue.trim(),
-        selectedQuantity: quantity * orderQuantity // Store the total quantity (service qty × order qty)
+        selectedQuantity: quantity * orderQuantity, // Store the total quantity (service qty × order qty)
+        baseServiceQuantity: quantity // Store the original service quantity for backend calculation
       }
     })
     
     // Show success feedback
-    alert(`✅ Erfolgreich hinzugefügt: ${formatNumber(quantity)} ${product.name}`)
+    if (isMobile) {
+      setButtonState('success')
+      setTimeout(() => setButtonState('default'), 2000)
+    } else {
+      showFeedback(`✅ Erfolgreich hinzugefügt: ${formatNumber(quantity * orderQuantity)} ${product.name}`, 'success')
+    }
   }
 
   // Memoize expensive price calculations
@@ -1751,12 +1810,11 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
             )}
           </VideoInputSection>
 
-          <AddToCartButton
+          <DynamicButton
+            state={buttonState}
             onClick={handleAddToCart}
             disabled={!inputValue.trim() || !isUrlValid || !!urlError}
-          >
-            🛒 In den Warenkorb
-          </AddToCartButton>
+          />
         </RightColumn>
       </Container>
 

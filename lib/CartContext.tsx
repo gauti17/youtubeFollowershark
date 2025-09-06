@@ -10,6 +10,7 @@ export interface CartItem {
     target?: string
     url?: string
     selectedQuantity?: number
+    baseServiceQuantity?: number
   }
   timestamp: number
 }
@@ -156,9 +157,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   useEffect(() => {
     if (isLoaded) {
       console.log('Saving cart to localStorage:', state)
-      localStorage.setItem('youshark_cart', JSON.stringify(state))
+      localStorage.setItem('youshark_cart', JSON.stringify({
+        items: state.items,
+        total: state.total
+      }))
     }
-  }, [state, isLoaded])
+  }, [state.items, state.total, isLoaded])
 
   const addItem = async (item: Omit<CartItem, 'id' | 'timestamp'>) => {
     const operationId = `add_${Date.now()}`

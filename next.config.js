@@ -5,9 +5,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   poweredByHeader: false,
   compress: true,
+  outputFileTracingRoot: __dirname,
   images: {
     domains: ['localhost'],
     formats: ['image/webp', 'image/avif'],

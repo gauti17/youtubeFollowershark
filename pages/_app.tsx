@@ -4,6 +4,7 @@ import GlobalStyles from '../styles/GlobalStyles'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { LoadingOverlay } from '../components/Loading'
+import { ToastProvider } from '../components/Toast'
 
 // Google Analytics
 declare global {
@@ -83,10 +84,12 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <CartProvider>
-      <GlobalStyles />
-      <Component {...pageProps} />
-      <LoadingOverlay show={isPageLoading} text="Seite wird geladen..." />
-    </CartProvider>
+    <ToastProvider>
+      <CartProvider>
+        <GlobalStyles />
+        <Component {...pageProps} />
+        <LoadingOverlay show={isPageLoading} text="Seite wird geladen..." />
+      </CartProvider>
+    </ToastProvider>
   )
 }

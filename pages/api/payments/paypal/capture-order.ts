@@ -70,15 +70,76 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     try {
-      // Convert cart items to the format expected by orderService
-      const cartItems = orderData.items.map(item => ({
-        id: `${item.productId}_${Date.now()}`,
+      // For WooCommerce, we need to re-calculate the cart items with prices
+      // since the orderData from frontend doesn't include calculated prices
+      console.log('[Capture Order] Calculating cart item prices for WooCommerce...')
+      
+      const cartItems = []
+      for (const item of orderData.items) {
+        const { products, calculatePrice } = await import('../../../../data/products')
+        const product = products.find(p => p.id === item.productId)
+        if (!product) {
+          throw new Error(`Product not found: ${item.productId}`)
+        }
+
+        // Get option prices using same logic as PayPal create-order
+        let speedPrice = 0
+        let targetPrice = 0
+
+        if (item.selectedOptions.speed && product.speedOptions) {
+          const speedOption = product.speedOptions.find(opt => 
+            opt.name === item.selectedOptions.speed || opt.id === item.selectedOptions.speed
+          )
+          if (speedOption) {
+            speedPrice = speedOption.price
+            console.log(`[Capture Order] Found speed option: ${speedOption.name} (+€${speedPrice})`)
+          }
+        }
+
+        if (item.selectedOptions.target && product.targetOptions) {
+          const targetOption = product.targetOptions.find(opt => 
+            opt.name === item.selectedOptions.target || opt.id === item.selectedOptions.target
+          )
+          if (targetOption) {
+            targetPrice = targetOption.price
+            console.log(`[Capture Order] Found target option: ${targetOption.name} (+€${targetPrice})`)
+          }
+        }
+
+        // Calculate using EXACT same logic as PayPal create-order
+        const selectedQuantity = item.selectedOptions.selectedQuantity || item.quantity
+        const serviceQuantity = selectedQuantity / item.quantity
+        const pricing = calculatePrice(product.basePrice, serviceQuantity, 0, targetPrice)
+        const unitPrice = pricing.total + speedPrice
+        const itemTotal = unitPrice * item.quantity
+
+        console.log(`[Capture Order] Price calculation for ${product.name}:`, {
+          selectedQuantity,
+          serviceQuantity,
+          cartQuantity: item.quantity,
+          basePrice: product.basePrice,
+          targetPrice,
+          speedPrice,
+          pricingTotal: pricing.total,
+          unitPrice,
+          itemTotal
+        })
+
+        cartItems.push({
+          id: `${item.productId}_${Date.now()}`,
+          productId: item.productId,
+          quantity: item.quantity,
+          price: itemTotal, // This should now have the calculated total
+          selectedOptions: item.selectedOptions,
+          timestamp: Date.now()
+        })
+      }
+
+      console.log('[Capture Order] Final cart items:', cartItems.map(item => ({
         productId: item.productId,
-        quantity: item.selectedOptions.selectedQuantity || item.quantity,
-        price: 0, // Will be calculated by orderService
-        selectedOptions: item.selectedOptions,
-        timestamp: Date.now()
-      }))
+        quantity: item.quantity,
+        price: item.price
+      })))
 
       // Create order in WooCommerce
       const wooCommerceOrder = await orderService.createOrder(

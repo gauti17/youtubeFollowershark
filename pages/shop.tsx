@@ -416,7 +416,7 @@ const ShopPage: React.FC = () => {
         {...shopSEO}
         structuredData={shopStructuredData}
       />
-      <Layout 
+      <Layout noSEO 
         title={shopSEO.title}
         description={shopSEO.description}
         keywords={shopSEO.keywords?.join(', ') || ''}
