@@ -458,6 +458,8 @@ const VideoInput = styled.input<{ $hasError?: boolean; $isValid?: boolean }>`
   font-weight: 400;
   letter-spacing: -0.01em;
   transition: all 0.2s ease;
+  color: #374151;
+  background: white;
   
   @media (max-width: 480px) {
     padding: 12px 12px 12px 40px;
