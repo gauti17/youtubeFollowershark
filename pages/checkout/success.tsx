@@ -10,8 +10,11 @@ const SuccessContainer = styled.div`
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   padding: 60px 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  max-width: 800px;
+  margin: 0 auto;
   
   @media (max-width: 768px) {
     padding: 40px 16px;
@@ -24,11 +27,11 @@ const MainSuccessCard = styled.div`
   padding: 80px 60px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
   text-align: center;
-  max-width: 700px;
   width: 100%;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(16, 185, 129, 0.1);
+  margin-bottom: 40px;
   
   &::before {
     content: '';
@@ -417,66 +420,135 @@ const TrustSignals = styled.div`
   }
 `
 
-const RecommendationCard = styled.div`
+const PeopleAlsoBuySection = styled.div`
   background: white;
-  border: 2px solid #f1f5f9;
   border-radius: 20px;
   padding: 40px;
-  margin-top: 40px;
-  text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  width: 100%;
   
   @media (max-width: 480px) {
     padding: 32px 24px;
   }
 `
 
-const RecommendationTitle = styled.h3`
+const SectionTitle = styled.h3`
   font-size: 24px;
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-family: 'Inter', sans-serif;
+  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   
   &::before {
-    content: '🎯';
+    content: '🛒';
     font-size: 28px;
   }
 `
 
-const RecommendationSubtitle = styled.p`
+const SectionSubtitle = styled.p`
   font-size: 16px;
   color: #64748b;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
   font-family: 'Inter', sans-serif;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  text-align: center;
 `
 
-const ShopButton = styled(Link)`
+const ProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+`
+
+const ProductCard = styled(Link)`
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: block;
+  text-align: center;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #FF6B35;
+  }
+  
+  .product-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  
+  .product-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.4;
+  }
+  
+  .product-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #FF6B35;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 16px;
+    
+    .product-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .product-name {
+      font-size: 15px;
+    }
+    
+    .product-price {
+      font-size: 13px;
+    }
+  }
+`
+
+const ViewAllButton = styled(Link)`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%);
   color: white;
   padding: 16px 32px;
   border-radius: 14px;
   text-decoration: none;
   font-weight: 700;
   font-size: 16px;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
+  margin: 0 auto;
+  display: flex;
+  width: fit-content;
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
   }
 `
 
@@ -511,6 +583,22 @@ const SuccessPage: React.FC = () => {
 
   const formatPrice = (price: number) => {
     return formatPriceUtil(price)
+  }
+
+  // Get recommended products for "People also buy" section
+  const getRecommendedProducts = (): Product[] => {
+    // Show top 3 most popular products
+    const popularProducts = [
+      products.find(p => p.id === 'youtube-views'),
+      products.find(p => p.id === 'youtube-likes'),
+      products.find(p => p.id === 'youtube-subscribers')
+    ].filter(Boolean) as Product[]
+    
+    return popularProducts
+  }
+
+  const getProductStartingPrice = (product: Product): string => {
+    return formatPrice(product.basePrice * (product.quantityOptions[0] || 1000))
   }
 
   if (isLoading) {
@@ -601,15 +689,26 @@ const SuccessPage: React.FC = () => {
           </TrustSignals>
         </MainSuccessCard>
 
-        <RecommendationCard>
-          <RecommendationTitle>Maximieren Sie Ihren Erfolg</RecommendationTitle>
-          <RecommendationSubtitle>
-            Entdecken Sie unsere anderen professionellen YouTube Growth Services
-          </RecommendationSubtitle>
-          <ShopButton href="/shop">
-            Alle Services ansehen
-          </ShopButton>
-        </RecommendationCard>
+        <PeopleAlsoBuySection>
+          <SectionTitle>Das kaufen andere auch</SectionTitle>
+          <SectionSubtitle>
+            Maximieren Sie Ihren YouTube-Erfolg mit diesen beliebten Services
+          </SectionSubtitle>
+          
+          <ProductGrid>
+            {getRecommendedProducts().map((product) => (
+              <ProductCard key={product.id} href={`/products/${product.slug}`}>
+                <span className="product-icon">{product.icon}</span>
+                <div className="product-name">{product.name}</div>
+                <div className="product-price">ab {getProductStartingPrice(product)}</div>
+              </ProductCard>
+            ))}
+          </ProductGrid>
+          
+          <ViewAllButton href="/shop">
+            Alle Services entdecken →
+          </ViewAllButton>
+        </PeopleAlsoBuySection>
 
       </SuccessContainer>
     </Layout>
