@@ -244,7 +244,7 @@ const CartLink = styled.a`
   }
 `
 
-const CartCount = styled.span`
+const CartCount = styled.span<{ $count: number }>`
   background: #FF6B35;
   color: white;
   border-radius: 50%;
@@ -253,6 +253,54 @@ const CartCount = styled.span`
   min-width: 18px;
   text-align: center;
   margin-left: 8px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: ${props => props.$count > 0 ? 'cartPulse 0.6s ease-out' : 'none'};
+  transform-origin: center center;
+  
+  @keyframes cartPulse {
+    0% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.3);
+      background: #FF8B35;
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3);
+    }
+    50% {
+      transform: scale(1.1);
+      background: #FF6B35;
+    }
+    75% {
+      transform: scale(1.15);
+      box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+    }
+    100% {
+      transform: scale(1);
+      background: #FF6B35;
+      box-shadow: none;
+    }
+  }
+  
+  @keyframes cartBounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: scale(1);
+    }
+    40%, 43% {
+      transform: scale(1.2);
+    }
+  }
+  
+  /* Add a subtle bounce when count increases */
+  &.count-increased {
+    animation: cartBounce 0.8s ease-in-out;
+  }
+  
+  /* Add a glow effect for emphasis */
+  &.just-added {
+    box-shadow: 0 0 8px rgba(255, 107, 53, 0.6);
+    animation: cartPulse 0.6s ease-out;
+  }
 `
 
 const AuthLinks = styled.div`
@@ -401,6 +449,8 @@ const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [customer, setCustomer] = useState<Customer | null>(null)
   const [isClient, setIsClient] = useState(false)
+  const [prevCartCount, setPrevCartCount] = useState(0)
+  const [animationClass, setAnimationClass] = useState('')
   
   const cartItemCount = cartContext?.items?.reduce((total, item) => total + item.quantity, 0) || 0
 
@@ -434,6 +484,23 @@ const Header: React.FC = () => {
     window.addEventListener('storage', checkAuth)
     return () => window.removeEventListener('storage', checkAuth)
   }, [])
+
+  // Handle cart count changes and trigger animations
+  useEffect(() => {
+    if (cartItemCount > prevCartCount && prevCartCount > 0) {
+      // Cart count increased - trigger animation
+      setAnimationClass('just-added')
+      
+      // Remove animation class after animation completes
+      const timer = setTimeout(() => {
+        setAnimationClass('')
+      }, 600)
+      
+      return () => clearTimeout(timer)
+    }
+    
+    setPrevCartCount(cartItemCount)
+  }, [cartItemCount, prevCartCount])
 
   const handleLogout = () => {
     localStorage.removeItem('authToken')
@@ -492,7 +559,7 @@ const Header: React.FC = () => {
               <NavItem>
                 <CartLink onClick={() => router.push('/cart')}>
                   🛒 Warenkorb 
-                  <CartCount>{cartItemCount}</CartCount>
+                  <CartCount $count={cartItemCount} className={animationClass}>{cartItemCount}</CartCount>
                 </CartLink>
               </NavItem>
               
@@ -526,7 +593,7 @@ const Header: React.FC = () => {
             <MobileCartAndMenu>
               <MobileCartLink onClick={() => router.push('/cart')}>
                 <span className="cart-icon">🛒</span>
-                <CartCount>{cartItemCount}</CartCount>
+                <CartCount $count={cartItemCount} className={animationClass}>{cartItemCount}</CartCount>
               </MobileCartLink>
               
               <MobileMenuButton onClick={() => setMobileMenuOpen(true)}>

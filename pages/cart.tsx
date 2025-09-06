@@ -334,11 +334,22 @@ const ItemTotal = styled.div`
   justify-content: space-between;
   padding-top: 16px;
   border-top: 1px solid #e2e8f0;
+  gap: 12px;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
   
   .quantity {
     display: flex;
     align-items: center;
     gap: 12px;
+    
+    @media (max-width: 480px) {
+      gap: 8px;
+    }
     
     span {
       font-size: 16px;
@@ -346,6 +357,16 @@ const ItemTotal = styled.div`
       color: #4a5568;
       min-width: 80px;
       font-family: 'Inter', sans-serif;
+      
+      @media (max-width: 768px) {
+        font-size: 14px;
+        min-width: 60px;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 13px;
+        min-width: 50px;
+      }
     }
     
     button {
@@ -362,6 +383,18 @@ const ItemTotal = styled.div`
       font-weight: 600;
       color: #4a5568;
       transition: all 0.2s ease;
+      
+      @media (max-width: 768px) {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+      }
+      
+      @media (max-width: 480px) {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
       
       &:hover {
         background: #edf2f7;
@@ -382,6 +415,16 @@ const ItemTotal = styled.div`
       min-width: 40px;
       text-align: center;
       font-family: 'Inter', sans-serif;
+      
+      @media (max-width: 768px) {
+        font-size: 16px;
+        min-width: 36px;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 14px;
+        min-width: 32px;
+      }
     }
   }
   
@@ -390,6 +433,14 @@ const ItemTotal = styled.div`
     font-weight: 700;
     color: #FF6B35;
     font-family: 'Inter', sans-serif;
+    
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 16px;
+    }
   }
 `
 
