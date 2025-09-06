@@ -197,7 +197,7 @@ export const products: Product[] = [
       {
         id: 'delayed',
         name: 'Verzögert',
-        price: 7.99,
+        price: 12.99,
         description: 'Langsamere, natürlichere Lieferung'
       }
     ],
