@@ -1158,6 +1158,7 @@ const TrustText = styled.div`
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 `
 
+
 // Features Section
 const FeaturesSection = styled.section`
   padding: 80px 0;
@@ -1421,7 +1422,9 @@ const HomePage: React.FC = () => {
   }, [])
 
   const formatProductPrice = (product: any) => {
-    let price = product.basePrice
+    // Calculate starting price with minimum quantity
+    const minQuantity = product.quantityOptions[0] || 1000
+    let price = product.basePrice * minQuantity
     if (product.discount) {
       price = price * (1 - product.discount / 100)
     }
@@ -1429,8 +1432,11 @@ const HomePage: React.FC = () => {
   }
   
   const formatOriginalPrice = (product: any) => {
-    return formatPrice(product.basePrice)
+    // Calculate original price with minimum quantity (before discount)
+    const minQuantity = product.quantityOptions[0] || 1000
+    return formatPrice(product.basePrice * minQuantity)
   }
+  
   
   // Generate structured data for homepage
   const websiteStructuredData = generateStructuredData('website', {})
