@@ -8,6 +8,7 @@ interface DynamicButtonProps {
   onClick: () => void
   disabled?: boolean
   children?: React.ReactNode
+  price?: string
 }
 
 const pulse = keyframes`
@@ -121,11 +122,18 @@ const ButtonText = styled.span<{ $state: ButtonState }>`
   transition: all 0.3s ease;
 `
 
+const PriceText = styled.span`
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  margin-left: 6px;
+`
+
 export const DynamicButton: React.FC<DynamicButtonProps> = ({
   state,
   onClick,
   disabled = false,
-  children
+  children,
+  price
 }) => {
   const getButtonContent = () => {
     switch (state) {
@@ -155,7 +163,10 @@ export const DynamicButton: React.FC<DynamicButtonProps> = ({
         return (
           <>
             <ButtonIcon $state={state}>🛒</ButtonIcon>
-            <ButtonText $state={state}>{children || 'In den Warenkorb'}</ButtonText>
+            <ButtonText $state={state}>
+              {children || 'In den Warenkorb'}
+              {price && <PriceText> - {price}</PriceText>}
+            </ButtonText>
           </>
         )
     }

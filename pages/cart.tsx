@@ -648,7 +648,10 @@ const CartPage: React.FC = () => {
 
   const formatNumber = (num: number) => {
     // Use a consistent format that works on both server and client
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    if (typeof num !== 'number' || isNaN(num)) {
+      return '0'
+    }
+    return new Intl.NumberFormat('de-DE').format(num)
   }
 
   const getProductInfo = (productId: string) => {

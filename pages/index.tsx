@@ -1410,10 +1410,11 @@ const FAQAnswer = styled.div<{ $isOpen: boolean }>`
 `
 
 const HomePage: React.FC = () => {
-  const [isProductsLoading, setIsProductsLoading] = useState(true)
+  const [isProductsLoading, setIsProductsLoading] = useState(false)
 
   useEffect(() => {
     // Simulate loading products (since they're static, we'll just show skeleton for UX)
+    setIsProductsLoading(true)
     const timer = setTimeout(() => {
       setIsProductsLoading(false)
     }, 800)

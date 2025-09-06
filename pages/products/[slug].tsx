@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { Product, getProductBySlug, getAllProductSlugs, products, calculatePrice as calculatePriceWithDiscount, getQuantityDiscount } from '../../data/products'
 import { useCart } from '../../lib/CartContext'
 import { YouTubeUrlValidator } from '../../lib/urlValidator'
-import { formatNumber } from '../../lib/formatUtils'
+import { formatNumber, formatPrice } from '../../lib/formatUtils'
 import SEO from '../../components/SEO'
 import { productSEOConfigs, generateStructuredData } from '../../lib/seo'
 import { useSmartFeedback } from '../../components/SmartFeedback'
@@ -1347,6 +1347,27 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     }
   }, [product, quantity, orderQuantity, speedOption, targetOption])
 
+  // Calculate the current item price for the button display
+  const currentItemPrice = useMemo(() => {
+    const selectedSpeed = product.speedOptions.find(option => option.id === speedOption)
+    const selectedTarget = product.targetOptions?.find(option => option.id === targetOption)
+    
+    const targetPrice = selectedTarget ? selectedTarget.price : 0
+    const speedPrice = selectedSpeed ? selectedSpeed.price : 0
+    
+    const priceBreakdown = calculatePriceWithDiscount(
+      product.basePrice,
+      quantity,
+      0,
+      targetPrice
+    )
+    
+    const unitPrice = priceBreakdown.total + speedPrice
+    const totalPrice = unitPrice * orderQuantity
+    
+    return formatPrice(totalPrice)
+  }, [product, quantity, orderQuantity, speedOption, targetOption])
+
   // Memoize other products calculation for recommendations
   const otherProducts = useMemo(() => 
     products.filter(p => p.id !== product.id).slice(0, 6)
@@ -1816,6 +1837,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
             state={buttonState}
             onClick={handleAddToCart}
             disabled={!inputValue.trim() || !isUrlValid || !!urlError}
+            price={currentItemPrice}
           />
         </RightColumn>
       </Container>

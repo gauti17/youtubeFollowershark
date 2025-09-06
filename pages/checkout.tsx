@@ -508,6 +508,59 @@ const SecurityNote = styled.div`
   }
 `
 
+const TermsSection = styled.div`
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+`
+
+const TermsCheckbox = styled.label`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #4a5568;
+  font-family: 'Inter', sans-serif;
+  
+  input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    accent-color: #FF6B35;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .terms-text {
+    flex: 1;
+    
+    a {
+      color: #FF6B35;
+      text-decoration: underline;
+      font-weight: 500;
+      
+      &:hover {
+        color: #e55a2b;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    gap: 10px;
+    
+    input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+    }
+  }
+`
+
 const CouponSection = styled.div`
   margin-bottom: 24px;
   padding: 20px;
@@ -642,6 +695,7 @@ const CheckoutPage: React.FC = () => {
     email: '',
     country: ''
   })
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   const formatPrice = (price: number) => {
     return formatPriceUtil(price)
@@ -888,7 +942,8 @@ const CheckoutPage: React.FC = () => {
   const isFormValid = () => {
     return formData.fullName && 
            formData.email && 
-           formData.country
+           formData.country &&
+           termsAccepted
   }
 
 
@@ -1188,11 +1243,24 @@ const CheckoutPage: React.FC = () => {
               </CheckoutButton>
             )}
 
+            <TermsSection>
+              <TermsCheckbox>
+                <input 
+                  type="checkbox" 
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                />
+                <div className="terms-text">
+                  Ich habe die <a href="/terms" target="_blank" rel="noopener noreferrer">Allgemeinen Geschäftsbedingungen</a>, 
+                  die <a href="/privacy" target="_blank" rel="noopener noreferrer">Datenschutzbestimmung</a> und 
+                  die <a href="/refund" target="_blank" rel="noopener noreferrer">Widerrufsbelehrung</a> gelesen und akzeptiert.
+                </div>
+              </TermsCheckbox>
+            </TermsSection>
+
             <SecurityNote>
               <span className="icon">🔒</span>
-              <span>
-                Ich habe die <a href="/terms" style={{ color: '#7c3aed' }}>Allgemeinen Geschäftsbedingungen</a>, die <a href="/privacy" style={{ color: '#7c3aed' }}>Datenschutzbestimmung</a> und die <a href="/refund" style={{ color: '#7c3aed' }}>Widerrufsbelehrung</a> gelesen und akzeptiert.
-              </span>
+              <span>Ihre Zahlung wird sicher über SSL verschlüsselt übertragen</span>
             </SecurityNote>
           </OrderSummary>
         </Container>
