@@ -61,11 +61,11 @@ const FilterSection = styled.div`
   }
 `
 
-const FilterButton = styled.button<{ active: boolean }>`
+const FilterButton = styled.button<{ $active: boolean }>`
   padding: 12px 24px;
-  border: 2px solid ${props => props.active ? '#FF6B35' : '#e2e8f0'};
-  background: ${props => props.active ? 'linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%)' : 'white'};
-  color: ${props => props.active ? 'white' : '#4a5568'};
+  border: 2px solid ${props => props.$active ? '#FF6B35' : '#e2e8f0'};
+  background: ${props => props.$active ? 'linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%)' : 'white'};
+  color: ${props => props.$active ? 'white' : '#4a5568'};
   border-radius: 50px;
   font-size: 14px;
   font-weight: 600;
@@ -77,8 +77,8 @@ const FilterButton = styled.button<{ active: boolean }>`
   
   &:hover {
     border-color: #FF6B35;
-    background: ${props => props.active ? 'linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%)' : 'rgba(255, 107, 53, 0.1)'};
-    color: ${props => props.active ? 'white' : '#FF6B35'};
+    background: ${props => props.$active ? 'linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%)' : 'rgba(255, 107, 53, 0.1)'};
+    color: ${props => props.$active ? 'white' : '#FF6B35'};
     transform: translateY(-2px);
   }
 `
@@ -401,10 +401,6 @@ const ShopPage: React.FC = () => {
     return filtered
   }, [activeFilter, searchTerm])
 
-  const formatPriceDisplay = (price: number) => {
-    return formatPrice(price)
-  }
-
   const calculateDiscountedPrice = (basePrice: number, discount?: number) => {
     if (!discount) return basePrice
     return basePrice * (1 - discount / 100)
@@ -447,7 +443,7 @@ const ShopPage: React.FC = () => {
             {categories.map(category => (
               <FilterButton
                 key={category.id}
-                active={activeFilter === category.id}
+                $active={activeFilter === category.id}
                 onClick={() => setActiveFilter(category.id)}
               >
                 {category.name}
@@ -488,10 +484,10 @@ const ShopPage: React.FC = () => {
                       <ProductPricing>
                         <div className="price">
                           <span className="from">ab</span>
-                          {formatPriceDisplay(discountedPrice)}
+                          {formatPrice(discountedPrice * 1000)}
                           {product.discount && (
                             <span className="original-price">
-                              {formatPriceDisplay(product.basePrice)}
+                              {formatPrice(product.basePrice * 1000)}
                             </span>
                           )}
                         </div>

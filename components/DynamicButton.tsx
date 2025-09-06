@@ -70,13 +70,14 @@ const StyledButton = styled.button<{ $state: ButtonState }>`
       case 'default':
       default:
         return css`
-          background: #2563eb;
+          background: linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%);
           color: white;
+          box-shadow: 0 4px 6px rgba(255, 107, 53, 0.2);
           
           &:hover {
-            background: #1d4ed8;
+            background: linear-gradient(135deg, #FF5722 0%, #FF6B35 100%);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 6px 12px rgba(255, 107, 53, 0.3);
           }
           
           &:active {
