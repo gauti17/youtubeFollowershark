@@ -191,12 +191,14 @@ export const products: Product[] = [
       {
         id: 'standard',
         name: 'Standard',
-        price: 0
+        price: 0,
+        description: 'Normale Liefergeschwindigkeit'
       },
       {
-        id: 'premium',
-        name: 'Premium',
-        price: 12.99
+        id: 'delayed',
+        name: 'Verzögert',
+        price: 7.99,
+        description: 'Langsamere, natürlichere Lieferung'
       }
     ],
     quantityOptions: [250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000],
