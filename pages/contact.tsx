@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Layout from '../components/Layout'
 import styled from 'styled-components'
 import { useToast } from '../components/Toast'
+import { useSmartFeedback } from '../components/SmartFeedback'
 
 const Container = styled.div`
   max-width: 1200px;

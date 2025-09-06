@@ -11,6 +11,7 @@ interface CreateOrderRequest {
       target?: string
       url?: string
       selectedQuantity?: number
+      baseServiceQuantity?: number
     }
   }>
   customerInfo: {
