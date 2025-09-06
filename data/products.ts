@@ -154,7 +154,7 @@ export const products: Product[] = [
       'Geschwindigkeit: 500 Abonnenten/Tag',
       'Lifetime Garantie'
     ],
-    basePrice: 0.5,
+    basePrice: 0.15,
     discount: 10,
     speedOptions: [
       {

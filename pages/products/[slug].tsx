@@ -1272,7 +1272,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
       serviceQuantity: quantity,
       totalServiceQuantity: quantity * orderQuantity,
       unitPrice: unitPrice,
-      displayTotal: parseFloat(prices.total),
+      displayTotal: unitPrice * orderQuantity,
       speedOption: speedOption,
       targetOption: targetOption,
       priceBreakdownDetails: {
