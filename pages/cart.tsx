@@ -128,7 +128,7 @@ const EmptyCart = styled.div`
   }
 `
 
-const ShopButton = styled(Link)`
+const ShopButtonWrapper = styled.a`
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -142,10 +142,12 @@ const ShopButton = styled(Link)`
   box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
+  cursor: pointer;
   
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(255, 107, 53, 0.4);
+    color: white;
   }
 `
 
@@ -686,10 +688,12 @@ const CartPage: React.FC = () => {
                 <div className="icon">🛒</div>
                 <h3>Ihr Warenkorb ist leer</h3>
                 <p>Entdecken Sie unsere Premium YouTube Growth Services und starten Sie noch heute!</p>
-                <ShopButton href="/">
-                  <span>🚀</span>
-                  Services entdecken
-                </ShopButton>
+                <Link href="/" passHref>
+                  <ShopButtonWrapper>
+                    <span>🚀</span>
+                    Services entdecken
+                  </ShopButtonWrapper>
+                </Link>
               </EmptyCart>
             ) : isCartLoading ? (
               // Show loading skeletons while cart is loading
