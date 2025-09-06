@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { CartContext } from '../lib/CartContext'
+import { formatPrice } from '../lib/formatUtils'
 
 const HeaderContainer = styled.header`
   background: rgba(255, 255, 255, 0.98);
@@ -232,31 +233,48 @@ const NavItem = styled.li`
 `
 
 const CartLink = styled.a`
-  background: #f8f9fa;
-  padding: 10px 15px;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%);
+  color: white;
+  padding: 12px 20px;
   border-radius: 25px;
   position: relative;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
   
   &:hover {
-    background: #e9ecef;
+    background: linear-gradient(135deg, #FF8E6B 0%, #FFB199 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+  }
+  
+  .cart-icon {
+    font-size: 16px;
+  }
+  
+  .cart-total {
+    font-weight: 700;
   }
 `
 
 const CartCount = styled.span<{ $count: number }>`
-  background: #FF6B35;
+  background: rgba(255, 255, 255, 0.2);
   color: white;
   border-radius: 50%;
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 11px;
   min-width: 18px;
   text-align: center;
-  margin-left: 8px;
   position: relative;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: ${props => props.$count > 0 ? 'cartPulse 0.6s ease-out' : 'none'};
   transform-origin: center center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   
   @keyframes cartPulse {
     0% {
@@ -417,22 +435,32 @@ const MobileCartAndMenu = styled.div`
 `
 
 const MobileCartLink = styled.div`
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%);
+  color: white;
   padding: 8px 12px;
   border-radius: 20px;
   position: relative;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  box-shadow: 0 3px 10px rgba(255, 107, 53, 0.3);
   
   &:hover {
-    background: #e9ecef;
+    background: linear-gradient(135deg, #FF8E6B 0%, #FFB199 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
   }
   
   .cart-icon {
-    font-size: 18px;
+    font-size: 16px;
+  }
+  
+  .cart-total {
+    font-weight: 700;
   }
 `
 
@@ -453,6 +481,7 @@ const Header: React.FC = () => {
   const [animationClass, setAnimationClass] = useState('')
   
   const cartItemCount = cartContext?.items?.reduce((total, item) => total + item.quantity, 0) || 0
+  const cartTotal = cartContext?.total || 0
 
   useEffect(() => {
     setIsClient(true)
@@ -558,7 +587,9 @@ const Header: React.FC = () => {
               </NavItem>
               <NavItem>
                 <CartLink onClick={() => router.push('/cart')}>
-                  🛒 Warenkorb 
+                  <span className="cart-icon">🛒</span>
+                  <span className="cart-total">{formatPrice(cartTotal)}</span>
+                  <span>- In den Warenkorb</span>
                   <CartCount $count={cartItemCount} className={animationClass}>{cartItemCount}</CartCount>
                 </CartLink>
               </NavItem>
@@ -593,6 +624,7 @@ const Header: React.FC = () => {
             <MobileCartAndMenu>
               <MobileCartLink onClick={() => router.push('/cart')}>
                 <span className="cart-icon">🛒</span>
+                <span className="cart-total">{formatPrice(cartTotal)}</span>
                 <CartCount $count={cartItemCount} className={animationClass}>{cartItemCount}</CartCount>
               </MobileCartLink>
               
