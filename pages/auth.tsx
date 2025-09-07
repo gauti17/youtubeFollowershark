@@ -478,23 +478,22 @@ const AuthPage: React.FC = () => {
     
     const token = localStorage.getItem('authToken')
     const storedCustomer = localStorage.getItem('customer')
-      
-      if (token && storedCustomer) {
-        try {
-          const customerData = JSON.parse(storedCustomer)
-          // Pre-fill form with existing user data
-          setFormData(prev => ({
-            ...prev,
-            email: customerData.email || '',
-            firstName: customerData.firstName || '',
-            lastName: customerData.lastName || '',
-            city: customerData.billing?.city || '',
-            postalCode: customerData.billing?.postcode || '',
-            country: customerData.billing?.country === 'DE' ? 'Deutschland' : customerData.billing?.country || 'Deutschland'
-          }))
-        } catch (error) {
-          console.error('Error parsing customer data:', error)
-        }
+    
+    if (token && storedCustomer) {
+      try {
+        const customerData = JSON.parse(storedCustomer)
+        // Pre-fill form with existing user data
+        setFormData(prev => ({
+          ...prev,
+          email: customerData.email || '',
+          firstName: customerData.firstName || '',
+          lastName: customerData.lastName || '',
+          city: customerData.billing?.city || '',
+          postalCode: customerData.billing?.postcode || '',
+          country: customerData.billing?.country === 'DE' ? 'Deutschland' : customerData.billing?.country || 'Deutschland'
+        }))
+      } catch (error) {
+        console.error('Error parsing customer data:', error)
       }
     }
   }, [isMounted])

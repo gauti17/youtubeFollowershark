@@ -710,29 +710,28 @@ const CheckoutPage: React.FC = () => {
     
     const token = localStorage.getItem('authToken')
     const storedCustomer = localStorage.getItem('customer')
-      
-      if (token && storedCustomer) {
-        try {
-          const customerData = JSON.parse(storedCustomer)
-          console.log('[Checkout] Auto-filling form with user data:', customerData)
-          
-          // Pre-fill form with existing user data
-          setFormData(prev => ({
-            ...prev,
-            fullName: `${customerData.first_name || ''} ${customerData.last_name || ''}`.trim() || 
-                      customerData.display_name || 
-                      (customerData.firstName && customerData.lastName ? 
-                      `${customerData.firstName} ${customerData.lastName}` : ''),
-            email: customerData.email || '',
-            country: customerData.billing?.country || customerData.country || 'Deutschland',
-            city: customerData.billing?.city || customerData.city || '',
-            postalCode: customerData.billing?.postcode || customerData.postalCode || ''
-          }))
-          
-          setIsUserLoggedIn(true)
-        } catch (error) {
-          console.error('[Checkout] Error parsing stored customer data:', error)
-        }
+    
+    if (token && storedCustomer) {
+      try {
+        const customerData = JSON.parse(storedCustomer)
+        console.log('[Checkout] Auto-filling form with user data:', customerData)
+        
+        // Pre-fill form with existing user data
+        setFormData(prev => ({
+          ...prev,
+          fullName: `${customerData.first_name || ''} ${customerData.last_name || ''}`.trim() || 
+                    customerData.display_name || 
+                    (customerData.firstName && customerData.lastName ? 
+                    `${customerData.firstName} ${customerData.lastName}` : ''),
+          email: customerData.email || '',
+          country: customerData.billing?.country || customerData.country || 'Deutschland',
+          city: customerData.billing?.city || customerData.city || '',
+          postalCode: customerData.billing?.postcode || customerData.postalCode || ''
+        }))
+        
+        setIsUserLoggedIn(true)
+      } catch (error) {
+        console.error('[Checkout] Error parsing stored customer data:', error)
       }
     }
   }, [isMounted])
