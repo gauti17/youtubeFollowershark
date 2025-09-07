@@ -35,69 +35,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const customer = customers[0]
 
-    // Use WooCommerce's built-in password reset functionality
-    // WooCommerce handles password reset tokens and emails automatically
-    // We'll trigger the WordPress lost password functionality via REST API
+    // Generate password reset token and store it in WooCommerce
+    // Since WordPress lost-password API endpoint doesn't exist, we'll handle it ourselves
+    const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
+    const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
     
-    try {
-      // Use WordPress REST API to trigger password reset
-      // This uses WooCommerce's built-in email system
-      const wpResponse = await fetch(`${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/wp-json/wp/v2/users/lost-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    // Store reset token in customer meta data
+    await wooCommerceAPI.put(`customers/${customer.id}`, {
+      meta_data: [
+        {
+          key: 'password_reset_token',
+          value: resetToken
         },
-        body: JSON.stringify({
-          user_login: email
-        })
-      })
-
-      if (wpResponse.ok) {
-        console.log('WooCommerce password reset email sent via WordPress API')
-      } else {
-        // If WordPress API fails, fall back to storing our own reset token
-        // Generate password reset token
-        const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
-        const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
-        
-        await wooCommerceAPI.put(`customers/${customer.id}`, {
-          meta_data: [
-            {
-              key: 'password_reset_token',
-              value: resetToken
-            },
-            {
-              key: 'password_reset_expiry',
-              value: expiryTime.toString()
-            }
-          ]
-        })
-        
-        console.log('Fallback: Reset token stored in WooCommerce customer meta')
-        console.log('Reset URL for manual sending:', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`)
-      }
-    } catch (wpError) {
-      console.error('WordPress API error:', wpError)
-      
-      // Fallback: Store reset token in WooCommerce
-      const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
-      const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
-      
-      await wooCommerceAPI.put(`customers/${customer.id}`, {
-        meta_data: [
-          {
-            key: 'password_reset_token',
-            value: resetToken
-          },
-          {
-            key: 'password_reset_expiry',
-            value: expiryTime.toString()
-          }
-        ]
-      })
-      
-      console.log('Fallback: Reset token stored after WP API error')
-    }
+        {
+          key: 'password_reset_expiry',
+          value: expiryTime.toString()
+        }
+      ]
+    })
+    
+    const resetUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
+    
+    console.log('Reset token generated and stored in WooCommerce')
+    console.log('Reset URL:', resetUrl)
+    
+    // TODO: Configure email service (Nodemailer, SendGrid, etc.) to send reset email
+    // For now, the reset URL is logged to console for manual testing
+    console.log(`Manual reset URL for ${email}:`, resetUrl)
 
     return res.status(200).json({
       success: true,
