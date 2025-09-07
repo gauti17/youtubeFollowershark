@@ -36,7 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const customer = customers[0]
 
     // Generate password reset token and store it in WooCommerce
-    // Since WordPress lost-password API endpoint doesn't exist, we'll handle it ourselves
     const resetToken = Buffer.from(`${customer.id}:${Date.now()}:${Math.random()}`).toString('base64url')
     const expiryTime = Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
     
@@ -56,12 +55,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     const resetUrl = `${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
     
-    console.log('Reset token generated and stored in WooCommerce')
-    console.log('Reset URL:', resetUrl)
-    
-    // TODO: Configure email service (Nodemailer, SendGrid, etc.) to send reset email
-    // For now, the reset URL is logged to console for manual testing
-    console.log(`Manual reset URL for ${email}:`, resetUrl)
+    // Try to trigger WooCommerce password reset email using WordPress lost password action
+    try {
+      const wpLostPasswordResponse = await fetch(`${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/wp-login.php?action=lostpassword`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          user_login: email,
+          redirect_to: '',
+          wp_submit: 'Get New Password'
+        })
+      })
+      
+      console.log('WordPress lost password response status:', wpLostPasswordResponse.status)
+      
+      if (wpLostPasswordResponse.status === 200) {
+        const responseText = await wpLostPasswordResponse.text()
+        if (responseText.includes('check your email') || responseText.includes('sent') || wpLostPasswordResponse.url.includes('checkemail')) {
+          console.log('WordPress password reset email sent successfully via native form')
+        } else {
+          console.log('WordPress password reset may have failed, using custom token')
+          console.log('Custom reset URL:', resetUrl)
+        }
+      } else {
+        console.log('WordPress lost password form failed, using custom token')
+        console.log('Custom reset URL:', resetUrl)
+      }
+    } catch (error) {
+      console.log('WordPress lost password error, using custom token:', error)
+      console.log('Custom reset URL:', resetUrl)
+    }
 
     return res.status(200).json({
       success: true,
