@@ -42,9 +42,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const saltRounds = 12
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-    // Create customer in WooCommerce
+    // Create customer in WooCommerce with password field
     const customerData = {
       email: email,
+      password: password, // Use WooCommerce native password field
       first_name: firstName,
       last_name: lastName,
       billing: {
