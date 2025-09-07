@@ -29,50 +29,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // In a real implementation, you would need to use WordPress authentication
     // For now, we'll implement a basic check against a stored hash in meta_data
     
-    // Try WordPress native authentication first
-    try {
-      // Use WordPress authentication endpoint
-      const wpAuthResponse = await fetch(`${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/wp-json/jwt-auth/v1/token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: email,
-          password: password
+    // Use our custom password hash stored in meta_data
+    const passwordMeta = customer.meta_data?.find((meta: any) => meta.key === '_password_hash')
+    
+    if (!passwordMeta) {
+      console.log('No password hash found for customer:', customer.id, 'Available meta keys:', customer.meta_data?.map((m: any) => m.key))
+      
+      // Check if this customer was created through order (no password set)
+      const registrationSource = customer.meta_data?.find((meta: any) => meta.key === '_registration_source')
+      
+      if (!registrationSource || registrationSource.value !== 'youshark_frontend') {
+        // Customer was created through order, needs password setup
+        return res.status(402).json({ 
+          error: 'Bitte setzen Sie Ihr Passwort zurück',
+          requirePasswordReset: true,
+          customerId: customer.id
         })
-      })
-
-      if (wpAuthResponse.ok) {
-        const authData = await wpAuthResponse.json()
-        console.log('WordPress authentication successful')
-        
-        // WordPress auth successful, proceed with login
       } else {
-        console.log('WordPress authentication failed, trying fallback method')
-        
-        // Fallback to meta_data password hash check
-        const passwordMeta = customer.meta_data?.find((meta: any) => meta.key === '_password_hash')
-        
-        if (!passwordMeta) {
-          console.log('No password hash found for customer:', customer.id, 'Available meta keys:', customer.meta_data?.map((m: any) => m.key))
-          return res.status(402).json({ 
-            error: 'Bitte setzen Sie Ihr Passwort zurück',
-            requirePasswordReset: true,
-            customerId: customer.id
-          })
-        }
-
-        // Basic password validation (in production, use proper hashing)
-        const bcrypt = require('bcryptjs')
-        const isValidPassword = await bcrypt.compare(password, passwordMeta.value)
-
-        if (!isValidPassword) {
-          return res.status(401).json({ error: 'Ungültige Anmeldedaten' })
-        }
+        // Customer was created through frontend but password hash is missing - this is an error
+        console.error('Customer created through frontend but password hash missing:', customer.id)
+        return res.status(500).json({ error: 'Kontoeinstellungen fehlen. Bitte kontaktieren Sie den Support.' })
       }
-    } catch (authError) {
-      console.log('Authentication error:', authError)
+    }
+
+    // Validate password using bcrypt
+    const bcrypt = require('bcryptjs')
+    const isValidPassword = await bcrypt.compare(password, passwordMeta.value)
+
+    if (!isValidPassword) {
       return res.status(401).json({ error: 'Ungültige Anmeldedaten' })
     }
 
