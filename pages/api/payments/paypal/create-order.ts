@@ -177,7 +177,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
 
       // Add to order description
-      orderDescription.push(`${selectedQuantity}x ${product.name}`)
+      orderDescription.push('YouTube Growth Plan')
       calculatedTotal += itemTotal
     }
 
