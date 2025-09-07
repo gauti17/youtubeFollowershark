@@ -34,6 +34,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Fetch orders for the customer
+    console.log('=== ORDERS FETCH DEBUG ===')
+    console.log('Fetching orders for customer ID:', customerId)
+    
     const ordersResponse = await wooCommerceAPI.get('orders', {
       customer: customerId,
       per_page: 50,
@@ -41,7 +44,49 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       order: 'desc'
     })
 
-    const orders = ordersResponse.data || []
+    console.log('Orders response type:', typeof ordersResponse)
+    console.log('Orders response keys:', Object.keys(ordersResponse || {}))
+    console.log('Orders response data available:', !!ordersResponse?.data)
+    console.log('Orders response direct array check:', Array.isArray(ordersResponse))
+    
+    // Handle both direct array response and response.data format
+    const orders = Array.isArray(ordersResponse) ? ordersResponse : (ordersResponse?.data || [])
+    
+    console.log('Final orders count:', orders.length)
+    
+    // If no orders found by customer ID, try searching by email as fallback
+    if (orders.length === 0) {
+      console.log('No orders found by customer ID, trying email fallback...')
+      
+      // Get customer details to find email
+      try {
+        const customerResponse = await wooCommerceAPI.get(`customers/${customerId}`)
+        const customerData = customerResponse?.email ? customerResponse : (customerResponse?.data || {})
+        
+        if (customerData.email) {
+          console.log('Searching for orders with email:', customerData.email)
+          
+          // Search orders by billing email
+          const ordersByEmailResponse = await wooCommerceAPI.get('orders', {
+            search: customerData.email,
+            per_page: 50,
+            orderby: 'date',
+            order: 'desc'
+          })
+          
+          const ordersByEmail = Array.isArray(ordersByEmailResponse) ? ordersByEmailResponse : (ordersByEmailResponse?.data || [])
+          console.log('Orders found by email search:', ordersByEmail.length)
+          
+          if (ordersByEmail.length > 0) {
+            orders.push(...ordersByEmail)
+          }
+        }
+      } catch (emailSearchError) {
+        console.log('Email fallback search failed:', emailSearchError.message)
+      }
+    }
+    
+    console.log('=== END ORDERS DEBUG ===')
 
     // Format orders for frontend
     const formattedOrders = orders.map((order: any) => ({

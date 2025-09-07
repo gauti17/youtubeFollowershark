@@ -90,7 +90,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     console.log('=== CREATED CUSTOMER DEBUG ===')
     console.log('Created customer ID:', customer.id)
+    console.log('Created customer email:', customer.email)
     console.log('Created customer meta_data:', JSON.stringify(customer.meta_data, null, 2))
+    console.log('Customer data being returned to frontend:', {
+      id: customer.id,
+      email: customer.email,
+      firstName: customer.first_name,
+      lastName: customer.last_name
+    })
     console.log('=== END REGISTRATION DEBUG ===')
 
     // Create JWT token

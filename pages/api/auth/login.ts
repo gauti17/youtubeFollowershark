@@ -31,6 +31,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Customer email:', customer.email)
     console.log('Customer meta_data:', JSON.stringify(customer.meta_data, null, 2))
     console.log('Customer full object keys:', Object.keys(customer))
+    console.log('Customer data being returned to frontend:', {
+      id: customer.id,
+      email: customer.email,
+      firstName: customer.first_name,
+      lastName: customer.last_name
+    })
     console.log('=== END CUSTOMER DEBUG ===')
 
     // Note: WooCommerce REST API doesn't support password verification directly
