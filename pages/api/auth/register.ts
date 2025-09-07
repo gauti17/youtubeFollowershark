@@ -79,11 +79,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ]
     }
 
+    console.log('=== REGISTRATION DEBUG ===')
+    console.log('Sending customer data:', JSON.stringify(customerData, null, 2))
+    
     const customer = await wooCommerceAPI.post('customers', customerData)
 
     if (!customer) {
       throw new Error('Customer creation failed')
     }
+    
+    console.log('=== CREATED CUSTOMER DEBUG ===')
+    console.log('Created customer ID:', customer.id)
+    console.log('Created customer meta_data:', JSON.stringify(customer.meta_data, null, 2))
+    console.log('=== END REGISTRATION DEBUG ===')
 
     // Create JWT token
     const jwt = require('jsonwebtoken')
