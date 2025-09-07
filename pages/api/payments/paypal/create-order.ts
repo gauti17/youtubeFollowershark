@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Server-side validation: recalculate total to prevent price manipulation
     // Must match frontend calculation exactly for security
     let calculatedTotal = 0
-    let orderDescription = []
+    const totalItems = items.length
 
     console.log(`[PayPal Create Order] Processing ${items.length} items for server-side validation`)
 
@@ -176,14 +176,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         itemTotal: itemTotal
       })
 
-      // Add to order description
-      orderDescription.push('YouTube Growth Plan')
       calculatedTotal += itemTotal
     }
 
     // Create a single consolidated item for PayPal to avoid rounding issues
+    // Use a clean, consolidated description regardless of number of items
+    const itemDescription = totalItems === 1 
+      ? 'YouTube Growth Plan'
+      : `YouTube Growth Plan (${totalItems} Services)`
+    
     const processedItems = [{
-      name: `youshark Order - ${orderDescription.join(', ')}`,
+      name: `youshark Order - ${itemDescription}`,
       quantity: "1",
       unitAmount: calculatedTotal.toFixed(2),
       sku: orderNumber
