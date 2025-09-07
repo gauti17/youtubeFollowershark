@@ -454,6 +454,7 @@ const AuthPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [successMessage, setSuccessMessage] = useState('')
+  const [isMounted, setIsMounted] = useState(false)
 
   // Form data
   const [formData, setFormData] = useState({
@@ -466,11 +467,17 @@ const AuthPage: React.FC = () => {
     postalCode: ''
   })
 
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   // Check for existing user data and pre-fill form
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('authToken')
-      const storedCustomer = localStorage.getItem('customer')
+    if (!isMounted) return // Wait for client-side mount
+    
+    const token = localStorage.getItem('authToken')
+    const storedCustomer = localStorage.getItem('customer')
       
       if (token && storedCustomer) {
         try {
@@ -490,7 +497,7 @@ const AuthPage: React.FC = () => {
         }
       }
     }
-  }, [])
+  }, [isMounted])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

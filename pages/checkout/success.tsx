@@ -703,8 +703,16 @@ const SuccessPage: React.FC = () => {
   const [orderInfo, setOrderInfo] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [copiedField, setCopiedField] = useState<string | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Prevent hydration mismatch by ensuring we only access localStorage on client
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   useEffect(() => {
+    if (!isMounted) return // Wait for component to mount on client
+    
     // Get order information from localStorage
     const orderId = localStorage.getItem('lastOrderId')
     const orderNumber = localStorage.getItem('lastOrderNumber')
@@ -729,7 +737,7 @@ const SuccessPage: React.FC = () => {
     }
 
     setIsLoading(false)
-  }, [])
+  }, [isMounted])
 
   const formatPrice = (price: number) => {
     return formatPriceUtil(price)

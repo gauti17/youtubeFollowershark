@@ -697,12 +697,19 @@ const CheckoutPage: React.FC = () => {
   })
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Auto-fill form with logged-in user data
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('authToken')
-      const storedCustomer = localStorage.getItem('customer')
+    if (!isMounted) return // Wait for client-side mount
+    
+    const token = localStorage.getItem('authToken')
+    const storedCustomer = localStorage.getItem('customer')
       
       if (token && storedCustomer) {
         try {
@@ -728,7 +735,7 @@ const CheckoutPage: React.FC = () => {
         }
       }
     }
-  }, [])
+  }, [isMounted])
 
   const formatPrice = (price: number) => {
     return formatPriceUtil(price)

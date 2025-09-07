@@ -411,8 +411,16 @@ const DashboardPage: React.FC = () => {
   const [error, setError] = useState('')
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [showOrderDetails, setShowOrderDetails] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   useEffect(() => {
+    if (!isMounted) return // Wait for client-side mount
+    
     // Check authentication
     const token = localStorage.getItem('authToken')
     const storedCustomer = localStorage.getItem('customer')
@@ -430,7 +438,7 @@ const DashboardPage: React.FC = () => {
       console.error('Error parsing customer data:', err)
       router.push('/auth')
     }
-  }, [router])
+  }, [router, isMounted])
 
   const fetchOrders = async (customerId: number, isRefresh: boolean = false) => {
     try {
