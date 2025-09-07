@@ -851,7 +851,7 @@ const CheckoutPage: React.FC = () => {
         clearCart()
         
         // Redirect to success page
-        router.push('/success')
+        router.push('/checkout/success')
       } else {
         throw new Error(result.error || 'Fehler beim Erstellen der Bestellung')
       }
