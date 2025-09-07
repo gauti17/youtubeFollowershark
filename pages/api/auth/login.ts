@@ -29,11 +29,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // In a real implementation, you would need to use WordPress authentication
     // For now, we'll implement a basic check against a stored hash in meta_data
     
+    // Debug: Log customer data to see what meta_data is available
+    console.log('Customer meta_data:', JSON.stringify(customer.meta_data, null, 2))
+    
     // Check if customer has a password hash in meta_data
     const passwordMeta = customer.meta_data?.find((meta: any) => meta.key === '_password_hash')
     
     if (!passwordMeta) {
       // Customer exists but no password set - redirect to password setup
+      console.log('No password hash found for customer:', customer.id, 'Available meta keys:', customer.meta_data?.map((m: any) => m.key))
       return res.status(402).json({ 
         error: 'Bitte setzen Sie Ihr Passwort zurück',
         requirePasswordReset: true,
