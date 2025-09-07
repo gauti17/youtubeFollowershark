@@ -434,13 +434,55 @@ const BankDetailsCard = styled.div`
       font-size: 14px;
       font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
       background: #f8fafc;
-      padding: 4px 8px;
+      padding: 8px 12px;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
       
       &:hover {
         background: #e2e8f0;
+      }
+      
+      &.copied {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+      
+      .copy-icon {
+        opacity: 0.6;
+        font-size: 12px;
+        transition: opacity 0.2s ease;
+      }
+      
+      &:hover .copy-icon {
+        opacity: 1;
+      }
+      
+      .copy-feedback {
+        position: absolute;
+        top: -30px;
+        right: 0;
+        background: #16a34a;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        z-index: 10;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          right: 10px;
+          border: 4px solid transparent;
+          border-top-color: #16a34a;
+        }
       }
     }
     
@@ -660,6 +702,7 @@ const ViewAllButton = styled(Link)`
 const SuccessPage: React.FC = () => {
   const [orderInfo, setOrderInfo] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [copiedField, setCopiedField] = useState<string | null>(null)
 
   useEffect(() => {
     // Get order information from localStorage
@@ -690,6 +733,25 @@ const SuccessPage: React.FC = () => {
 
   const formatPrice = (price: number) => {
     return formatPriceUtil(price)
+  }
+
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedField(field)
+      setTimeout(() => setCopiedField(null), 2000) // Clear copied state after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy text: ', err)
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea')
+      textArea.value = text
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      setCopiedField(field)
+      setTimeout(() => setCopiedField(null), 2000)
+    }
   }
 
   // Get recommended products for "People also buy" section
@@ -770,33 +832,87 @@ const SuccessPage: React.FC = () => {
               <div className="bank-info">
                 <div className="bank-row">
                   <span className="label">Empfänger:</span>
-                  <span className="value">Skybuzz Media Ltd</span>
+                  <span 
+                    className={`value ${copiedField === 'recipient' ? 'copied' : ''}`}
+                    onClick={() => copyToClipboard('Skybuzz Media Ltd', 'recipient')}
+                  >
+                    Skybuzz Media Ltd
+                    <span className="copy-icon">📋</span>
+                    {copiedField === 'recipient' && (
+                      <div className="copy-feedback">Kopiert!</div>
+                    )}
+                  </span>
                 </div>
                 <div className="bank-row">
                   <span className="label">IBAN:</span>
-                  <span className="value">BE67 9670 6107 3687</span>
+                  <span 
+                    className={`value ${copiedField === 'iban' ? 'copied' : ''}`}
+                    onClick={() => copyToClipboard('BE67 9670 6107 3687', 'iban')}
+                  >
+                    BE67 9670 6107 3687
+                    <span className="copy-icon">📋</span>
+                    {copiedField === 'iban' && (
+                      <div className="copy-feedback">Kopiert!</div>
+                    )}
+                  </span>
                 </div>
                 <div className="bank-row">
                   <span className="label">Swift/BIC:</span>
-                  <span className="value">TRWIBEB1XXX</span>
+                  <span 
+                    className={`value ${copiedField === 'swift' ? 'copied' : ''}`}
+                    onClick={() => copyToClipboard('TRWIBEB1XXX', 'swift')}
+                  >
+                    TRWIBEB1XXX
+                    <span className="copy-icon">📋</span>
+                    {copiedField === 'swift' && (
+                      <div className="copy-feedback">Kopiert!</div>
+                    )}
+                  </span>
                 </div>
                 <div className="bank-row">
                   <span className="label">Bank:</span>
-                  <span className="value">Wise</span>
+                  <span 
+                    className={`value ${copiedField === 'bank' ? 'copied' : ''}`}
+                    onClick={() => copyToClipboard('Wise', 'bank')}
+                  >
+                    Wise
+                    <span className="copy-icon">📋</span>
+                    {copiedField === 'bank' && (
+                      <div className="copy-feedback">Kopiert!</div>
+                    )}
+                  </span>
                 </div>
                 <div className="bank-row">
                   <span className="label">Adresse:</span>
-                  <span className="value">Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium</span>
+                  <span 
+                    className={`value ${copiedField === 'address' ? 'copied' : ''}`}
+                    onClick={() => copyToClipboard('Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium', 'address')}
+                  >
+                    Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium
+                    <span className="copy-icon">📋</span>
+                    {copiedField === 'address' && (
+                      <div className="copy-feedback">Kopiert!</div>
+                    )}
+                  </span>
                 </div>
                 {orderInfo.orderNumber && (
                   <div className="bank-row">
                     <span className="label">Verwendungszweck:</span>
-                    <span className="value">#{orderInfo.orderNumber}</span>
+                    <span 
+                      className={`value ${copiedField === 'reference' ? 'copied' : ''}`}
+                      onClick={() => copyToClipboard(`#${orderInfo.orderNumber}`, 'reference')}
+                    >
+                      #{orderInfo.orderNumber}
+                      <span className="copy-icon">📋</span>
+                      {copiedField === 'reference' && (
+                        <div className="copy-feedback">Kopiert!</div>
+                      )}
+                    </span>
                   </div>
                 )}
               </div>
               <div className="note">
-                Bitte verwenden Sie die Bestellnummer als Verwendungszweck. Ihre Bestellung wird nach Geldeingang automatisch verarbeitet.
+                Klicken Sie auf die Bankdaten um sie zu kopieren. Bitte verwenden Sie die Bestellnummer als Verwendungszweck. Ihre Bestellung wird nach Geldeingang automatisch verarbeitet.
               </div>
             </BankDetailsCard>
           )}
