@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ]
     })
     
-    const resetUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
+    const resetUrl = `${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
     
     console.log('Reset token generated and stored in WooCommerce')
     console.log('Reset URL:', resetUrl)
