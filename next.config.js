@@ -41,6 +41,12 @@ const nextConfig = {
         destination: '/products/deutsche-youtube-views',
         permanent: true,
       },
+      // Redirect old success page to correct location
+      {
+        source: '/success',
+        destination: '/checkout/success',
+        permanent: false,
+      },
     ]
   },
   async headers() {
