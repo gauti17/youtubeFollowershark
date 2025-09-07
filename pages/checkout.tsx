@@ -841,6 +841,7 @@ const CheckoutPage: React.FC = () => {
         localStorage.setItem('customerCreated', result.customerCreated ? 'true' : 'false')
         localStorage.setItem('customerEmail', formData.email)
         localStorage.setItem('customerName', formData.fullName)
+        localStorage.setItem('paymentMethod', selectedPayment)
         
         // Show account creation message if applicable
         if (result.customerCreated) {

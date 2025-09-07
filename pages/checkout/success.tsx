@@ -377,6 +377,111 @@ const SecondaryActionButton = styled(Link)`
   }
 `
 
+const BankDetailsCard = styled.div`
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 2px solid #93c5fd;
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 32px;
+  text-align: left;
+  
+  .title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin-bottom: 20px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    &::before {
+      content: '🏦';
+      font-size: 24px;
+    }
+  }
+  
+  .bank-info {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bank-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-family: 'Inter', sans-serif;
+    
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .label {
+      font-weight: 600;
+      color: #374151;
+      font-size: 14px;
+    }
+    
+    .value {
+      font-weight: 700;
+      color: #1f2937;
+      font-size: 14px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      background: #f8fafc;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: #e2e8f0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      
+      .value {
+        width: 100%;
+        text-align: left;
+      }
+    }
+  }
+  
+  .note {
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 14px;
+    color: #92400e;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    
+    &::before {
+      content: '⚠️';
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    padding: 24px;
+  }
+`
+
 const TrustSignals = styled.div`
   background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
   border: 2px solid #fde68a;
@@ -565,6 +670,7 @@ const SuccessPage: React.FC = () => {
     const paymentAmount = localStorage.getItem('paymentAmount')
     const paymentCurrency = localStorage.getItem('paymentCurrency')
     const customerEmail = localStorage.getItem('customerEmail')
+    const paymentMethod = localStorage.getItem('paymentMethod')
 
     if (orderId) {
       setOrderInfo({
@@ -574,7 +680,8 @@ const SuccessPage: React.FC = () => {
         paypalOrderId,
         paymentAmount: paymentAmount ? parseFloat(paymentAmount) : 0,
         paymentCurrency: paymentCurrency || 'EUR',
-        customerEmail
+        customerEmail,
+        paymentMethod
       })
     }
 
@@ -657,14 +764,63 @@ const SuccessPage: React.FC = () => {
             </OrderSummary>
           )}
 
+          {orderInfo && orderInfo.paymentMethod === 'klarna' && (
+            <BankDetailsCard>
+              <div className="title">Bankverbindung für Überweisung</div>
+              <div className="bank-info">
+                <div className="bank-row">
+                  <span className="label">Empfänger:</span>
+                  <span className="value">Skybuzz Media Ltd</span>
+                </div>
+                <div className="bank-row">
+                  <span className="label">IBAN:</span>
+                  <span className="value">BE67 9670 6107 3687</span>
+                </div>
+                <div className="bank-row">
+                  <span className="label">Swift/BIC:</span>
+                  <span className="value">TRWIBEB1XXX</span>
+                </div>
+                <div className="bank-row">
+                  <span className="label">Bank:</span>
+                  <span className="value">Wise</span>
+                </div>
+                <div className="bank-row">
+                  <span className="label">Adresse:</span>
+                  <span className="value">Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium</span>
+                </div>
+                {orderInfo.orderNumber && (
+                  <div className="bank-row">
+                    <span className="label">Verwendungszweck:</span>
+                    <span className="value">#{orderInfo.orderNumber}</span>
+                  </div>
+                )}
+              </div>
+              <div className="note">
+                Bitte verwenden Sie die Bestellnummer als Verwendungszweck. Ihre Bestellung wird nach Geldeingang automatisch verarbeitet.
+              </div>
+            </BankDetailsCard>
+          )}
+
           <NextStepsCard>
             <NextStepsTitle>Was passiert jetzt?</NextStepsTitle>
             <StepsList>
-              <li>Sie erhalten eine Bestätigungs-E-Mail von PayPal</li>
-              <li>Unser Team überprüft Ihre Bestellung binnen 30 Minuten</li>
-              <li>Die Lieferung Ihrer YouTube Services startet automatisch</li>
-              <li>Verfolgen Sie den Fortschritt in Ihrem Dashboard</li>
-              <li>Bei Fragen hilft unser 24/7 Support-Team gerne weiter</li>
+              {orderInfo && orderInfo.paymentMethod === 'klarna' ? (
+                <>
+                  <li>Überweisen Sie den Betrag an die oben angegebene Bankverbindung</li>
+                  <li>Verwenden Sie Ihre Bestellnummer als Verwendungszweck</li>
+                  <li>Nach Geldeingang überprüfen wir Ihre Bestellung automatisch</li>
+                  <li>Die Lieferung Ihrer YouTube Services startet nach Zahlungsbestätigung</li>
+                  <li>Bei Fragen hilft unser 24/7 Support-Team gerne weiter</li>
+                </>
+              ) : (
+                <>
+                  <li>Sie erhalten eine Bestätigungs-E-Mail von PayPal</li>
+                  <li>Unser Team überprüft Ihre Bestellung binnen 30 Minuten</li>
+                  <li>Die Lieferung Ihrer YouTube Services startet automatisch</li>
+                  <li>Verfolgen Sie den Fortschritt in Ihrem Dashboard</li>
+                  <li>Bei Fragen hilft unser 24/7 Support-Team gerne weiter</li>
+                </>
+              )}
             </StepsList>
           </NextStepsCard>
 
