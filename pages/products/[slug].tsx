@@ -1377,7 +1377,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   const getSEOContent = (product: Product) => {
     const categoryMap = {
       'views': {
-        title: `${product.name} - Echte YouTube Views kaufen 2024`,
+        title: `${product.name} - Echte YouTube Views 2024`,
         content: {
           intro: `Steigern Sie Ihre YouTube-Reichweite mit unserem Premium ${product.name} Service. Wir bieten hochwertige, echte Views von realen Nutzern mit hoher Retention-Rate und schneller Lieferung.`,
           benefits: [
@@ -1420,7 +1420,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
         ]
       },
       'likes': {
-        title: `${product.name} - Echte YouTube Likes kaufen 2024`,
+        title: `${product.name} - Echte YouTube Likes 2024`,
         content: {
           intro: `Erhöhen Sie das Engagement Ihrer YouTube-Videos mit unserem Premium ${product.name} Service. Echte Likes von realen Nutzern steigern Ihre Glaubwürdigkeit und Reichweite nachhaltig.`,
           benefits: [
@@ -1463,7 +1463,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
         ]
       },
       'subscribers': {
-        title: `${product.name} - Echte YouTube Abonnenten kaufen 2024`,
+        title: `${product.name} - Echte YouTube Abonnenten 2024`,
         content: {
           intro: `Wachsen Sie Ihren YouTube-Kanal mit unserem Premium ${product.name} Service. Echte, aktive Abonnenten von realen Nutzern für nachhaltiges Kanalwachstum.`,
           benefits: [

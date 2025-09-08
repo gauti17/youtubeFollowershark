@@ -70,7 +70,7 @@ export const calculatePrice = (
 export const products: Product[] = [
   {
     id: 'youtube-views',
-    name: 'YouTube Views kaufen',
+    name: 'YouTube Views',
     slug: 'youtube-views',
     icon: '▶️',
     description: 'Kaufe hochwertige YouTube Views mit hoher Retention. Schnelle Lieferung, sichere Abwicklung und 24/7 Support.',
@@ -114,7 +114,7 @@ export const products: Product[] = [
   },
   {
     id: 'youtube-likes',
-    name: 'YouTube Likes kaufen',
+    name: 'YouTube Likes',
     slug: 'youtube-likes',
     icon: '👍',
     description: 'Kaufe echte YouTube Likes von aktiven Nutzern. Schnelle Lieferung, sichere Abwicklung und 24/7 Support.',
@@ -144,7 +144,7 @@ export const products: Product[] = [
   },
   {
     id: 'youtube-subscribers',
-    name: 'YouTube Abonnenten kaufen',
+    name: 'YouTube Abonnenten',
     slug: 'youtube-subscribers',
     icon: '👥',
     description: 'Kaufe echte YouTube Abonnenten von aktiven Nutzern. Permanente Abonnenten mit Lifetime-Garantie.',
@@ -175,7 +175,7 @@ export const products: Product[] = [
   },
   {
     id: 'deutsche-youtube-views',
-    name: 'Deutsche YouTube Views kaufen',
+    name: 'Deutsche YouTube Views',
     slug: 'deutsche-youtube-views',
     icon: '🇩🇪',
     description: 'Kaufe deutsche YouTube Views für gezieltes deutschsprachiges Publikum. 100% deutscher Traffic mit hoher Retention.',

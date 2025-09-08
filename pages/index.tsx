@@ -1735,7 +1735,7 @@ const HomePage: React.FC = () => {
       <FeaturesSection>
         <Container>
           <FeaturesSectionTitle>
-            YouTube Growth kaufen - seriös,<br />
+            YouTube Growth - seriös,<br />
             einfach & sicher!
           </FeaturesSectionTitle>
           <FeaturesSectionSubtitle>
@@ -1780,7 +1780,7 @@ const HomePage: React.FC = () => {
               <FeatureIcon>🏆</FeatureIcon>
               <FeatureTitle>Services von höchster Qualität</FeatureTitle>
               <FeatureDescription>
-                Oft wird davon abgeraten, YouTube Services für das eigene Profil zu kaufen. Der Hauptgrund 
+                Oft wird davon abgeraten, YouTube Services für das eigene Profil zu nutzen. Der Hauptgrund 
                 dafür ist, dass viele von billigen Anbietern 
                 überflütet ist: die minderwertige Profile liefern.
               </FeatureDescription>
