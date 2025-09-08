@@ -361,6 +361,35 @@ const SecurityNote = styled.div`
   font-weight: 500;
 `
 
+const BackupLinkNote = styled.div`
+  background: rgba(255, 107, 53, 0.05);
+  border: 1px solid rgba(255, 107, 53, 0.1);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #ea580c;
+  text-align: center;
+  line-height: 1.6;
+  animation: slideInSuccess 0.5s ease;
+  
+  a {
+    color: #FF6B35;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: #F7931E;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 13px;
+    padding: 14px 16px;
+  }
+`
+
 const FloatingElement = styled.div<{ delay?: number; size?: number }>`
   position: absolute;
   width: ${props => props.size || 60}px;
@@ -517,6 +546,16 @@ const PasswordResetPage: React.FC = () => {
                 </ButtonWithSpinner>
               </SubmitButton>
             </Form>
+          )}
+
+          {emailSent && (
+            <BackupLinkNote>
+              Falls Sie keine E-Mail erhalten haben, können Sie auch{' '}
+              <a href="https://api.youshark.de/my-account/lost-password" target="_blank" rel="noopener noreferrer">
+                diesen direkten Link
+              </a>{' '}
+              für die Passwort-Zurücksetzung verwenden.
+            </BackupLinkNote>
           )}
 
           <BackLink href="/auth">
