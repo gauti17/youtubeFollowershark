@@ -318,8 +318,17 @@ const FormRow = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   
+  /* Special case for country/city row - give country more space */
+  &.country-city-row {
+    grid-template-columns: 3fr 2fr;
+  }
+  
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
+    
+    &.country-city-row {
+      grid-template-columns: 1fr;
+    }
   }
 `
 
@@ -1070,7 +1079,7 @@ const CheckoutPage: React.FC = () => {
                 </FormGroup>
               </FormRow>
 
-              <FormRow>
+              <FormRow className="country-city-row">
                 <FormGroup>
                   <label>
                     Land <span className="required">*</span>
