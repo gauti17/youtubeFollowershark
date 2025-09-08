@@ -209,7 +209,43 @@ export class OrderService {
         ]
       }
 
-      console.log('Creating WooCommerce order:', orderData)
+      // Validate order data before sending
+      console.log('=== Order Validation ===')
+      console.log('Customer ID:', orderData.customer_id)
+      console.log('Billing Address:', orderData.billing)
+      console.log('Line Items Count:', orderData.line_items.length)
+      console.log('Line Items Details:', orderData.line_items.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        total: item.total,
+        product_id: item.product_id,
+        sku: item.sku
+      })))
+      
+      // Validate required fields
+      if (!orderData.billing.email || !orderData.billing.first_name || !orderData.billing.last_name) {
+        throw new Error('Missing required billing information: email, first_name, or last_name')
+      }
+      
+      if (!orderData.line_items || orderData.line_items.length === 0) {
+        throw new Error('Order must have at least one line item')
+      }
+      
+      // Validate line items
+      for (const item of orderData.line_items) {
+        if (!item.name) {
+          throw new Error('Line item missing name')
+        }
+        if (!item.quantity || item.quantity < 1) {
+          throw new Error('Line item must have quantity >= 1')
+        }
+        if (!item.price || parseFloat(item.price) < 0) {
+          throw new Error('Line item must have valid price')
+        }
+      }
+
+      console.log('Creating WooCommerce order:', JSON.stringify(orderData, null, 2))
 
       const response = await wooCommerceAPI.createOrder(orderData)
 

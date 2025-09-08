@@ -114,15 +114,45 @@ class WooCommerceAPI {
       options.body = JSON.stringify(data)
     }
 
+    // Enhanced logging for debugging 400 errors
+    console.log('=== WooCommerce API Request ===')
+    console.log('URL:', url)
+    console.log('Method:', method)
+    console.log('Headers:', {
+      ...options.headers,
+      'Authorization': 'Basic [HIDDEN]' // Don't log full auth header
+    })
+    if (data) {
+      console.log('Request Body:', JSON.stringify(data, null, 2))
+    }
+
     try {
       const response = await fetch(url, options)
       
+      console.log('=== WooCommerce API Response ===')
+      console.log('Status:', response.status)
+      console.log('Status Text:', response.statusText)
+      console.log('Headers:', Object.fromEntries(response.headers.entries()))
+      
       if (!response.ok) {
         const errorData = await response.text()
+        console.log('Error Response Body:', errorData)
+        
+        // Try to parse as JSON for better error details
+        let parsedError
+        try {
+          parsedError = JSON.parse(errorData)
+          console.log('Parsed Error Details:', JSON.stringify(parsedError, null, 2))
+        } catch (parseError) {
+          console.log('Error response is not JSON:', errorData)
+        }
+        
         throw new Error(`WooCommerce API Error ${response.status}: ${errorData}`)
       }
 
-      return await response.json()
+      const responseData = await response.json()
+      console.log('Success Response:', JSON.stringify(responseData, null, 2))
+      return responseData
     } catch (error) {
       console.error('WooCommerce API Request Failed:', error)
       throw error
