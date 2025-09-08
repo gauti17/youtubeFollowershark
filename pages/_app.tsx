@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { LoadingOverlay } from '../components/Loading'
 import { ToastProvider } from '../components/Toast'
+import Script from 'next/script'
 
 // Google Analytics
 declare global {
@@ -50,7 +51,7 @@ export default function App({ Component, pageProps }: AppProps) {
     // Google Analytics
     const handleRouteChange = (url: string) => {
       if (typeof window.gtag !== 'undefined') {
-        window.gtag('config', process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID, {
+        window.gtag('config', 'AW-17541475827', {
           page_path: url,
         })
       }
@@ -84,12 +85,28 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <ToastProvider>
-      <CartProvider>
-        <GlobalStyles />
-        <Component {...pageProps} />
-        <LoadingOverlay show={isPageLoading} text="Seite wird geladen..." />
-      </CartProvider>
-    </ToastProvider>
+    <>
+      {/* Google Analytics Scripts */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-17541475827"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-17541475827');
+        `}
+      </Script>
+
+      <ToastProvider>
+        <CartProvider>
+          <GlobalStyles />
+          <Component {...pageProps} />
+          <LoadingOverlay show={isPageLoading} text="Seite wird geladen..." />
+        </CartProvider>
+      </ToastProvider>
+    </>
   )
 }
