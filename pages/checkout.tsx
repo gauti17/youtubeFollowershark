@@ -311,6 +311,11 @@ const FormGroup = styled.div`
       color: #9ca3af;
     }
   }
+  
+  select {
+    min-height: 52px; /* Make dropdown taller */
+    padding: 16px; /* Increase vertical padding */
+  }
 `
 
 const FormRow = styled.div`
