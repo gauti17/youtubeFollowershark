@@ -2,6 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Header from './Header'
 import Footer from './Footer'
+import GDPRBanner from './GDPRBanner'
 import styled from 'styled-components'
 
 interface LayoutProps {
@@ -62,6 +63,7 @@ const Layout: React.FC<LayoutProps> = ({
       <Header />
       <MainContainer>{children}</MainContainer>
       <Footer />
+      <GDPRBanner />
     </>
   )
 }
