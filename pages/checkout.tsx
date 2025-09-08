@@ -846,30 +846,45 @@ const CheckoutPage: React.FC = () => {
         return
       }
 
+      // Debug: Log the form data before sending
+      const orderData = {
+        cartItems: items,
+        formData: {
+          firstName: formData.fullName.trim() ? (formData.fullName.split(' ')[0] || formData.fullName) : '',
+          lastName: formData.fullName.trim() ? (formData.fullName.split(' ').slice(1).join(' ') || '') : '',
+          email: formData.email.trim(),
+          country: formData.country.trim(),
+          city: formData.city.trim(),
+          postalCode: formData.postalCode.trim()
+        },
+        options: {
+          paymentMethod: selectedPayment,
+          paymentMethodTitle: getPaymentMethodTitle(selectedPayment),
+          couponCode: appliedCoupon ? appliedCoupon.code : undefined,
+          discountAmount: discount,
+          couponData: appliedCoupon
+        }
+      }
+      
+      console.log('=== Checkout Debug ===')
+      console.log('Original formData:', formData)
+      console.log('Processed orderData:', orderData)
+      console.log('FormData validation:', {
+        firstName: orderData.formData.firstName,
+        lastName: orderData.formData.lastName,
+        email: orderData.formData.email,
+        hasFirstName: !!orderData.formData.firstName,
+        hasLastName: !!orderData.formData.lastName,
+        hasEmail: !!orderData.formData.email
+      })
+
       // Create order via API endpoint (more secure)
       const response = await fetch('/api/orders/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          cartItems: items,
-          formData: {
-            firstName: formData.fullName.split(' ')[0] || formData.fullName,
-            lastName: formData.fullName.split(' ').slice(1).join(' ') || '',
-            email: formData.email,
-            country: formData.country,
-            city: formData.city,
-            postalCode: formData.postalCode
-          },
-          options: {
-            paymentMethod: selectedPayment,
-            paymentMethodTitle: getPaymentMethodTitle(selectedPayment),
-            couponCode: appliedCoupon ? appliedCoupon.code : undefined,
-            discountAmount: discount,
-            couponData: appliedCoupon
-          }
-        })
+        body: JSON.stringify(orderData)
       })
 
       const result = await response.json()

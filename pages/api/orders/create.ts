@@ -35,13 +35,38 @@ export default async function handler(
   try {
     const { cartItems, formData, options }: CreateOrderRequest = req.body
 
+    // Log the incoming request data for debugging
+    console.log('=== Order Creation API Debug ===')
+    console.log('Cart Items:', cartItems?.length || 0)
+    console.log('Form Data received:', formData)
+    console.log('Form Data validation:', {
+      hasFirstName: !!formData?.firstName,
+      hasLastName: !!formData?.lastName,
+      hasEmail: !!formData?.email,
+      firstName: formData?.firstName,
+      lastName: formData?.lastName,
+      email: formData?.email
+    })
+
     // Validate required fields
     if (!cartItems || cartItems.length === 0) {
+      console.log('Validation failed: Empty cart')
       return res.status(400).json({ error: 'Warenkorb ist leer' })
     }
 
-    if (!formData.firstName || !formData.lastName || !formData.email) {
-      return res.status(400).json({ error: 'Erforderliche Rechnungsinformationen fehlen' })
+    if (!formData?.firstName?.trim()) {
+      console.log('Validation failed: Missing firstName')
+      return res.status(400).json({ error: 'Vorname ist erforderlich' })
+    }
+
+    if (!formData?.lastName?.trim()) {
+      console.log('Validation failed: Missing lastName')
+      return res.status(400).json({ error: 'Nachname ist erforderlich' })
+    }
+
+    if (!formData?.email?.trim()) {
+      console.log('Validation failed: Missing email')
+      return res.status(400).json({ error: 'E-Mail-Adresse ist erforderlich' })
     }
 
     // Create order
