@@ -57,6 +57,19 @@ const Layout: React.FC<LayoutProps> = ({
           
           {/* Canonical URL */}
           <link rel="canonical" href={process.env.NEXT_PUBLIC_APP_URL} />
+          
+          {/* Google Analytics */}
+          <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17541475827"></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'AW-17541475827');
+              `,
+            }}
+          />
         </Head>
       )}
       
