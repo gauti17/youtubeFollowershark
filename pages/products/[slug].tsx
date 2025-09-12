@@ -1504,6 +1504,166 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
             answer: 'Absolut. Unsere Methoden entsprechen vollständig den YouTube-Richtlinien und bergen kein Risiko für Ihren Kanal.'
           }
         ]
+      },
+      'tiktok-views': {
+        title: `${product.name} - Echte TikTok Views 2024`,
+        content: {
+          intro: `Steigern Sie Ihre TikTok-Reichweite mit unserem Premium ${product.name} Service. Echte Views von aktiven TikTok-Nutzern für maximale Sichtbarkeit und Algorithmus-Boost.`,
+          benefits: [
+            'Echte Views von aktiven TikTok-Nutzern',
+            'Hohe Retention-Rate für besseren Algorithmus-Boost',
+            'Algorithmussichere und natürliche Lieferung',
+            'Sofortiger Start der Lieferung',
+            'Lifetime Garantie auf alle Views',
+            'TikTok-TOS konforme Methoden',
+            '24/7 Premium Support',
+            'Geld-zurück-Garantie'
+          ],
+          detailed: `TikTok Views sind entscheidend für die Sichtbarkeit Ihrer Inhalte. Unser ${product.name} Service nutzt bewährte Methoden, um Ihre Videos im TikTok-Algorithmus zu fördern und organisches Wachstum zu stimulieren.`,
+          whyChoose: 'Warum YouShark für TikTok Views?',
+          reasons: [
+            'Spezialisiert auf TikTok-Marketing seit Jahren',
+            'Sichere und diskrete Lieferung',
+            'Transparente Preise ohne versteckte Kosten',
+            'Deutscher Kundenservice',
+            'Über 25.000 erfolgreiche TikTok-Projekte'
+          ]
+        },
+        faqs: [
+          {
+            question: 'Sind die TikTok Views echt?',
+            answer: 'Ja, alle Views stammen von echten, aktiven TikTok-Accounts. Wir verwenden keine Bots oder automatisierte Software.'
+          },
+          {
+            question: 'Wie schnell bekomme ich die Views?',
+            answer: 'Die Lieferung startet normalerweise innerhalb von 1-6 Stunden. Die vollständige Lieferung erfolgt je nach Paket über mehrere Tage.'
+          },
+          {
+            question: 'Ist das sicher für meinen TikTok-Account?',
+            answer: 'Absolut sicher. Unsere Methoden sind vollständig TikTok-konform und bergen kein Risiko für Ihren Account.'
+          },
+          {
+            question: 'Kann ich mehrere Videos bearbeiten lassen?',
+            answer: 'Ja, Sie können für jedes Video separate Bestellungen aufgeben. Kontaktieren Sie uns für Mengenrabatte.'
+          }
+        ]
+      },
+      'tiktok-likes': {
+        title: `${product.name} - Echte TikTok Likes 2024`,
+        content: {
+          intro: `Boosten Sie Ihr TikTok-Engagement mit unserem Premium ${product.name} Service. Echte Likes von aktiven Nutzern für maximale Interaktion und Reichweite.`,
+          benefits: [
+            'Echte Likes von aktiven TikTok-Accounts',
+            'Sofortiger Algorithmus-Boost',
+            'Organisches Engagement für bessere Rankings',
+            'Schnelle und sichere Lieferung',
+            'Lifetime Garantie',
+            'TikTok-TOS konforme Methoden',
+            '24/7 Support',
+            'Geld-zurück-Garantie'
+          ],
+          detailed: `TikTok Likes sind ein wichtiger Engagementfaktor und signalisieren dem Algorithmus, dass Ihr Content wertvoll ist. Unser ${product.name} Service hilft dabei, die Sichtbarkeit Ihrer Videos zu erhöhen.`,
+          whyChoose: 'Warum YouShark für TikTok Likes?',
+          reasons: [
+            'Premium-Qualität und echte Interaktionen',
+            'Diskrete und natürliche Lieferung',
+            'Faire Preise ohne Abonnement-Fallen',
+            'Professioneller deutschsprachiger Support',
+            'Bewährte TikTok-Marketing Strategien'
+          ]
+        },
+        faqs: [
+          {
+            question: 'Wie funktioniert der TikTok Like-Service?',
+            answer: 'Nach Ihrer Bestellung liken echte TikTok-Nutzer Ihr Video organisch. Der Prozess läuft vollautomatisch und sicher ab.'
+          },
+          {
+            question: 'Verschwinden die Likes wieder?',
+            answer: 'Nein, unsere Likes sind permanent. Falls doch Likes verschwinden sollten, ersetzen wir diese kostenlos.'
+          },
+          {
+            question: 'Wie natürlich wirken die Likes?',
+            answer: 'Die Likes werden über einen natürlichen Zeitraum verteilt, sodass es völlig organisch aussieht.'
+          }
+        ]
+      },
+      'tiktok-shares': {
+        title: `${product.name} - Echte TikTok Shares 2024`,
+        content: {
+          intro: `Maximieren Sie Ihre virale Reichweite mit unserem Premium ${product.name} Service. Echte Shares für exponentielles Wachstum und maximale Sichtbarkeit.`,
+          benefits: [
+            'Echter viraler Traffic durch Shares',
+            'Maximaler Algorithmus-Boost',
+            'Echte TikTok-Nutzer teilen Ihr Video',
+            'Exponentielles Reichweitenwachstum',
+            'Premium Service für beste Ergebnisse',
+            'Lifetime Garantie',
+            'TikTok-konforme Methoden',
+            '24/7 Premium Support'
+          ],
+          detailed: `TikTok Shares sind der Schlüssel zu viralem Erfolg. Unser ${product.name} Service nutzt echte Nutzer-Interaktionen, um Ihre Videos in die richtige Richtung zu lenken und maximale virale Reichweite zu erzielen.`,
+          whyChoose: 'Warum YouShark für TikTok Shares?',
+          reasons: [
+            'Experten für virales TikTok-Marketing',
+            'Höchste Qualitätsstandards',
+            'Bewährte Strategien für maximale Wirkung',
+            'Transparente und faire Preisgestaltung',
+            'Deutscher Premium Support'
+          ]
+        },
+        faqs: [
+          {
+            question: 'Wie wirken sich Shares auf mein Video aus?',
+            answer: 'Shares sind das stärkste Signal für den TikTok-Algorithmus und können zu explosivem, viralem Wachstum führen.'
+          },
+          {
+            question: 'Wie schnell sehe ich Ergebnisse?',
+            answer: 'Shares wirken oft sehr schnell. Erste Ergebnisse sind meist innerhalb weniger Stunden sichtbar.'
+          },
+          {
+            question: 'Sind die Shares von echten Nutzern?',
+            answer: 'Ja, alle Shares kommen von echten, aktiven TikTok-Accounts und erfolgen vollständig organisch.'
+          }
+        ]
+      },
+      'tiktok-comments': {
+        title: `${product.name} - Echte TikTok Kommentare 2024`,
+        content: {
+          intro: `Beleben Sie Ihre TikTok-Videos mit unserem Premium ${product.name} Service. Deutsche und englische Kommentare von echten Nutzern für maximales Engagement.`,
+          benefits: [
+            'Deutsche und englische Kommentare',
+            'Echte TikTok-Accounts kommentieren',
+            'Personalisierte und relevante Kommentare',
+            'Maximales Engagement und Interaktion',
+            'Premium Qualität und Service',
+            'Lifetime Garantie',
+            'TikTok-konforme Methoden',
+            '24/7 individueller Support'
+          ],
+          detailed: `TikTok Kommentare sind essentiell für Engagement und Community-Building. Unser ${product.name} Service bietet hochwertige, relevante Kommentare, die echte Diskussionen anstoßen und Ihr Video lebendiger machen.`,
+          whyChoose: 'Warum YouShark für TikTok Kommentare?',
+          reasons: [
+            'Muttersprachliche deutsche und englische Kommentare',
+            'Personalisiert und auf Ihren Content abgestimmt',
+            'Echte Accounts mit aktiven Profilen',
+            'Premium Service mit individueller Betreuung',
+            'Langjährige Erfahrung im TikTok-Marketing'
+          ]
+        },
+        faqs: [
+          {
+            question: 'Wie werden die Kommentare erstellt?',
+            answer: 'Unsere Experten erstellen relevante, natürliche Kommentare, die zu Ihrem Content passen und echte Diskussionen fördern.'
+          },
+          {
+            question: 'In welchen Sprachen sind die Kommentare?',
+            answer: 'Standardmäßig gemischt deutsch/englisch. Sie können auch rein deutsche Kommentare als Premium-Option wählen.'
+          },
+          {
+            question: 'Wie natürlich wirken die Kommentare?',
+            answer: 'Alle Kommentare werden von echten Accounts verfasst und sind inhaltlich relevant und natürlich geschrieben.'
+          }
+        ]
       }
     }
     
@@ -1812,7 +1972,9 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
 
           <VideoInputSection>
             <SectionTitle>
-              {product.inputType === 'video' ? 'Youtube Videolink:' : 'Youtube Channellink:'} *
+              {product.inputType === 'video' ? 'Youtube Videolink:' : 
+               product.inputType === 'channel' ? 'Youtube Channellink:' : 
+               'TikTok Videolink:'} *
             </SectionTitle>
             <VideoInputContainer>
               <VideoIcon>📺</VideoIcon>

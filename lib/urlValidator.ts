@@ -1,8 +1,8 @@
-// Basic YouTube URL validation utilities
+// URL validation utilities for YouTube and TikTok
 export interface ValidationResult {
   isValid: boolean
   error?: string
-  urlType?: 'video' | 'channel'
+  urlType?: 'video' | 'channel' | 'tiktok'
   cleanUrl?: string
 }
 
@@ -128,12 +128,17 @@ export class YouTubeUrlValidator {
   /**
    * Generic validator that determines URL type and validates accordingly
    */
-  static validateYouTubeUrl(url: string, expectedType?: 'video' | 'channel'): ValidationResult {
+  static validateYouTubeUrl(url: string, expectedType?: 'video' | 'channel' | 'tiktok'): ValidationResult {
     if (!url || url.trim().length === 0) {
       return { isValid: false, error: 'URL ist erforderlich' }
     }
 
-    // If specific type is expected, validate for that type
+    // If TikTok type is expected, use TikTok validator
+    if (expectedType === 'tiktok') {
+      return this.validateTikTokUrl(url)
+    }
+
+    // If specific YouTube type is expected, validate for that type
     if (expectedType === 'video') {
       return this.validateVideoUrl(url)
     }
@@ -157,6 +162,64 @@ export class YouTubeUrlValidator {
     return {
       isValid: false,
       error: 'URL muss eine gültige YouTube-Video oder Kanal-URL sein'
+    }
+  }
+
+  /**
+   * Validate TikTok video URLs
+   * Accepts various TikTok video URL formats
+   */
+  static validateTikTokUrl(url: string): ValidationResult {
+    if (!url || url.trim().length === 0) {
+      return { isValid: false, error: 'TikTok URL ist erforderlich' }
+    }
+
+    const cleanUrl = url.trim()
+
+    // Basic URL structure check
+    if (!cleanUrl.startsWith('http')) {
+      return { isValid: false, error: 'URL muss mit http:// oder https:// beginnen' }
+    }
+
+    // TikTok domain check
+    const tiktokDomains = [
+      'tiktok.com',
+      'www.tiktok.com',
+      'm.tiktok.com',
+      'vm.tiktok.com'
+    ]
+
+    const hasTikTokDomain = tiktokDomains.some(domain => 
+      cleanUrl.includes(domain)
+    )
+
+    if (!hasTikTokDomain) {
+      return { isValid: false, error: 'URL muss eine TikTok-URL sein' }
+    }
+
+    // TikTok video URL patterns
+    const tiktokPatterns = [
+      /tiktok\.com\/@([a-zA-Z0-9_.]+)\/video\/(\d+)/,  // Standard video URL
+      /tiktok\.com\/t\/([a-zA-Z0-9_]+)/,               // Short URL format
+      /vm\.tiktok\.com\/([a-zA-Z0-9_]+)/,             // Mobile short URL
+      /tiktok\.com\/@([^\/]+)\/video\/(\d{19})/       // Full video ID format
+    ]
+
+    const hasTikTokPattern = tiktokPatterns.some(pattern => 
+      pattern.test(cleanUrl)
+    )
+
+    if (!hasTikTokPattern) {
+      return { 
+        isValid: false, 
+        error: 'URL muss ein gültiges TikTok-Video sein (z.B. tiktok.com/@username/video/...)' 
+      }
+    }
+
+    return {
+      isValid: true,
+      urlType: 'tiktok',
+      cleanUrl
     }
   }
 

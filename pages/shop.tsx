@@ -377,6 +377,8 @@ const ShopPage: React.FC = () => {
 
   const categories = [
     { id: 'all', name: 'Alle Services' },
+    { id: 'youtube', name: 'YouTube' },
+    { id: 'tiktok', name: 'TikTok' },
     { id: 'views', name: 'Views' },
     { id: 'likes', name: 'Likes' },
     { id: 'subscribers', name: 'Abonnenten' }
@@ -387,7 +389,28 @@ const ShopPage: React.FC = () => {
 
     // Filter by category
     if (activeFilter !== 'all') {
-      filtered = filtered.filter(product => product.category === activeFilter)
+      if (activeFilter === 'youtube') {
+        // Show all YouTube products (views, likes, subscribers)
+        filtered = filtered.filter(product => 
+          product.category === 'views' || 
+          product.category === 'likes' || 
+          product.category === 'subscribers'
+        )
+      } else if (activeFilter === 'tiktok') {
+        // Show all TikTok products
+        filtered = filtered.filter(product => 
+          product.category === 'tiktok-views' || 
+          product.category === 'tiktok-likes' || 
+          product.category === 'tiktok-shares' || 
+          product.category === 'tiktok-comments'
+        )
+      } else {
+        // Filter by specific category (views, likes, subscribers)
+        filtered = filtered.filter(product => 
+          product.category === activeFilter ||
+          product.category === `tiktok-${activeFilter}`
+        )
+      }
     }
 
     // Filter by search term
@@ -421,11 +444,11 @@ const ShopPage: React.FC = () => {
         <Container>
           <ShopHeader>
             <ShopTitle>
-              YouTube Growth <span className="accent">Services</span>
+              Social Media Growth <span className="accent">Services</span>
             </ShopTitle>
             <ShopSubtitle>
-              Entdecken Sie alle Premium Services für explosives YouTube-Wachstum. 
-              Von Views bis Abonnenten - alles für Ihren Erfolg!
+              Entdecken Sie alle Premium Services für YouTube & TikTok Wachstum. 
+              Views, Likes, Abonnenten und mehr - alles für Ihren Erfolg!
             </ShopSubtitle>
           </ShopHeader>
 

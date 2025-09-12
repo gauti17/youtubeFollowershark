@@ -5,8 +5,8 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/U3CeMhry-YCZ6iSYQ0qSM/_buildManifest.js",
-    "static/U3CeMhry-YCZ6iSYQ0qSM/_ssgManifest.js"
+    "static/0KqevBy9psEjDI5mMax_a/_buildManifest.js",
+    "static/0KqevBy9psEjDI5mMax_a/_ssgManifest.js"
   ],
   "rootMainFiles": [],
   "rootMainFilesTree": {},
@@ -17,7 +17,7 @@
       "static/chunks/main-5fde5a7234a5e4df.js",
       "static/chunks/695-948c687547f7d4e5.js",
       "static/chunks/510-ab52e38c5b5e4db0.js",
-      "static/chunks/pages/index-38b72e31d0862f0d.js"
+      "static/chunks/pages/index-45e299f04f1b35cf.js"
     ],
     "/_app": [
       "static/chunks/webpack-ed8db4e92067a91e.js",
@@ -53,7 +53,7 @@
       "static/chunks/main-5fde5a7234a5e4df.js",
       "static/chunks/695-948c687547f7d4e5.js",
       "static/chunks/510-ab52e38c5b5e4db0.js",
-      "static/chunks/pages/cart-1f8b3924c14e86c2.js"
+      "static/chunks/pages/cart-c37c92ddd30f969f.js"
     ],
     "/checkout": [
       "static/chunks/webpack-ed8db4e92067a91e.js",
@@ -62,7 +62,7 @@
       "static/chunks/695-948c687547f7d4e5.js",
       "static/chunks/412-9ec4602b83c33f14.js",
       "static/chunks/510-ab52e38c5b5e4db0.js",
-      "static/chunks/pages/checkout-7f1d9392540fd48c.js"
+      "static/chunks/pages/checkout-23f00727fedb9797.js"
     ],
     "/checkout/success": [
       "static/chunks/webpack-ed8db4e92067a91e.js",
@@ -70,7 +70,7 @@
       "static/chunks/main-5fde5a7234a5e4df.js",
       "static/chunks/695-948c687547f7d4e5.js",
       "static/chunks/510-ab52e38c5b5e4db0.js",
-      "static/chunks/pages/checkout/success-ac8514cd6d61d185.js"
+      "static/chunks/pages/checkout/success-410de69e06aa91cc.js"
     ],
     "/contact": [
       "static/chunks/webpack-ed8db4e92067a91e.js",
@@ -126,7 +126,7 @@
       "static/chunks/main-5fde5a7234a5e4df.js",
       "static/chunks/695-948c687547f7d4e5.js",
       "static/chunks/510-ab52e38c5b5e4db0.js",
-      "static/chunks/pages/products/[slug]-6c69f6fdc9c83291.js"
+      "static/chunks/pages/products/[slug]-dd85c0d0be768893.js"
     ],
     "/refund": [
       "static/chunks/webpack-ed8db4e92067a91e.js",
@@ -150,7 +150,7 @@
       "static/chunks/main-5fde5a7234a5e4df.js",
       "static/chunks/695-948c687547f7d4e5.js",
       "static/chunks/510-ab52e38c5b5e4db0.js",
-      "static/chunks/pages/shop-8fe017f9c96100f6.js"
+      "static/chunks/pages/shop-9547eaec62010934.js"
     ],
     "/success": [
       "static/chunks/webpack-ed8db4e92067a91e.js",

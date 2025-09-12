@@ -9,9 +9,9 @@ export interface Product {
   discount?: number
   speedOptions: SpeedOption[]
   quantityOptions: number[]
-  inputType: 'video' | 'channel'
+  inputType: 'video' | 'channel' | 'tiktok'
   inputPlaceholder: string
-  category: 'views' | 'likes' | 'subscribers'
+  category: 'views' | 'likes' | 'subscribers' | 'tiktok-views' | 'tiktok-likes' | 'tiktok-shares' | 'tiktok-comments'
   targetOptions?: TargetOption[]
 }
 
@@ -205,6 +205,157 @@ export const products: Product[] = [
     inputType: 'video',
     inputPlaceholder: 'https://www.youtube.com/watch?v=... oder /shorts/...',
     category: 'views'
+  },
+  {
+    id: 'tiktok-views',
+    name: 'TikTok Views',
+    slug: 'tiktok-views',
+    icon: '📱',
+    description: 'Steigere deine TikTok Reichweite mit echten Views von aktiven Nutzern. Hohe Retention-Rate und algorithmussichere Lieferung.',
+    features: [
+      'Echte Views von aktiven TikTok-Nutzern',
+      'Hohe Retention-Rate für bessere Rankings',
+      'Algorithmussichere Lieferung',
+      'Geschwindigkeit: 50.000 Views/Tag',
+      'Lifetime Garantie',
+      'Sofortiger Start der Lieferung'
+    ],
+    basePrice: 0.015,
+    discount: 15,
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard',
+        price: 0,
+        description: 'Normale Liefergeschwindigkeit'
+      },
+      {
+        id: 'delayed',
+        name: 'Verzögert',
+        price: 9.99,
+        description: 'Langsamere, natürlichere Lieferung'
+      }
+    ],
+    quantityOptions: [100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000],
+    inputType: 'tiktok',
+    inputPlaceholder: 'https://www.tiktok.com/@username/video/...',
+    category: 'tiktok-views'
+  },
+  {
+    id: 'tiktok-likes',
+    name: 'TikTok Likes',
+    slug: 'tiktok-likes',
+    icon: '❤️',
+    description: 'Erhöhe das Engagement deiner TikTok Videos mit echten Likes von aktiven Nutzern. Mehr Likes = Mehr Reichweite.',
+    features: [
+      'Echte Likes von aktiven TikTok-Accounts',
+      'Organisches Engagement für bessere Rankings',
+      'Sofortiger Algorithmus-Boost',
+      'Geschwindigkeit: 10.000 Likes/Tag',
+      'Lifetime Garantie',
+      '24/7 Support'
+    ],
+    basePrice: 0.025,
+    discount: 10,
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard',
+        price: 0,
+        description: 'Normale Liefergeschwindigkeit'
+      },
+      {
+        id: 'premium',
+        name: 'Premium',
+        price: 5.99,
+        description: 'Schnellere Lieferung mit Premium-Accounts'
+      }
+    ],
+    quantityOptions: [25, 50, 100, 250, 500, 1000, 2500, 5000, 10000],
+    inputType: 'tiktok',
+    inputPlaceholder: 'https://www.tiktok.com/@username/video/...',
+    category: 'tiktok-likes'
+  },
+  {
+    id: 'tiktok-shares',
+    name: 'TikTok Shares',
+    slug: 'tiktok-shares',
+    icon: '🔄',
+    description: 'Maximiere deine virale Reichweite mit echten TikTok Shares. Der beste Weg für exponentielles Wachstum.',
+    features: [
+      'Echter viraler Traffic und Reichweite',
+      'Algorithmus-Boost durch Shares',
+      'Echte TikTok-Nutzer teilen dein Video',
+      'Geschwindigkeit: 2.500 Shares/Tag',
+      'Premium Service für maximale Wirkung',
+      'Lifetime Garantie'
+    ],
+    basePrice: 0.08,
+    discount: 20,
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard',
+        price: 0,
+        description: 'Normale Liefergeschwindigkeit'
+      },
+      {
+        id: 'express',
+        name: 'Express',
+        price: 12.99,
+        description: 'Schnellere Lieferung für maximale Wirkung'
+      }
+    ],
+    quantityOptions: [10, 25, 50, 100, 250, 500, 1000, 2500, 5000],
+    inputType: 'tiktok',
+    inputPlaceholder: 'https://www.tiktok.com/@username/video/...',
+    category: 'tiktok-shares'
+  },
+  {
+    id: 'tiktok-comments',
+    name: 'TikTok Kommentare',
+    slug: 'tiktok-comments',
+    icon: '💬',
+    description: 'Belebe deine TikTok Videos mit echten Kommentaren. Deutsche und englische Kommentare von realen Nutzern.',
+    features: [
+      'Deutsche und englische Kommentare',
+      'Echte TikTok-Accounts kommentieren',
+      'Personalisierte und relevante Kommentare',
+      'Geschwindigkeit: 500 Kommentare/Tag',
+      'Premium Qualität und Service',
+      'Lifetime Garantie auf alle Kommentare'
+    ],
+    basePrice: 0.15,
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard',
+        price: 0,
+        description: 'Normale Liefergeschwindigkeit'
+      },
+      {
+        id: 'premium',
+        name: 'Premium',
+        price: 15.99,
+        description: 'Hochwertige Kommentare mit schnellerer Lieferung'
+      }
+    ],
+    quantityOptions: [5, 10, 25, 50, 100, 250, 500, 1000],
+    inputType: 'tiktok',
+    inputPlaceholder: 'https://www.tiktok.com/@username/video/...',
+    category: 'tiktok-comments',
+    targetOptions: [
+      {
+        id: 'mixed',
+        name: 'Gemischt (Deutsch/Englisch)',
+        price: 0
+      },
+      {
+        id: 'german',
+        name: 'Nur Deutsche Kommentare',
+        price: 0.05
+      }
+    ]
   }
 ]
 
