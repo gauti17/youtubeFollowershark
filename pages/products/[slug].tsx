@@ -249,7 +249,9 @@ const RadioGroup = styled.div`
   }
 `
 
-const RadioOption = styled.label<{ selected: boolean }>`
+const RadioOption = styled.label.withConfig({
+  shouldForwardProp: (prop) => prop !== 'selected',
+})<{ selected: boolean }>`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -300,7 +302,9 @@ const QuantityGrid = styled.div`
   }
 `
 
-const QuantityButton = styled.button<{ selected: boolean }>`
+const QuantityButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'selected',
+})<{ selected: boolean }>`
   padding: 10px 14px;
   border: 1px solid ${props => props.selected ? '#8b5cf6' : '#d1d5db'};
   border-radius: 6px;
@@ -329,7 +333,9 @@ const SpeedOptions = styled.div`
   }
 `
 
-const SpeedOption = styled.label<{ selected: boolean }>`
+const SpeedOption = styled.label.withConfig({
+  shouldForwardProp: (prop) => prop !== 'selected',
+})<{ selected: boolean }>`
   display: block;
   padding: 12px;
   border: 1px solid ${props => props.selected ? '#8b5cf6' : '#e5e7eb'};
