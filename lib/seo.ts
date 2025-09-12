@@ -14,19 +14,28 @@ export interface SEOProps {
 }
 
 export const defaultSEO = {
-  title: 'YouShark - YouTube Views, Likes & Abonnenten kaufen',
-  description: 'Steigere deine YouTube Reichweite mit echten Views, Likes und Abonnenten. Sichere und schnelle Lieferung ✓ 24/7 Support ✓ Günstige Preise ✓',
+  title: 'YouShark - Social Media Growth für YouTube & TikTok | Views, Likes, Followers',
+  description: '🚀 Werde zum Social Media Star! YouTube & TikTok Services für echte Views, Likes, Shares & Followers. Premium-Qualität ✓ Schnelle Lieferung ✓ 24/7 Support ✓',
   keywords: [
+    'Social Media Growth',
     'YouTube Views kaufen',
+    'TikTok Views kaufen',
     'YouTube Likes kaufen', 
+    'TikTok Likes kaufen',
     'YouTube Abonnenten kaufen',
-    'YouTube Marketing',
+    'TikTok Followers kaufen',
+    'TikTok Shares kaufen',
+    'TikTok Kommentare kaufen',
     'Social Media Marketing',
-    'YouTube Wachstum',
+    'YouTube Marketing',
+    'TikTok Marketing',
+    'Viral gehen',
+    'Content Creator Services',
+    'Influencer Marketing',
     'Deutsche YouTube Views',
-    'YouTube Promotion',
-    'Echte YouTube Views',
-    'YouTube Reichweite erhöhen'
+    'YouTube & TikTok Promotion',
+    'Echte Follower',
+    'Social Media Wachstum'
   ],
   image: '/images/youshark-og-image.jpg',
   url: 'https://youshark.de',
@@ -138,26 +147,33 @@ export const productSEOConfigs = {
 // Page-specific SEO configurations
 export const pageSEOConfigs = {
   home: {
-    title: 'YouShark - #1 für YouTube Views, Likes & Abonnenten kaufen',
-    description: 'Deutschlands führende Plattform für YouTube Marketing. Kaufe echte Views, Likes & Abonnenten. ✓ Sichere Zahlung ✓ Schnelle Lieferung ✓ 24/7 Support',
+    title: 'YouShark - #1 Social Media Growth für YouTube & TikTok | Viral gehen!',
+    description: '🚀 Werde zum Social Media Star! YouTube & TikTok Growth Services: Views, Likes, Shares, Followers & mehr. Premium-Qualität ✓ Viral-Garantie ✓ 24/7 Support ✓',
     keywords: [
+      'Social Media Growth',
       'YouTube Views kaufen',
+      'TikTok Views kaufen',
       'YouTube Likes kaufen',
+      'TikTok Likes kaufen',
+      'TikTok Shares kaufen',
       'YouTube Abonnenten kaufen',
-      'YouTube Marketing Deutschland',
+      'TikTok Followers kaufen',
       'Social Media Marketing',
-      'YouTube Promotion',
+      'Viral gehen',
+      'Content Creator',
+      'Influencer Services',
       'YouShark'
     ]
   },
   shop: {
-    title: 'Shop - YouTube Marketing Services kaufen | YouShark',
-    description: 'Entdecke alle YouTube Marketing Services von YouShark. Views, Likes, Abonnenten und mehr für deinen Kanal-Erfolg.',
+    title: 'Shop - Social Media Growth Services für YouTube & TikTok | YouShark',
+    description: 'Entdecke alle Premium Social Media Services von YouShark. YouTube & TikTok Views, Likes, Shares, Followers und mehr für viralen Erfolg.',
     keywords: [
-      'YouTube Services kaufen',
-      'YouTube Marketing Shop',
-      'Social Media Services',
-      'YouTube Promotion Pakete'
+      'Social Media Services kaufen',
+      'YouTube & TikTok Services',
+      'Social Media Growth Shop',
+      'YouTube TikTok Marketing',
+      'Viral Marketing Services'
     ]
   },
   about: {

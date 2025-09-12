@@ -1461,28 +1461,28 @@ const HomePage: React.FC = () => {
 
           <HeroContent>
             <HeroSubtitle>
-              ✨ Der #1 YouTube Growth Service in Deutschland
+              🚀 Der #1 Social Media Growth Service in Deutschland
             </HeroSubtitle>
             
             <HeroTitle>
-              <span className="primary-text">Steigere deine</span><br />
-              <span className="accent-text">YouTube-Präsenz</span><br className="hidden sm:block" />
-              <span className="primary-text"> mit </span><span className="accent-text">wenigen Klicks!</span>
+              <span className="primary-text">Werde zum</span><br />
+              <span className="accent-text">Social Media Star</span><br className="hidden sm:block" />
+              <span className="primary-text"> auf </span><span className="accent-text">YouTube & TikTok!</span>
             </HeroTitle>
             
             <HeroDescription>
-              Steigere deine <strong>YouTube-Präsenz</strong> und <strong>Reichweite</strong> mit schnellen Lösungen –<br className="hidden sm:block" />
-              alles mit wenigen Klicks! So geht <strong>YouTube-Marketing 2025!</strong>
+              <strong>Millionen von Views, Likes und Followern</strong> warten auf dich! Verwandle deine Social Media Präsenz in eine<br className="hidden sm:block" />
+              <strong>Erfolgsgeschichte</strong> - mit echten Ergebnissen, die deinen Content viral gehen lassen. <strong>Starte heute!</strong>
             </HeroDescription>
 
             <CTASection>
               <Link href="/shop">
                 <PrimaryCTA>
-                  <span>🚀 Jetzt loslegen</span>
+                  <span>🔥 Viral gehen - Jetzt starten!</span>
                 </PrimaryCTA>
               </Link>
               <SecondaryCTA href="#how-it-works">
-                <span>📖 Mehr erfahren</span>
+                <span>⚡ Wie es funktioniert</span>
               </SecondaryCTA>
             </CTASection>
             
@@ -1506,19 +1506,23 @@ const HomePage: React.FC = () => {
 
           <SectionDivider>
             <DividerLine />
-            <DividerText>Unsere Dienstleistungen</DividerText>
+            <DividerText>🔥 Unsere Top Services</DividerText>
             <DividerLine />
           </SectionDivider>
-
+          
+          {/* YouTube Services */}
+          <SectionTitle style={{fontSize: '32px', marginBottom: '20px', color: '#FF6B35'}}>
+            📺 YouTube Services
+          </SectionTitle>
           <ProductGrid>
             {isProductsLoading ? (
               // Show skeleton loading cards
-              Array.from({ length: 4 }).map((_, index) => (
+              Array.from({ length: 3 }).map((_, index) => (
                 <ProductCardSkeleton key={index} />
               ))
             ) : (
-              // Show actual products
-              products.map((product) => (
+              // Show YouTube products only
+              products.filter(p => ['views', 'likes', 'subscribers'].includes(p.category)).map((product) => (
                 <Link key={product.id} href={`/products/${product.slug}`} passHref>
                   <ProductCard>
                     <div>
@@ -1540,7 +1544,53 @@ const HomePage: React.FC = () => {
                         )}
                       </PriceSection>
                       <ViewButton>
-                        Jetzt ansehen →
+                        🚀 Viral gehen →
+                      </ViewButton>
+                    </ProductFooter>
+                    {product.discount && (
+                      <ProductDiscount>-{product.discount}%</ProductDiscount>
+                    )}
+                  </ProductCard>
+                </Link>
+              ))
+            )}
+          </ProductGrid>
+
+          {/* TikTok Services */}
+          <SectionTitle style={{fontSize: '32px', marginBottom: '20px', color: '#FF6B35', marginTop: '60px'}}>
+            🎵 TikTok Services
+          </SectionTitle>
+          <ProductGrid>
+            {isProductsLoading ? (
+              // Show skeleton loading cards
+              Array.from({ length: 4 }).map((_, index) => (
+                <ProductCardSkeleton key={`tiktok-${index}`} />
+              ))
+            ) : (
+              // Show TikTok products only
+              products.filter(p => p.category.startsWith('tiktok-')).map((product) => (
+                <Link key={product.id} href={`/products/${product.slug}`} passHref>
+                  <ProductCard>
+                    <div>
+                      <ProductIcon className="product-icon">{product.icon}</ProductIcon>
+                      <ProductTitle className="product-title">{product.name}</ProductTitle>
+                      <ProductDescription>
+                        {product.description.length > 80 
+                          ? `${product.description.substring(0, 80)}...` 
+                          : product.description
+                        }
+                      </ProductDescription>
+                    </div>
+                    <ProductFooter>
+                      <PriceSection>
+                        <span className="from">ab</span>
+                        <span className="price">{formatProductPrice(product)}</span>
+                        {product.discount && (
+                          <span className="original">{formatOriginalPrice(product)}</span>
+                        )}
+                      </PriceSection>
+                      <ViewButton>
+                        ⚡ Viral gehen →
                       </ViewButton>
                     </ProductFooter>
                     {product.discount && (
@@ -1567,7 +1617,7 @@ const HomePage: React.FC = () => {
         <Container>
           <SectionTitle>So funktioniert es</SectionTitle>
           <SectionSubtitle>
-            In nur 3 einfachen Schritten zu mehr YouTube-Erfolg. Schnell, sicher und zuverlässig.
+            In nur 3 einfachen Schritten zu mehr YouTube & TikTok Erfolg. Schnell, sicher und garantiert viral.
           </SectionSubtitle>
           
           <StepsGrid>
@@ -1575,7 +1625,7 @@ const HomePage: React.FC = () => {
               <StepNumber>1</StepNumber>
               <StepTitle>Service wählen</StepTitle>
               <StepDescription>
-                Wählen Sie den gewünschten Service aus unserem Portfolio: Views, Likes, Abonnenten oder deutsche Views - alles in Premium-Qualität.
+                Wählen Sie den gewünschten Service: YouTube Views/Likes/Abonnenten oder TikTok Views/Likes/Shares/Kommentare - alles in Premium-Qualität.
               </StepDescription>
             </StepCard>
             
@@ -1583,7 +1633,7 @@ const HomePage: React.FC = () => {
               <StepNumber>2</StepNumber>
               <StepTitle>Bestellen & Bezahlen</StepTitle>
               <StepDescription>
-                Geben Sie Ihre Video-URL ein, wählen Sie die gewünschte Menge und bezahlen Sie sicher mit PayPal, Kreditkarte oder anderen Methoden.
+                Geben Sie Ihre YouTube- oder TikTok-URL ein, wählen Sie die gewünschte Menge und bezahlen Sie sicher mit PayPal oder anderen Methoden.
               </StepDescription>
             </StepCard>
             
@@ -1722,7 +1772,7 @@ const HomePage: React.FC = () => {
         <Container>
           <SectionTitle>Häufig gestellte Fragen</SectionTitle>
           <SectionSubtitle>
-            Alle wichtigen Antworten zu unseren YouTube Growth Services. Haben Sie weitere Fragen? Kontaktieren Sie unseren 24/7 Support!
+            Alle wichtigen Antworten zu unseren Social Media Growth Services für YouTube & TikTok. Haben Sie weitere Fragen? Kontaktieren Sie unseren 24/7 Support!
           </SectionSubtitle>
           
           <FAQGrid>
@@ -1735,12 +1785,12 @@ const HomePage: React.FC = () => {
       <FeaturesSection>
         <Container>
           <FeaturesSectionTitle>
-            YouTube Growth - seriös,<br />
-            einfach & sicher!
+            Social Media Growth - seriös,<br />
+            schnell & erfolgreich!
           </FeaturesSectionTitle>
           <FeaturesSectionSubtitle>
-            Warum sich täglich über 500 Kunden für youshark entscheiden und unseren schnellen,
-            zuverlässigen Service in Anspruch nehmen.
+            Warum sich täglich über 1000 Content Creator für youshark entscheiden und unseren blitzschnellen,
+            zuverlässigen Premium-Service für YouTube & TikTok nutzen.
           </FeaturesSectionSubtitle>
           
           <FeaturesGrid>
@@ -1748,15 +1798,15 @@ const HomePage: React.FC = () => {
               <FeatureIcon>⚡</FeatureIcon>
               <FeatureTitle>Schnelle Vermittlung</FeatureTitle>
               <FeatureDescription>
-                Bei youshark ist der Kauf von YouTube Services einfach und schnell. Das ist der Hauptgrund, 
-                warum sich täglich über 500 Kunden uns anvertrauen und unseren schnellen, 
-                zuverlässigen Service in Anspruch nehmen.
+                Bei youshark ist der Kauf von YouTube & TikTok Services blitzschnell und kinderleicht. Das ist der Hauptgrund, 
+                warum sich täglich über 1000 Content Creator uns anvertrauen und unseren Premium-Service 
+                für explosives Social Media Wachstum nutzen.
               </FeatureDescription>
               <FeatureDetails>
                 Nach der Bestellung starten wir sofort mit der 
-                Vermittlung von Views, Likes, Abonnenten etc., 
-                sodass du euren Service innerhalb weniger 
-                Minuten erhältst.
+                Lieferung von Views, Likes, Shares, Kommentaren & Followern, 
+                sodass dein Content innerhalb weniger 
+                Minuten viral geht!
               </FeatureDetails>
             </FeatureCard>
             
@@ -1764,15 +1814,14 @@ const HomePage: React.FC = () => {
               <FeatureIcon>🚀</FeatureIcon>
               <FeatureTitle>Kompetenter Live-Support</FeatureTitle>
               <FeatureDescription>
-                Die Zusammenarbeit mit youshark bedeutet, mit erfahrenen Experten zu arbeiten. 
-                Solltest du Fragen, Bedenken oder ein Anliegen haben, stehen wir dir fast rund um die Uhr zur 
+                Die Zusammenarbeit mit youshark bedeutet, mit Social Media Experten zu arbeiten, die wissen wie Viral-Marketing funktioniert. 
+                Solltest du Fragen, Bedenken oder ein Anliegen haben, stehen wir dir 24/7 zur 
                 Verfügung.
               </FeatureDescription>
               <FeatureDetails>
                 <strong>Wir sind live für dich da</strong> und unterstützen dich 
-                mit kompetenter Beratung und um eine 
-                sinnvolle und seriöse Vermittlung von 
-                YouTube Services.
+                mit Experten-Beratung für maximalen Erfolg auf 
+                YouTube, TikTok und anderen Social Media Plattformen.
               </FeatureDetails>
             </FeatureCard>
             
@@ -1780,20 +1829,18 @@ const HomePage: React.FC = () => {
               <FeatureIcon>🏆</FeatureIcon>
               <FeatureTitle>Services von höchster Qualität</FeatureTitle>
               <FeatureDescription>
-                Oft wird davon abgeraten, YouTube Services für das eigene Profil zu nutzen. Der Hauptgrund 
-                dafür ist, dass viele von billigen Anbietern 
-                überflütet ist: die minderwertige Profile liefern.
+                Oft wird vor Social Media Growth Services gewarnt, weil der Markt von billigen Anbietern 
+                überflutet ist, die minderwertige Fake-Accounts liefern und deinen Content gefährden können.
               </FeatureDescription>
               <FeatureDetails>
-                <strong>Bei uns ist das anders:</strong> Wir konzentrieren uns 
-                bewusst auf das Gegenteil - und genau 
-                deshalb sind wir so beliebt. Selbst unsere 
-                günstigsten Services werden auf Aussehen und 
+                <strong>Bei youshark ist das anders:</strong> Wir setzen auf Premium-Qualität 
+                statt Billig-Services. Alle unsere YouTube & TikTok 
+                Services werden streng auf Echtheit und 
                 Qualität geprüft.
                 <br/><br/>
-                <strong>Keine Fake-Accounts ohne Profilbild oder mit 
-                reinen Zahlennamen:</strong> Alle unsere vermittelten 
-                Profile sind von höchster Qualität.
+                <strong>Nur echte Accounts mit Profilbildern:</strong> Keine Bots, 
+                keine Fake-Profile - nur authentische Nutzer, 
+                die deinen Content wirklich viral gehen lassen!
               </FeatureDetails>
             </FeatureCard>
           </FeaturesGrid>
