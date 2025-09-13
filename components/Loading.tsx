@@ -59,8 +59,8 @@ interface SpinnerProps {
 }
 
 export const Spinner: React.FC<SpinnerProps> = ({ size = 'medium', className }) => (
-  <SpinnerWrapper $$size={size} className={className}>
-    <SpinnerCircle $$size={size} />
+  <SpinnerWrapper $size={size} className={className}>
+    <SpinnerCircle $size={size} />
   </SpinnerWrapper>
 )
 
@@ -83,7 +83,7 @@ export const ButtonWithSpinner: React.FC<ButtonSpinnerProps> = ({
   size = 'small' 
 }) => (
   <ButtonSpinnerWrapper>
-    {loading && <Spinner $size={size} />}
+    {loading && <Spinner size={size} />}
     {children}
   </ButtonSpinnerWrapper>
 )
@@ -212,7 +212,7 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
 }) => (
   <OverlayWrapper $show={show}>
     <OverlayContent>
-      <Spinner $size="large" />
+      <Spinner size="large" />
       <OverlayText>{text}</OverlayText>
     </OverlayContent>
   </OverlayWrapper>
@@ -243,7 +243,7 @@ export const InlineLoading: React.FC<InlineLoadingProps> = ({
   size = 'medium' 
 }) => (
   <InlineLoadingWrapper>
-    <Spinner $size={size} />
+    <Spinner size={size} />
     <InlineLoadingText>{text}</InlineLoadingText>
   </InlineLoadingWrapper>
 )
