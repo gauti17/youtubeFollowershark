@@ -14,26 +14,31 @@ export interface SEOProps {
 }
 
 export const defaultSEO = {
-  title: 'YouShark - Social Media Growth für YouTube & TikTok | Views, Likes, Followers',
-  description: '🚀 Werde zum Social Media Star! YouTube & TikTok Services für echte Views, Likes, Shares & Followers. Premium-Qualität ✓ Schnelle Lieferung ✓ 24/7 Support ✓',
+  title: 'YouShark - Social Media Growth für YouTube, TikTok & Instagram | Views, Likes, Followers',
+  description: '🚀 Werde zum Social Media Star! YouTube, TikTok & Instagram Services für echte Views, Likes, Shares & Followers. Premium-Qualität ✓ Schnelle Lieferung ✓ 24/7 Support ✓',
   keywords: [
     'Social Media Growth',
     'YouTube Views kaufen',
     'TikTok Views kaufen',
+    'Instagram Followers kaufen',
     'YouTube Likes kaufen', 
     'TikTok Likes kaufen',
+    'Instagram Likes kaufen',
     'YouTube Abonnenten kaufen',
     'TikTok Followers kaufen',
+    'Instagram Views kaufen',
     'TikTok Shares kaufen',
     'TikTok Kommentare kaufen',
+    'Instagram Kommentare kaufen',
     'Social Media Marketing',
     'YouTube Marketing',
     'TikTok Marketing',
+    'Instagram Marketing',
     'Viral gehen',
     'Content Creator Services',
     'Influencer Marketing',
     'Deutsche YouTube Views',
-    'YouTube & TikTok Promotion',
+    'YouTube TikTok Instagram Promotion',
     'Echte Follower',
     'Social Media Wachstum'
   ],
@@ -141,14 +146,62 @@ export const productSEOConfigs = {
       'YouTube Marketing Deutschland',
       'Regionale YouTube Promotion'
     ]
+  },
+  'instagram-followers': {
+    title: 'Instagram Followers kaufen - Echte Premium Follower | YouShark',
+    description: 'Kaufe echte Instagram Followers von aktiven Premium-Accounts. Hochqualitative Follower für nachhaltiges Instagram-Wachstum.',
+    keywords: [
+      'Instagram Followers kaufen',
+      'Instagram Abonnenten kaufen',
+      'Echte Instagram Follower',
+      'Premium Instagram Followers',
+      'Instagram Community aufbauen',
+      'Instagram Marketing'
+    ]
+  },
+  'instagram-likes': {
+    title: 'Instagram Likes kaufen - Mehr Engagement für Posts | YouShark',
+    description: 'Kaufe echte Instagram Likes für deine Posts. Sofortiger Algorithmus-Boost und mehr Sichtbarkeit für deinen Content.',
+    keywords: [
+      'Instagram Likes kaufen',
+      'Instagram Engagement erhöhen',
+      'Echte Instagram Likes',
+      'Instagram Post Likes',
+      'Instagram Algorithmus Boost',
+      'Instagram Marketing'
+    ]
+  },
+  'instagram-views': {
+    title: 'Instagram Views kaufen - Reels & Stories Reichweite | YouShark',
+    description: 'Kaufe echte Instagram Views für Reels und Stories. Maximiere deine Reichweite mit algorithmussicherer Premium-Lieferung.',
+    keywords: [
+      'Instagram Views kaufen',
+      'Instagram Reels Views kaufen',
+      'Instagram Stories Views',
+      'Instagram Reichweite erhöhen',
+      'Instagram Video Views',
+      'Instagram Marketing'
+    ]
+  },
+  'instagram-comments': {
+    title: 'Instagram Kommentare kaufen - Premium Engagement | YouShark',
+    description: 'Kaufe hochwertige Instagram Kommentare von echten Accounts. Deutsche und englische Premium-Kommentare für authentisches Engagement.',
+    keywords: [
+      'Instagram Kommentare kaufen',
+      'Premium Instagram Kommentare',
+      'Deutsche Instagram Kommentare',
+      'Instagram Engagement kaufen',
+      'Echte Instagram Kommentare',
+      'Instagram Marketing'
+    ]
   }
 }
 
 // Page-specific SEO configurations
 export const pageSEOConfigs = {
   home: {
-    title: 'YouShark - #1 Social Media Growth für YouTube & TikTok | Viral gehen!',
-    description: '🚀 Werde zum Social Media Star! YouTube & TikTok Growth Services: Views, Likes, Shares, Followers & mehr. Premium-Qualität ✓ Viral-Garantie ✓ 24/7 Support ✓',
+    title: 'YouShark - #1 Social Media Growth für YouTube, TikTok & Instagram | Viral gehen!',
+    description: '🚀 Werde zum Social Media Star! YouTube, TikTok & Instagram Growth Services: Views, Likes, Shares, Followers & mehr. Premium-Qualität ✓ Viral-Garantie ✓ 24/7 Support ✓',
     keywords: [
       'Social Media Growth',
       'YouTube Views kaufen',
@@ -166,13 +219,13 @@ export const pageSEOConfigs = {
     ]
   },
   shop: {
-    title: 'Shop - Social Media Growth Services für YouTube & TikTok | YouShark',
-    description: 'Entdecke alle Premium Social Media Services von YouShark. YouTube & TikTok Views, Likes, Shares, Followers und mehr für viralen Erfolg.',
+    title: 'Shop - Social Media Growth Services für YouTube, TikTok & Instagram | YouShark',
+    description: 'Entdecke alle Premium Social Media Services von YouShark. YouTube, TikTok & Instagram Views, Likes, Shares, Followers und mehr für viralen Erfolg.',
     keywords: [
       'Social Media Services kaufen',
-      'YouTube & TikTok Services',
+      'YouTube TikTok Instagram Services',
       'Social Media Growth Shop',
-      'YouTube TikTok Marketing',
+      'YouTube TikTok Instagram Marketing',
       'Viral Marketing Services'
     ]
   },

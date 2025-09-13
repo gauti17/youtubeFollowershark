@@ -61,7 +61,9 @@ const FilterSection = styled.div`
   }
 `
 
-const FilterButton = styled.button<{ $active: boolean }>`
+const FilterButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['$active'].includes(prop)
+})<{ $active: boolean }>`
   padding: 12px 24px;
   border: 2px solid ${props => props.$active ? '#FF6B35' : '#e2e8f0'};
   background: ${props => props.$active ? 'linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%)' : 'white'};
@@ -379,6 +381,7 @@ const ShopPage: React.FC = () => {
     { id: 'all', name: 'Alle Services' },
     { id: 'youtube', name: 'YouTube' },
     { id: 'tiktok', name: 'TikTok' },
+    { id: 'instagram', name: 'Instagram' },
     { id: 'views', name: 'Views' },
     { id: 'likes', name: 'Likes' },
     { id: 'subscribers', name: 'Abonnenten' }
@@ -404,11 +407,22 @@ const ShopPage: React.FC = () => {
           product.category === 'tiktok-shares' || 
           product.category === 'tiktok-comments'
         )
+      } else if (activeFilter === 'instagram') {
+        // Show all Instagram products
+        filtered = filtered.filter(product => 
+          product.category === 'instagram-followers' || 
+          product.category === 'instagram-likes' || 
+          product.category === 'instagram-views' || 
+          product.category === 'instagram-comments'
+        )
       } else {
         // Filter by specific category (views, likes, subscribers)
         filtered = filtered.filter(product => 
           product.category === activeFilter ||
-          product.category === `tiktok-${activeFilter}`
+          product.category === `tiktok-${activeFilter}` ||
+          (activeFilter === 'likes' && product.category === 'instagram-likes') ||
+          (activeFilter === 'views' && product.category === 'instagram-views') ||
+          (activeFilter === 'subscribers' && product.category === 'instagram-followers')
         )
       }
     }

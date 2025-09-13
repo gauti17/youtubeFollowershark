@@ -139,7 +139,9 @@ const TabContainer = styled.div`
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
 `
 
-const Tab = styled.button<{ active: boolean }>`
+const Tab = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'active'
+})<{ active: boolean }>`
   flex: 1;
   padding: 14px 20px;
   border: none;
@@ -216,7 +218,9 @@ const Label = styled.label`
   letter-spacing: -0.01em;
 `
 
-const Input = styled.input<{ $hasError?: boolean }>`
+const Input = styled.input.withConfig({
+  shouldForwardProp: (prop) => prop !== '$hasError'
+})<{ $hasError?: boolean }>`
   padding: 16px 20px;
   border: 2px solid ${props => props.$hasError ? '#ef4444' : '#e2e8f0'};
   border-radius: 12px;
@@ -270,7 +274,9 @@ const ErrorMessage = styled.div`
   }
 `
 
-const SubmitButton = styled.button<{ loading?: boolean }>`
+const SubmitButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'loading'
+})<{ loading?: boolean }>`
   background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
   color: white;
   padding: 18px 32px;
@@ -414,7 +420,9 @@ const SecurityNote = styled.div`
   font-weight: 500;
 `
 
-const FloatingElement = styled.div<{ delay?: number; size?: number }>`
+const FloatingElement = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['delay', 'size'].includes(prop)
+})<{ delay?: number; size?: number }>`
   position: absolute;
   width: ${props => props.size || 60}px;
   height: ${props => props.size || 60}px;

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
-const BannerContainer = styled.div<{ $show: boolean }>`
+const BannerContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$show'
+})<{ $show: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;

@@ -64,7 +64,9 @@ const SectionTitle = styled.h2`
   border-bottom: 2px solid #FF6B35;
 `
 
-const FAQItem = styled.div<{ $isOpen: boolean }>`
+const FAQItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$isOpen'
+})<{ $isOpen: boolean }>`
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   margin-bottom: 12px;
@@ -98,14 +100,18 @@ const FAQQuestion = styled.button`
   }
 `
 
-const FAQIcon = styled.span<{ $isOpen: boolean }>`
+const FAQIcon = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== '$isOpen'
+})<{ $isOpen: boolean }>`
   font-size: 20px;
   color: #FF6B35;
   transition: transform 0.2s ease;
   transform: ${props => props.$isOpen ? 'rotate(45deg)' : 'rotate(0deg)'};
 `
 
-const FAQAnswer = styled.div<{ $isOpen: boolean }>`
+const FAQAnswer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$isOpen'
+})<{ $isOpen: boolean }>`
   max-height: ${props => props.$isOpen ? '500px' : '0'};
   overflow: hidden;
   transition: max-height 0.3s ease;

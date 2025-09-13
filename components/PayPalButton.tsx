@@ -37,7 +37,9 @@ interface PayPalButtonProps {
   onCancel?: () => void
 }
 
-const PayPalContainer = styled.div<{ $disabled: boolean }>`
+const PayPalContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$disabled'
+})<{ $disabled: boolean }>`
   opacity: ${props => props.$disabled ? 0.6 : 1};
   pointer-events: ${props => props.$disabled ? 'none' : 'auto'};
   min-height: 55px;

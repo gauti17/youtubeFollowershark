@@ -5,8 +5,8 @@ import SEO from '../components/SEO'
 import styled from 'styled-components'
 import { products } from '../data/products'
 import { formatPrice, formatNumber } from '../lib/formatUtils'
-import { ProductCardSkeleton } from '../components/Loading'
 import { pageSEOConfigs, generateStructuredData } from '../lib/seo'
+import CategoryNavigation from '../components/CategoryNavigation'
 
 const HeroSection = styled.section`
   padding: 20px 16px 80px 16px;
@@ -568,230 +568,6 @@ const DividerText = styled.span`
   backdrop-filter: blur(10px);
 `
 
-const ProductGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-  margin-bottom: 80px;
-  position: relative;
-  z-index: 1;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-  justify-items: center;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 500px;
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    max-width: 400px;
-  }
-`
-
-const ProductCard = styled.div`
-  background: white;
-  border-radius: 24px;
-  padding: 32px 24px;
-  text-align: center;
-  color: #1a1a1a;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  min-height: 280px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.02) 0%, rgba(255, 107, 53, 0.06) 100%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
-    opacity: 0;
-    transition: all 0.6s ease;
-    transform: scale(0);
-  }
-
-  &:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 107, 53, 0.1);
-    border-color: rgba(255, 107, 53, 0.3);
-    
-    &::before {
-      opacity: 1;
-    }
-    
-    &::after {
-      opacity: 1;
-      transform: scale(1);
-    }
-    
-    .product-icon {
-      transform: scale(1.15) rotate(5deg);
-      filter: drop-shadow(0 8px 16px rgba(255, 107, 53, 0.3));
-    }
-    
-    .product-title {
-      color: #FF6B35;
-    }
-  }
-`
-
-const ProductIcon = styled.div`
-  font-size: 56px;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 142, 107, 0.1) 100%);
-  width: 80px;
-  height: 80px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px auto;
-  border: 1px solid rgba(255, 107, 53, 0.1);
-`
-
-const ProductTitle = styled.h3`
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: #1a1a1a;
-  position: relative;
-  z-index: 1;
-  margin-bottom: 12px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  transition: color 0.3s ease;
-  letter-spacing: -0.01em;
-`
-
-const ProductDescription = styled.p`
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-  font-family: 'Inter', sans-serif;
-  min-height: 42px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-`
-
-const ProductFooter = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
-  z-index: 1;
-`
-
-const PriceSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  
-  .from {
-    font-size: 12px;
-    color: #9ca3af;
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
-  }
-  
-  .price {
-    font-size: 18px;
-    font-weight: 700;
-    color: #FF6B35;
-    font-family: 'Inter', sans-serif;
-  }
-  
-  .original {
-    font-size: 14px;
-    color: #9ca3af;
-    text-decoration: line-through;
-    font-family: 'Inter', sans-serif;
-  }
-`
-
-const ViewButton = styled.div`
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #e2e8f0;
-  color: #4a5568;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Inter', sans-serif;
-  
-  &:hover {
-    background: linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%);
-    color: white;
-    border-color: #FF6B35;
-    transform: translateY(-1px);
-  }
-`
-
-const ProductDiscount = styled.div`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 700;
-  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
-  z-index: 3;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: 0.02em;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: pulse 3s ease-in-out infinite;
-
-  @keyframes pulse {
-    0%, 100% { 
-      transform: scale(1);
-      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
-    }
-    50% { 
-      transform: scale(1.05);
-      box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4);
-    }
-  }
-`
 
 const ViewAllButton = styled(Link)`
   display: inline-flex;
@@ -1203,7 +979,9 @@ const FeaturesGrid = styled.div`
   }
 `
 
-const FeatureCard = styled.div<{ $bgColor: string }>`
+const FeatureCard = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$bgColor'
+})<{ $bgColor: string }>`
   background: ${props => props.$bgColor};
   border-radius: 24px;
   padding: 40px;
@@ -1364,7 +1142,9 @@ const FAQItem = styled.div`
   }
 `
 
-const FAQQuestion = styled.div<{ $isOpen: boolean }>`
+const FAQQuestion = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$isOpen'
+})<{ $isOpen: boolean }>`
   padding: 24px 30px;
   font-size: 18px;
   font-weight: 600;
@@ -1389,7 +1169,9 @@ const FAQQuestion = styled.div<{ $isOpen: boolean }>`
   }
 `
 
-const FAQAnswer = styled.div<{ $isOpen: boolean }>`
+const FAQAnswer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$isOpen'
+})<{ $isOpen: boolean }>`
   max-height: ${props => props.$isOpen ? '300px' : '0'};
   overflow: hidden;
   transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -1410,33 +1192,6 @@ const FAQAnswer = styled.div<{ $isOpen: boolean }>`
 `
 
 const HomePage: React.FC = () => {
-  const [isProductsLoading, setIsProductsLoading] = useState(false)
-
-  useEffect(() => {
-    // Simulate loading products (since they're static, we'll just show skeleton for UX)
-    setIsProductsLoading(true)
-    const timer = setTimeout(() => {
-      setIsProductsLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  const formatProductPrice = (product: any) => {
-    // Calculate starting price with minimum quantity
-    const minQuantity = product.quantityOptions[0] || 1000
-    let price = product.basePrice * minQuantity
-    if (product.discount) {
-      price = price * (1 - product.discount / 100)
-    }
-    return formatPrice(price)
-  }
-  
-  const formatOriginalPrice = (product: any) => {
-    // Calculate original price with minimum quantity (before discount)
-    const minQuantity = product.quantityOptions[0] || 1000
-    return formatPrice(product.basePrice * minQuantity)
-  }
   
   
   // Generate structured data for homepage
@@ -1467,7 +1222,7 @@ const HomePage: React.FC = () => {
             <HeroTitle>
               <span className="primary-text">Werde zum</span><br />
               <span className="accent-text">Social Media Star</span><br className="hidden sm:block" />
-              <span className="primary-text"> auf </span><span className="accent-text">YouTube & TikTok!</span>
+              <span className="primary-text"> auf </span><span className="accent-text">YouTube, TikTok & Instagram!</span>
             </HeroTitle>
             
             <HeroDescription>
@@ -1510,97 +1265,8 @@ const HomePage: React.FC = () => {
             <DividerLine />
           </SectionDivider>
           
-          {/* YouTube Services */}
-          <SectionTitle style={{fontSize: '32px', marginBottom: '20px', color: '#FF6B35'}}>
-            📺 YouTube Services
-          </SectionTitle>
-          <ProductGrid>
-            {isProductsLoading ? (
-              // Show skeleton loading cards
-              Array.from({ length: 3 }).map((_, index) => (
-                <ProductCardSkeleton key={index} />
-              ))
-            ) : (
-              // Show YouTube products only
-              products.filter(p => ['views', 'likes', 'subscribers'].includes(p.category)).map((product) => (
-                <Link key={product.id} href={`/products/${product.slug}`} passHref>
-                  <ProductCard>
-                    <div>
-                      <ProductIcon className="product-icon">{product.icon}</ProductIcon>
-                      <ProductTitle className="product-title">{product.name}</ProductTitle>
-                      <ProductDescription>
-                        {product.description.length > 80 
-                          ? `${product.description.substring(0, 80)}...` 
-                          : product.description
-                        }
-                      </ProductDescription>
-                    </div>
-                    <ProductFooter>
-                      <PriceSection>
-                        <span className="from">ab</span>
-                        <span className="price">{formatProductPrice(product)}</span>
-                        {product.discount && (
-                          <span className="original">{formatOriginalPrice(product)}</span>
-                        )}
-                      </PriceSection>
-                      <ViewButton>
-                        🚀 Viral gehen →
-                      </ViewButton>
-                    </ProductFooter>
-                    {product.discount && (
-                      <ProductDiscount>-{product.discount}%</ProductDiscount>
-                    )}
-                  </ProductCard>
-                </Link>
-              ))
-            )}
-          </ProductGrid>
-
-          {/* TikTok Services */}
-          <SectionTitle style={{fontSize: '32px', marginBottom: '20px', color: '#FF6B35', marginTop: '60px'}}>
-            🎵 TikTok Services
-          </SectionTitle>
-          <ProductGrid>
-            {isProductsLoading ? (
-              // Show skeleton loading cards
-              Array.from({ length: 4 }).map((_, index) => (
-                <ProductCardSkeleton key={`tiktok-${index}`} />
-              ))
-            ) : (
-              // Show TikTok products only
-              products.filter(p => p.category.startsWith('tiktok-')).map((product) => (
-                <Link key={product.id} href={`/products/${product.slug}`} passHref>
-                  <ProductCard>
-                    <div>
-                      <ProductIcon className="product-icon">{product.icon}</ProductIcon>
-                      <ProductTitle className="product-title">{product.name}</ProductTitle>
-                      <ProductDescription>
-                        {product.description.length > 80 
-                          ? `${product.description.substring(0, 80)}...` 
-                          : product.description
-                        }
-                      </ProductDescription>
-                    </div>
-                    <ProductFooter>
-                      <PriceSection>
-                        <span className="from">ab</span>
-                        <span className="price">{formatProductPrice(product)}</span>
-                        {product.discount && (
-                          <span className="original">{formatOriginalPrice(product)}</span>
-                        )}
-                      </PriceSection>
-                      <ViewButton>
-                        ⚡ Viral gehen →
-                      </ViewButton>
-                    </ProductFooter>
-                    {product.discount && (
-                      <ProductDiscount>-{product.discount}%</ProductDiscount>
-                    )}
-                  </ProductCard>
-                </Link>
-              ))
-            )}
-          </ProductGrid>
+          {/* Category Navigation Component */}
+          <CategoryNavigation />
 
           <ViewAllContainer>
             <ViewAllButton href="/shop">
@@ -1617,7 +1283,7 @@ const HomePage: React.FC = () => {
         <Container>
           <SectionTitle>So funktioniert es</SectionTitle>
           <SectionSubtitle>
-            In nur 3 einfachen Schritten zu mehr YouTube & TikTok Erfolg. Schnell, sicher und garantiert viral.
+            In nur 3 einfachen Schritten zu mehr YouTube, TikTok & Instagram Erfolg. Schnell, sicher und garantiert viral.
           </SectionSubtitle>
           
           <StepsGrid>
@@ -1772,7 +1438,7 @@ const HomePage: React.FC = () => {
         <Container>
           <SectionTitle>Häufig gestellte Fragen</SectionTitle>
           <SectionSubtitle>
-            Alle wichtigen Antworten zu unseren Social Media Growth Services für YouTube & TikTok. Haben Sie weitere Fragen? Kontaktieren Sie unseren 24/7 Support!
+            Alle wichtigen Antworten zu unseren Social Media Growth Services für YouTube, TikTok & Instagram. Haben Sie weitere Fragen? Kontaktieren Sie unseren 24/7 Support!
           </SectionSubtitle>
           
           <FAQGrid>

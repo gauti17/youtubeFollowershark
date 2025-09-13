@@ -451,7 +451,9 @@ const UrlSuccessMessage = styled.div`
   }
 `
 
-const VideoInput = styled.input<{ $hasError?: boolean; $isValid?: boolean }>`
+const VideoInput = styled.input.withConfig({
+  shouldForwardProp: (prop) => !['$hasError', '$isValid'].includes(prop)
+})<{ $hasError?: boolean; $isValid?: boolean }>`
   width: 100%;
   padding: 14px 14px 14px 44px;
   border: 1px solid ${props => 
@@ -1215,10 +1217,10 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     if (!inputValue.trim()) {
       if (isMobile) {
         setButtonState('error')
-        setUrlError('Bitte geben Sie eine YouTube-URL ein.')
+        setUrlError(`Bitte geben Sie eine ${product.inputType === 'video' || product.inputType === 'channel' ? 'YouTube' : product.inputType === 'tiktok' ? 'TikTok' : 'Instagram'}-URL ein.`)
         setTimeout(() => setButtonState('default'), 2000)
       } else {
-        showFeedback('Bitte geben Sie eine YouTube-URL ein.', 'warning')
+        showFeedback(`Bitte geben Sie eine ${product.inputType === 'video' || product.inputType === 'channel' ? 'YouTube' : product.inputType === 'tiktok' ? 'TikTok' : 'Instagram'}-URL ein.`, 'warning')
       }
       return
     }
@@ -1755,7 +1757,10 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
           <ProductDetailsBox>
             <ProductHeader>
               <ProductIconRow>
-                <ProductIcon>▶</ProductIcon>
+                <ProductIcon>
+                  {product.inputType === 'video' || product.inputType === 'channel' ? '▶' : 
+                   product.inputType === 'tiktok' ? '🎵' : '📷'}
+                </ProductIcon>
                 <ProductTitle>{product.name}</ProductTitle>
               </ProductIconRow>
               {product.discount && (
@@ -1980,10 +1985,14 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
             <SectionTitle>
               {product.inputType === 'video' ? 'Youtube Videolink:' : 
                product.inputType === 'channel' ? 'Youtube Channellink:' : 
-               'TikTok Videolink:'} *
+               product.inputType === 'tiktok' ? 'TikTok Videolink:' :
+               'Instagram Videolink:'} *
             </SectionTitle>
             <VideoInputContainer>
-              <VideoIcon>📺</VideoIcon>
+              <VideoIcon>
+                {product.inputType === 'video' || product.inputType === 'channel' ? '📺' : 
+                 product.inputType === 'tiktok' ? '🎵' : '📷'}
+              </VideoIcon>
               <VideoInput
                 type="url"
                 value={inputValue}
@@ -1997,7 +2006,10 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
               <UrlErrorMessage>{urlError}</UrlErrorMessage>
             )}
             {isUrlValid && !urlError && inputValue.trim() && (
-              <UrlSuccessMessage>Gültige YouTube-URL erkannt</UrlSuccessMessage>
+              <UrlSuccessMessage>
+                Gültige {product.inputType === 'video' || product.inputType === 'channel' ? 'YouTube' : 
+                         product.inputType === 'tiktok' ? 'TikTok' : 'Instagram'}-URL erkannt
+              </UrlSuccessMessage>
             )}
           </VideoInputSection>
 

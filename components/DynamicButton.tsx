@@ -29,7 +29,9 @@ const shake = keyframes`
   75% { transform: translateX(4px); }
 `
 
-const StyledButton = styled.button<{ $state: ButtonState }>`
+const StyledButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== '$state'
+})<{ $state: ButtonState }>`
   width: 100%;
   padding: 16px 24px;
   border: none;
@@ -94,7 +96,9 @@ const StyledButton = styled.button<{ $state: ButtonState }>`
   }
 `
 
-const ButtonIcon = styled.span<{ $state: ButtonState }>`
+const ButtonIcon = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== '$state'
+})<{ $state: ButtonState }>`
   font-size: 18px;
   display: flex;
   align-items: center;
@@ -118,7 +122,9 @@ const LoadingSpinner = styled.div`
   }
 `
 
-const ButtonText = styled.span<{ $state: ButtonState }>`
+const ButtonText = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== '$state'
+})<{ $state: ButtonState }>`
   transition: all 0.3s ease;
 `
 

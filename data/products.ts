@@ -9,9 +9,9 @@ export interface Product {
   discount?: number
   speedOptions: SpeedOption[]
   quantityOptions: number[]
-  inputType: 'video' | 'channel' | 'tiktok'
+  inputType: 'video' | 'channel' | 'tiktok' | 'instagram'
   inputPlaceholder: string
-  category: 'views' | 'likes' | 'subscribers' | 'tiktok-views' | 'tiktok-likes' | 'tiktok-shares' | 'tiktok-comments'
+  category: 'views' | 'likes' | 'subscribers' | 'tiktok-views' | 'tiktok-likes' | 'tiktok-shares' | 'tiktok-comments' | 'instagram-followers' | 'instagram-likes' | 'instagram-views' | 'instagram-comments'
   targetOptions?: TargetOption[]
 }
 
@@ -354,6 +354,164 @@ export const products: Product[] = [
         id: 'german',
         name: 'Nur Deutsche Kommentare',
         price: 0.05
+      }
+    ]
+  },
+
+  // Instagram Products - Premium positioning with 20-30% higher pricing than TikTok
+  {
+    id: 'instagram-followers',
+    name: 'Instagram Followers',
+    slug: 'instagram-followers',
+    icon: '👥',
+    description: 'Baue deine Instagram-Community mit echten Followern auf. Hochwertige, aktive Accounts für nachhaltiges Wachstum.',
+    features: [
+      'Echte Instagram-Accounts mit hoher Aktivität',
+      'Permanente Follower mit Lifetime-Garantie',
+      'Langsame, natürliche Lieferung für Sicherheit',
+      'Geschwindigkeit: 1.000 Follower/Tag',
+      'Premium-Qualität für Business-Accounts',
+      '24/7 Premium-Support'
+    ],
+    basePrice: 0.095, // 27% higher than TikTok equivalent (0.075)
+    discount: 15,
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard Lieferung',
+        price: 0,
+        description: '500-1.000 Follower/Tag'
+      },
+      {
+        id: 'premium',
+        name: 'Premium Lieferung',
+        price: 12.99,
+        description: 'Bis zu 2.000 Follower/Tag'
+      }
+    ],
+    quantityOptions: [50, 100, 250, 500, 1000, 2500, 5000, 10000, 20000],
+    inputType: 'instagram',
+    inputPlaceholder: 'https://www.instagram.com/dein-profil/',
+    category: 'instagram-followers'
+  },
+  {
+    id: 'instagram-likes',
+    name: 'Instagram Likes',
+    slug: 'instagram-likes',
+    icon: '❤️',
+    description: 'Steigere das Engagement deiner Instagram Posts mit echten Likes. Mehr Sichtbarkeit im Instagram-Algorithmus.',
+    features: [
+      'Echte Likes von aktiven Instagram-Nutzern',
+      'Sofortiger Algorithmus-Boost für Posts',
+      'Hohe Engagement-Rate für bessere Reichweite',
+      'Geschwindigkeit: 15.000 Likes/Tag',
+      'Lifetime-Garantie auf alle Likes',
+      'Sichere und diskrete Lieferung'
+    ],
+    basePrice: 0.032, // 28% higher than TikTok (0.025)
+    discount: 12,
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard',
+        price: 0,
+        description: 'Normale Liefergeschwindigkeit'
+      },
+      {
+        id: 'instant',
+        name: 'Sofort-Lieferung',
+        price: 7.99,
+        description: 'Start innerhalb von 1 Stunde'
+      }
+    ],
+    quantityOptions: [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000],
+    inputType: 'instagram',
+    inputPlaceholder: 'https://www.instagram.com/p/ABC123...',
+    category: 'instagram-likes'
+  },
+  {
+    id: 'instagram-views',
+    name: 'Instagram Views',
+    slug: 'instagram-views',
+    icon: '👀',
+    description: 'Maximiere die Reichweite deiner Instagram Reels und Stories. Echte Views für viralen Content.',
+    features: [
+      'Echte Views für Reels und Stories',
+      'Algorithmus-optimierte Lieferung',
+      'Hohe Retention-Rate für bessere Performance',
+      'Geschwindigkeit: 100.000 Views/Tag',
+      'Perfekt für Reels und Video-Content',
+      'Lifetime-Garantie'
+    ],
+    basePrice: 0.019, // 27% higher than TikTok (0.015)
+    discount: 18,
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard',
+        price: 0,
+        description: 'Optimale Liefergeschwindigkeit'
+      },
+      {
+        id: 'viral',
+        name: 'Viral-Boost',
+        price: 9.99,
+        description: 'Maximale Geschwindigkeit für viralen Effekt'
+      }
+    ],
+    quantityOptions: [500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000],
+    inputType: 'instagram',
+    inputPlaceholder: 'https://www.instagram.com/reel/ABC123... oder Story-Link',
+    category: 'instagram-views'
+  },
+  {
+    id: 'instagram-comments',
+    name: 'Instagram Kommentare',
+    slug: 'instagram-comments',
+    icon: '💬',
+    description: 'Belebe deine Instagram Posts mit echten, hochwertigen Kommentaren. Deutsche und englische Premium-Kommentare.',
+    features: [
+      'Hochwertige deutsche und englische Kommentare',
+      'Echte Instagram-Accounts kommentieren',
+      'Personalisierte und relevante Inhalte',
+      'Geschwindigkeit: 200 Kommentare/Tag',
+      'Premium-Service mit individueller Betreuung',
+      'Lifetime-Garantie auf alle Kommentare'
+    ],
+    basePrice: 0.195, // 30% higher than TikTok (0.15)
+    speedOptions: [
+      {
+        id: 'standard',
+        name: 'Standard',
+        price: 0,
+        description: 'Qualitäts-Kommentare über 2-3 Tage verteilt'
+      },
+      {
+        id: 'premium',
+        name: 'Premium Custom',
+        price: 15.99,
+        description: 'Individuell angepasste Kommentare'
+      }
+    ],
+    quantityOptions: [5, 10, 25, 50, 100, 200, 500],
+    inputType: 'instagram',
+    inputPlaceholder: 'https://www.instagram.com/p/ABC123...',
+    category: 'instagram-comments',
+    targetOptions: [
+      {
+        id: 'mixed',
+        name: 'Gemischt (Deutsch/Englisch)',
+        price: 0
+      },
+      {
+        id: 'german',
+        name: 'Nur Deutsche Premium-Kommentare',
+        price: 0.08
+      },
+      {
+        id: 'business',
+        name: 'Business-fokussierte Kommentare',
+        price: 0.12
       }
     ]
   }

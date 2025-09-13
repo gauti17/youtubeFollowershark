@@ -68,7 +68,9 @@ const NavMenu = styled.ul`
   }
 `
 
-const MobileNavMenu = styled.div<{ $isOpen: boolean }>`
+const MobileNavMenu = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$isOpen'
+})<{ $isOpen: boolean }>`
   display: none;
   position: fixed;
   top: 0;
@@ -86,7 +88,9 @@ const MobileNavMenu = styled.div<{ $isOpen: boolean }>`
   }
 `
 
-const MobileNavContent = styled.div<{ $isOpen: boolean }>`
+const MobileNavContent = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$isOpen'
+})<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
   right: 0;
@@ -262,7 +266,9 @@ const CartLink = styled.a`
   }
 `
 
-const CartCount = styled.span<{ $count: number }>`
+const CartCount = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== '$count'
+})<{ $count: number }>`
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border-radius: 50%;
@@ -588,9 +594,11 @@ const Header: React.FC = () => {
               <NavItem>
                 <CartLink onClick={() => router.push('/cart')}>
                   <span className="cart-icon">🛒</span>
-                  <span className="cart-total">{formatPrice(cartTotal)}</span>
+                  <span className="cart-total">{isClient ? formatPrice(cartTotal) : formatPrice(0)}</span>
                   <span>- In den Warenkorb</span>
-                  <CartCount $count={cartItemCount} className={animationClass}>{cartItemCount}</CartCount>
+                  <CartCount $count={isClient ? cartItemCount : 0} className={isClient ? animationClass : ''}>
+                    {isClient ? cartItemCount : 0}
+                  </CartCount>
                 </CartLink>
               </NavItem>
               
@@ -624,8 +632,10 @@ const Header: React.FC = () => {
             <MobileCartAndMenu>
               <MobileCartLink onClick={() => router.push('/cart')}>
                 <span className="cart-icon">🛒</span>
-                <span className="cart-total">{formatPrice(cartTotal)}</span>
-                <CartCount $count={cartItemCount} className={animationClass}>{cartItemCount}</CartCount>
+                <span className="cart-total">{isClient ? formatPrice(cartTotal) : formatPrice(0)}</span>
+                <CartCount $count={isClient ? cartItemCount : 0} className={isClient ? animationClass : ''}>
+                  {isClient ? cartItemCount : 0}
+                </CartCount>
               </MobileCartLink>
               
               <MobileMenuButton onClick={() => setMobileMenuOpen(true)}>

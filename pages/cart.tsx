@@ -286,7 +286,9 @@ const ItemInfo = styled.div`
   }
 `
 
-const RemoveButton = styled.button<{ disabled?: boolean }>`
+const RemoveButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['disabled'].includes(prop)
+})<{ disabled?: boolean }>`
   background: none;
   border: none;
   color: ${props => props.disabled ? '#a0aec0' : '#e53e3e'};

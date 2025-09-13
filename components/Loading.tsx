@@ -20,7 +20,9 @@ const shimmer = keyframes`
 `
 
 // Basic spinner component
-const SpinnerWrapper = styled.div<{ size?: 'small' | 'medium' | 'large' }>`
+const SpinnerWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'size'
+})<{ size?: 'small' | 'medium' | 'large' }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +42,9 @@ const SpinnerWrapper = styled.div<{ size?: 'small' | 'medium' | 'large' }>`
   }};
 `
 
-const SpinnerCircle = styled.div<{ size?: 'small' | 'medium' | 'large' }>`
+const SpinnerCircle = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'size'
+})<{ size?: 'small' | 'medium' | 'large' }>`
   width: 100%;
   height: 100%;
   border: ${props => props.size === 'small' ? '2px' : '3px'} solid #f3f4f6;
@@ -94,19 +98,25 @@ const SkeletonBase = styled.div`
   overflow: hidden;
 `
 
-const SkeletonLine = styled(SkeletonBase)<{ width?: string; height?: string }>`
+const SkeletonLine = styled(SkeletonBase).withConfig({
+  shouldForwardProp: (prop) => !['width', 'height'].includes(prop)
+})<{ width?: string; height?: string }>`
   height: ${props => props.height || '16px'};
   width: ${props => props.width || '100%'};
   margin-bottom: 8px;
 `
 
-const SkeletonCircle = styled(SkeletonBase)<{ size?: string }>`
+const SkeletonCircle = styled(SkeletonBase).withConfig({
+  shouldForwardProp: (prop) => prop !== 'size'
+})<{ size?: string }>`
   width: ${props => props.size || '40px'};
   height: ${props => props.size || '40px'};
   border-radius: 50%;
 `
 
-const SkeletonRect = styled(SkeletonBase)<{ width?: string; height?: string }>`
+const SkeletonRect = styled(SkeletonBase).withConfig({
+  shouldForwardProp: (prop) => !['width', 'height'].includes(prop)
+})<{ width?: string; height?: string }>`
   width: ${props => props.width || '100%'};
   height: ${props => props.height || '100px'};
 `
@@ -154,7 +164,9 @@ export const ProductCardSkeleton: React.FC = () => (
 )
 
 // Page loading overlay
-const OverlayWrapper = styled.div<{ $show: boolean }>`
+const OverlayWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== '$show'
+})<{ $show: boolean }>`
   position: fixed;
   top: 0;
   left: 0;

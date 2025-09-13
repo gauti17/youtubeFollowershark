@@ -1,8 +1,8 @@
-// URL validation utilities for YouTube and TikTok
+// URL validation utilities for YouTube, TikTok, and Instagram
 export interface ValidationResult {
   isValid: boolean
   error?: string
-  urlType?: 'video' | 'channel' | 'tiktok'
+  urlType?: 'video' | 'channel' | 'tiktok' | 'instagram'
   cleanUrl?: string
 }
 
@@ -128,7 +128,7 @@ export class YouTubeUrlValidator {
   /**
    * Generic validator that determines URL type and validates accordingly
    */
-  static validateYouTubeUrl(url: string, expectedType?: 'video' | 'channel' | 'tiktok'): ValidationResult {
+  static validateYouTubeUrl(url: string, expectedType?: 'video' | 'channel' | 'tiktok' | 'instagram'): ValidationResult {
     if (!url || url.trim().length === 0) {
       return { isValid: false, error: 'URL ist erforderlich' }
     }
@@ -136,6 +136,11 @@ export class YouTubeUrlValidator {
     // If TikTok type is expected, use TikTok validator
     if (expectedType === 'tiktok') {
       return this.validateTikTokUrl(url)
+    }
+
+    // If Instagram type is expected, use Instagram validator
+    if (expectedType === 'instagram') {
+      return this.validateInstagramUrl(url)
     }
 
     // If specific YouTube type is expected, validate for that type
@@ -219,6 +224,66 @@ export class YouTubeUrlValidator {
     return {
       isValid: true,
       urlType: 'tiktok',
+      cleanUrl
+    }
+  }
+
+  /**
+   * Validate Instagram URLs
+   * Accepts various Instagram URL formats: profiles, posts, reels, stories
+   */
+  static validateInstagramUrl(url: string): ValidationResult {
+    if (!url || url.trim().length === 0) {
+      return { isValid: false, error: 'Instagram URL ist erforderlich' }
+    }
+
+    const cleanUrl = url.trim()
+
+    // Basic URL structure check
+    if (!cleanUrl.startsWith('http')) {
+      return { isValid: false, error: 'URL muss mit http:// oder https:// beginnen' }
+    }
+
+    // Instagram domain check
+    const instagramDomains = [
+      'instagram.com',
+      'www.instagram.com',
+      'm.instagram.com'
+    ]
+
+    const hasInstagramDomain = instagramDomains.some(domain => 
+      cleanUrl.includes(domain)
+    )
+
+    if (!hasInstagramDomain) {
+      return { isValid: false, error: 'URL muss eine Instagram-URL sein' }
+    }
+
+    // Instagram URL patterns
+    const instagramPatterns = [
+      /instagram\.com\/([a-zA-Z0-9_.]+)\/?$/,                      // Profile URL
+      /instagram\.com\/p\/([a-zA-Z0-9_-]+)\/?/,                   // Post URL
+      /instagram\.com\/reel\/([a-zA-Z0-9_-]+)\/?/,                // Reels URL
+      /instagram\.com\/tv\/([a-zA-Z0-9_-]+)\/?/,                  // IGTV URL
+      /instagram\.com\/stories\/([a-zA-Z0-9_.]+)\/([0-9]+)\/?/,   // Stories URL
+      /instagram\.com\/([a-zA-Z0-9_.]+)\/p\/([a-zA-Z0-9_-]+)\/?/, // Profile post URL
+      /instagram\.com\/([a-zA-Z0-9_.]+)\/reel\/([a-zA-Z0-9_-]+)\/?/ // Profile reel URL
+    ]
+
+    const hasInstagramPattern = instagramPatterns.some(pattern => 
+      pattern.test(cleanUrl)
+    )
+
+    if (!hasInstagramPattern) {
+      return { 
+        isValid: false, 
+        error: 'URL muss ein gültiger Instagram-Link sein (Profil, Post, Reel oder Story)' 
+      }
+    }
+
+    return {
+      isValid: true,
+      urlType: 'instagram',
       cleanUrl
     }
   }

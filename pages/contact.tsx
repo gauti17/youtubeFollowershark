@@ -70,7 +70,9 @@ const Label = styled.label`
   font-size: 14px;
 `
 
-const Input = styled.input<{ $hasError?: boolean }>`
+const Input = styled.input.withConfig({
+  shouldForwardProp: (prop) => prop !== '$hasError'
+})<{ $hasError?: boolean }>`
   width: 100%;
   padding: 12px 16px;
   border: 2px solid ${props => props.$hasError ? '#ef4444' : '#e2e8f0'};
@@ -89,7 +91,9 @@ const Input = styled.input<{ $hasError?: boolean }>`
   }
 `
 
-const Textarea = styled.textarea<{ $hasError?: boolean }>`
+const Textarea = styled.textarea.withConfig({
+  shouldForwardProp: (prop) => prop !== '$hasError'
+})<{ $hasError?: boolean }>`
   width: 100%;
   padding: 12px 16px;
   border: 2px solid ${props => props.$hasError ? '#ef4444' : '#e2e8f0'};
@@ -133,7 +137,9 @@ const ErrorMessage = styled.span`
   display: block;
 `
 
-const SubmitButton = styled.button<{ loading?: boolean }>`
+const SubmitButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'loading'
+})<{ loading?: boolean }>`
   width: 100%;
   background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
   color: white;

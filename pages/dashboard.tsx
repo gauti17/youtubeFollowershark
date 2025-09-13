@@ -105,7 +105,9 @@ const TableCell = styled.td`
   color: #6b7280;
 `
 
-const StatusBadge = styled.span<{ $bg: string; $color: string }>`
+const StatusBadge = styled.span.withConfig({
+  shouldForwardProp: (prop) => !['$bg', '$color'].includes(prop)
+})<{ $bg: string; $color: string }>`
   display: inline-block;
   padding: 6px 12px;
   border-radius: 16px;
@@ -158,7 +160,9 @@ const RefreshButton = styled.button`
   }
 `
 
-const OrderDetailsModal = styled.div<{ show: boolean }>`
+const OrderDetailsModal = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'show'
+})<{ show: boolean }>`
   position: fixed;
   top: 0;
   left: 0;

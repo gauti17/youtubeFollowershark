@@ -53,7 +53,9 @@ const ToastContainer = styled.div`
   }
 `
 
-const ToastItem = styled.div<{ type: Toast['type']; isLeaving?: boolean }>`
+const ToastItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['type', 'isLeaving'].includes(prop)
+})<{ type: Toast['type']; isLeaving?: boolean }>`
   padding: 16px 20px;
   border-radius: 8px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -114,7 +116,9 @@ const ToastItem = styled.div<{ type: Toast['type']; isLeaving?: boolean }>`
   }
 `
 
-const ToastIcon = styled.span<{ type: Toast['type'] }>`
+const ToastIcon = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== 'type'
+})<{ type: Toast['type'] }>`
   margin-right: 8px;
   font-weight: 600;
   

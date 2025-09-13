@@ -44,10 +44,12 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
+      // Use a more predictable ID generation for better hydration compatibility
+      const timestamp = typeof window !== 'undefined' ? Date.now() : 0
       const newItem = {
         ...action.payload,
-        id: `${action.payload.productId}_${Date.now()}`,
-        timestamp: Date.now()
+        id: `${action.payload.productId}_${timestamp}_${Math.random().toString(36).substr(2, 9)}`,
+        timestamp
       }
       
       const updatedItems = [...state.items, newItem]
@@ -165,7 +167,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, [state.items, state.total, isLoaded])
 
   const addItem = async (item: Omit<CartItem, 'id' | 'timestamp'>) => {
-    const operationId = `add_${Date.now()}`
+    const operationId = `add_${typeof window !== 'undefined' ? Date.now() : Math.random()}`
     try {
       dispatch({ type: 'SET_LOADING', payload: { operation: operationId, loading: true } })
       // Simulate API delay for better UX feedback

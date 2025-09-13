@@ -195,7 +195,9 @@ const Label = styled.label`
   letter-spacing: -0.01em;
 `
 
-const Input = styled.input<{ $hasError?: boolean }>`
+const Input = styled.input.withConfig({
+  shouldForwardProp: (prop) => prop !== '$hasError'
+})<{ $hasError?: boolean }>`
   padding: 16px 20px;
   border: 2px solid ${props => props.$hasError ? '#ef4444' : '#e2e8f0'};
   border-radius: 12px;
@@ -223,7 +225,9 @@ const Input = styled.input<{ $hasError?: boolean }>`
   }
 `
 
-const PasswordStrength = styled.div<{ strength: number }>`
+const PasswordStrength = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'strength'
+})<{ strength: number }>`
   margin-top: 8px;
   
   .strength-bar {
@@ -259,7 +263,9 @@ const PasswordStrength = styled.div<{ strength: number }>`
   }
 `
 
-const SubmitButton = styled.button<{ loading?: boolean }>`
+const SubmitButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'loading'
+})<{ loading?: boolean }>`
   background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
   color: white;
   padding: 18px 32px;
@@ -387,7 +393,9 @@ const BackLink = styled(Link)`
   }
 `
 
-const FloatingElement = styled.div<{ delay?: number; size?: number }>`
+const FloatingElement = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['delay', 'size'].includes(prop)
+})<{ delay?: number; size?: number }>`
   position: absolute;
   width: ${props => props.size || 60}px;
   height: ${props => props.size || 60}px;

@@ -134,7 +134,9 @@ const PaymentMethods = styled.div`
   margin-bottom: 32px;
 `
 
-const PaymentMethod = styled.div<{ selected: boolean }>`
+const PaymentMethod = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'selected'
+})<{ selected: boolean }>`
   border: 2px solid ${props => props.selected ? '#7c3aed' : '#e5e7eb'};
   border-radius: 12px;
   padding: 20px;
