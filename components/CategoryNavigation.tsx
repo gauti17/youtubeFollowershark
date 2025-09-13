@@ -18,24 +18,24 @@ const categories: Category[] = [
     id: 'youtube',
     name: 'YouTube',
     icon: '📺',
-    color: '#FF6B35',
-    bgGradient: 'linear-gradient(135deg, #FF6B35 0%, #FF8E6B 100%)',
+    color: '#FF0000',
+    bgGradient: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
     description: 'Views, Likes & Abonnenten'
   },
   {
     id: 'tiktok',
     name: 'TikTok',
     icon: '🎵',
-    color: '#000000',
-    bgGradient: 'linear-gradient(135deg, #000000 0%, #333333 100%)',
+    color: '#ff0050',
+    bgGradient: 'linear-gradient(135deg, #ff0050 0%, #00f2ea 100%)',
     description: 'Views, Likes & Shares'
   },
   {
     id: 'instagram',
     name: 'Instagram',
     icon: '📷',
-    color: '#8b5cf6',
-    bgGradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+    color: '#E4405F',
+    bgGradient: 'linear-gradient(135deg, #833AB4 0%, #FD1D1D 50%, #F77737 100%)',
     description: 'Likes, Views & Kommentare'
   }
 ]

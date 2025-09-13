@@ -287,12 +287,12 @@ const ItemInfo = styled.div`
 `
 
 const RemoveButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => !['disabled'].includes(prop)
-})<{ disabled?: boolean }>`
+  shouldForwardProp: (prop) => !['$disabled'].includes(prop)
+})<{ $disabled?: boolean }>`
   background: none;
   border: none;
-  color: ${props => props.disabled ? '#a0aec0' : '#e53e3e'};
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  color: ${props => props.$disabled ? '#a0aec0' : '#e53e3e'};
+  cursor: ${props => props.$disabled ? 'not-allowed' : 'pointer'};
   font-size: 20px;
   padding: 8px;
   border-radius: 8px;
@@ -300,7 +300,7 @@ const RemoveButton = styled.button.withConfig({
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${props => props.disabled ? 0.6 : 1};
+  opacity: ${props => props.$disabled ? 0.6 : 1};
   
   &:hover:not(:disabled) {
     background: rgba(229, 62, 62, 0.1);
@@ -725,7 +725,7 @@ const CartPage: React.FC = () => {
                         </ItemInfo>
                         <RemoveButton 
                           onClick={() => removeItem(item.id)}
-                          disabled={isOperationLoading(`remove_${item.id}`)}
+                          $disabled={isOperationLoading(`remove_${item.id}`)}
                         >
                           <ButtonWithSpinner loading={isOperationLoading(`remove_${item.id}`)} size="small">
                             ✕
