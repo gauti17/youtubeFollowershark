@@ -38,7 +38,7 @@ interface PayPalButtonProps {
 }
 
 const PayPalContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== '$disabled'
+  shouldForwardProp: (prop) => !['$disabled'].includes(prop)
 })<{ $disabled: boolean }>`
   opacity: ${props => props.$disabled ? 0.6 : 1};
   pointer-events: ${props => props.$disabled ? 'none' : 'auto'};

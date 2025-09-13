@@ -54,8 +54,8 @@ const ToastContainer = styled.div`
 `
 
 const ToastItem = styled.div.withConfig({
-  shouldForwardProp: (prop) => !['type', 'isLeaving'].includes(prop)
-})<{ type: Toast['type']; isLeaving?: boolean }>`
+  shouldForwardProp: (prop) => !['$type', '$isLeaving'].includes(prop)
+})<{ $type: Toast['type']; $isLeaving?: boolean }>`
   padding: 16px 20px;
   border-radius: 8px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -63,13 +63,13 @@ const ToastItem = styled.div.withConfig({
   line-height: 1.5;
   font-weight: 500;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  animation: ${props => props.isLeaving ? css`${slideOut} 0.3s ease-in-out` : css`${slideIn} 0.3s ease-out`};
+  animation: ${props => props.$isLeaving ? css`${slideOut} 0.3s ease-in-out` : css`${slideIn} 0.3s ease-out`};
   cursor: pointer;
   position: relative;
   overflow: hidden;
   
   ${props => {
-    switch (props.type) {
+    switch (props.$type) {
       case 'success':
         return css`
           background: #10b981;
@@ -117,14 +117,14 @@ const ToastItem = styled.div.withConfig({
 `
 
 const ToastIcon = styled.span.withConfig({
-  shouldForwardProp: (prop) => prop !== 'type'
-})<{ type: Toast['type'] }>`
+  shouldForwardProp: (prop) => !['$type'].includes(prop)
+})<{ $type: Toast['type'] }>`
   margin-right: 8px;
   font-weight: 600;
   
   &::before {
     content: ${props => {
-      switch (props.type) {
+      switch (props.$type) {
         case 'success':
           return '"✅"'
         case 'error':
@@ -182,11 +182,11 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         {toasts.map(toast => (
           <ToastItem
             key={toast.id}
-            type={toast.type}
-            isLeaving={toast.isLeaving}
+            $type={toast.type}
+            $isLeaving={toast.isLeaving}
             onClick={() => removeToast(toast.id)}
           >
-            <ToastIcon type={toast.type} />
+            <ToastIcon $type={toast.type} />
             {toast.message}
           </ToastItem>
         ))}

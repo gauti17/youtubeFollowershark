@@ -30,7 +30,7 @@ const shake = keyframes`
 `
 
 const StyledButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== '$state'
+  shouldForwardProp: (prop) => !['$state'].includes(prop)
 })<{ $state: ButtonState }>`
   width: 100%;
   padding: 16px 24px;
@@ -97,7 +97,7 @@ const StyledButton = styled.button.withConfig({
 `
 
 const ButtonIcon = styled.span.withConfig({
-  shouldForwardProp: (prop) => prop !== '$state'
+  shouldForwardProp: (prop) => !['$state'].includes(prop)
 })<{ $state: ButtonState }>`
   font-size: 18px;
   display: flex;
@@ -123,7 +123,7 @@ const LoadingSpinner = styled.div`
 `
 
 const ButtonText = styled.span.withConfig({
-  shouldForwardProp: (prop) => prop !== '$state'
+  shouldForwardProp: (prop) => !['$state'].includes(prop)
 })<{ $state: ButtonState }>`
   transition: all 0.3s ease;
 `

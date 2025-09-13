@@ -69,7 +69,7 @@ const NavMenu = styled.ul`
 `
 
 const MobileNavMenu = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== '$isOpen'
+  shouldForwardProp: (prop) => !['$isOpen'].includes(prop)
 })<{ $isOpen: boolean }>`
   display: none;
   position: fixed;
@@ -89,7 +89,7 @@ const MobileNavMenu = styled.div.withConfig({
 `
 
 const MobileNavContent = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== '$isOpen'
+  shouldForwardProp: (prop) => !['$isOpen'].includes(prop)
 })<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
@@ -267,7 +267,7 @@ const CartLink = styled.a`
 `
 
 const CartCount = styled.span.withConfig({
-  shouldForwardProp: (prop) => prop !== '$count'
+  shouldForwardProp: (prop) => !['$count'].includes(prop)
 })<{ $count: number }>`
   background: rgba(255, 255, 255, 0.2);
   color: white;

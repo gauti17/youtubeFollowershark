@@ -59,7 +59,9 @@ const CategoryTabs = styled.div`
   }
 `
 
-const CategoryTab = styled.button<{ $isActive: boolean; $color: string }>`
+const CategoryTab = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['$isActive', '$color'].includes(prop)
+})<{ $isActive: boolean; $color: string }>`
   background: ${props => props.$isActive ? props.$color : 'rgba(255, 255, 255, 0.9)'};
   color: ${props => props.$isActive ? 'white' : '#4a5568'};
   border: 2px solid ${props => props.$isActive ? props.$color : 'rgba(0, 0, 0, 0.1)'};
@@ -140,7 +142,9 @@ const CategoryTab = styled.button<{ $isActive: boolean; $color: string }>`
   }
 `
 
-const CategoryDescription = styled.div<{ $color: string }>`
+const CategoryDescription = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['$color'].includes(prop)
+})<{ $color: string }>`
   text-align: center;
   margin-bottom: 30px;
   font-size: 16px;
@@ -188,7 +192,9 @@ const ProductGrid = styled.div`
   }
 `
 
-const ProductCard = styled.div<{ $bgGradient: string }>`
+const ProductCard = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['$bgGradient'].includes(prop)
+})<{ $bgGradient: string }>`
   background: white;
   border-radius: 24px;
   padding: 32px 24px;
@@ -237,7 +243,9 @@ const ProductCard = styled.div<{ $bgGradient: string }>`
   }
 `
 
-const ProductIcon = styled.div<{ $bgGradient: string }>`
+const ProductIcon = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['$bgGradient'].includes(prop)
+})<{ $bgGradient: string }>`
   font-size: 48px;
   margin-bottom: 16px;
   position: relative;
@@ -335,7 +343,9 @@ const ViewButton = styled.div`
   z-index: 1;
 `
 
-const ProductDiscount = styled.div<{ $color: string }>`
+const ProductDiscount = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['$color'].includes(prop)
+})<{ $color: string }>`
   position: absolute;
   top: 16px;
   right: 16px;

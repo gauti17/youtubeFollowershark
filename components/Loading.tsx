@@ -21,20 +21,20 @@ const shimmer = keyframes`
 
 // Basic spinner component
 const SpinnerWrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'size'
-})<{ size?: 'small' | 'medium' | 'large' }>`
+  shouldForwardProp: (prop) => !['$size'].includes(prop)
+})<{ $size?: 'small' | 'medium' | 'large' }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: ${props => {
-    switch (props.size) {
+    switch (props.$size) {
       case 'small': return '16px'
       case 'large': return '48px'
       default: return '24px'
     }
   }};
   height: ${props => {
-    switch (props.size) {
+    switch (props.$size) {
       case 'small': return '16px'
       case 'large': return '48px'
       default: return '24px'
@@ -43,12 +43,12 @@ const SpinnerWrapper = styled.div.withConfig({
 `
 
 const SpinnerCircle = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'size'
-})<{ size?: 'small' | 'medium' | 'large' }>`
+  shouldForwardProp: (prop) => !['$size'].includes(prop)
+})<{ $size?: 'small' | 'medium' | 'large' }>`
   width: 100%;
   height: 100%;
-  border: ${props => props.size === 'small' ? '2px' : '3px'} solid #f3f4f6;
-  border-top: ${props => props.size === 'small' ? '2px' : '3px'} solid #FF6B35;
+  border: ${props => props.$size === 'small' ? '2px' : '3px'} solid #f3f4f6;
+  border-top: ${props => props.$size === 'small' ? '2px' : '3px'} solid #FF6B35;
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
 `
@@ -59,8 +59,8 @@ interface SpinnerProps {
 }
 
 export const Spinner: React.FC<SpinnerProps> = ({ size = 'medium', className }) => (
-  <SpinnerWrapper size={size} className={className}>
-    <SpinnerCircle size={size} />
+  <SpinnerWrapper $$size={size} className={className}>
+    <SpinnerCircle $$size={size} />
   </SpinnerWrapper>
 )
 
@@ -83,7 +83,7 @@ export const ButtonWithSpinner: React.FC<ButtonSpinnerProps> = ({
   size = 'small' 
 }) => (
   <ButtonSpinnerWrapper>
-    {loading && <Spinner size={size} />}
+    {loading && <Spinner $size={size} />}
     {children}
   </ButtonSpinnerWrapper>
 )
@@ -99,26 +99,26 @@ const SkeletonBase = styled.div`
 `
 
 const SkeletonLine = styled(SkeletonBase).withConfig({
-  shouldForwardProp: (prop) => !['width', 'height'].includes(prop)
-})<{ width?: string; height?: string }>`
-  height: ${props => props.height || '16px'};
-  width: ${props => props.width || '100%'};
+  shouldForwardProp: (prop) => !['$width', '$height'].includes(prop)
+})<{ $width?: string; $height?: string }>`
+  height: ${props => props.$height || '16px'};
+  width: ${props => props.$width || '100%'};
   margin-bottom: 8px;
 `
 
 const SkeletonCircle = styled(SkeletonBase).withConfig({
-  shouldForwardProp: (prop) => prop !== 'size'
-})<{ size?: string }>`
-  width: ${props => props.size || '40px'};
-  height: ${props => props.size || '40px'};
+  shouldForwardProp: (prop) => !['$size'].includes(prop)
+})<{ $size?: string }>`
+  width: ${props => props.$size || '40px'};
+  height: ${props => props.$size || '40px'};
   border-radius: 50%;
 `
 
 const SkeletonRect = styled(SkeletonBase).withConfig({
-  shouldForwardProp: (prop) => !['width', 'height'].includes(prop)
-})<{ width?: string; height?: string }>`
-  width: ${props => props.width || '100%'};
-  height: ${props => props.height || '100px'};
+  shouldForwardProp: (prop) => !['$width', '$height'].includes(prop)
+})<{ $width?: string; $height?: string }>`
+  width: ${props => props.$width || '100%'};
+  height: ${props => props.$height || '100px'};
 `
 
 // Product card skeleton
@@ -150,22 +150,22 @@ export const ProductCardSkeleton: React.FC = () => (
   <ProductSkeletonWrapper>
     <div>
       <ProductSkeletonHeader>
-        <SkeletonRect width="80px" height="80px" />
-        <SkeletonLine width="80%" height="20px" />
-        <SkeletonLine width="100%" height="14px" />
-        <SkeletonLine width="60%" height="14px" />
+        <SkeletonRect $width="80px" $height="80px" />
+        <SkeletonLine $width="80%" $height="20px" />
+        <SkeletonLine $width="100%" $height="14px" />
+        <SkeletonLine $width="60%" $height="14px" />
       </ProductSkeletonHeader>
     </div>
     <ProductSkeletonFooter>
-      <SkeletonLine width="40%" height="18px" />
-      <SkeletonRect width="100%" height="44px" />
+      <SkeletonLine $width="40%" $height="18px" />
+      <SkeletonRect $width="100%" $height="44px" />
     </ProductSkeletonFooter>
   </ProductSkeletonWrapper>
 )
 
 // Page loading overlay
 const OverlayWrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== '$show'
+  shouldForwardProp: (prop) => !['$show'].includes(prop)
 })<{ $show: boolean }>`
   position: fixed;
   top: 0;
@@ -212,7 +212,7 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
 }) => (
   <OverlayWrapper $show={show}>
     <OverlayContent>
-      <Spinner size="large" />
+      <Spinner $size="large" />
       <OverlayText>{text}</OverlayText>
     </OverlayContent>
   </OverlayWrapper>
@@ -243,7 +243,7 @@ export const InlineLoading: React.FC<InlineLoadingProps> = ({
   size = 'medium' 
 }) => (
   <InlineLoadingWrapper>
-    <Spinner size={size} />
+    <Spinner $size={size} />
     <InlineLoadingText>{text}</InlineLoadingText>
   </InlineLoadingWrapper>
 )
@@ -266,8 +266,8 @@ export const FormSkeleton: React.FC<{ fields?: number }> = ({ fields = 4 }) => (
   <FormSkeletonWrapper>
     {Array.from({ length: fields }).map((_, index) => (
       <FormFieldSkeleton key={index}>
-        <SkeletonLine width="25%" height="14px" />
-        <SkeletonRect height="48px" />
+        <SkeletonLine $width="25%" $height="14px" />
+        <SkeletonRect $height="48px" />
       </FormFieldSkeleton>
     ))}
   </FormSkeletonWrapper>
@@ -297,15 +297,15 @@ const CartItemActions = styled.div`
 
 export const CartItemSkeleton: React.FC = () => (
   <CartItemSkeletonWrapper>
-    <SkeletonCircle size="60px" />
+    <SkeletonCircle $size="60px" />
     <CartItemContent>
-      <SkeletonLine width="70%" height="18px" />
-      <SkeletonLine width="50%" height="14px" />
-      <SkeletonLine width="30%" height="14px" />
+      <SkeletonLine $width="70%" $height="18px" />
+      <SkeletonLine $width="50%" $height="14px" />
+      <SkeletonLine $width="30%" $height="14px" />
     </CartItemContent>
     <CartItemActions>
-      <SkeletonLine width="60px" height="20px" />
-      <SkeletonRect width="80px" height="36px" />
+      <SkeletonLine $width="60px" $height="20px" />
+      <SkeletonRect $width="80px" $height="36px" />
     </CartItemActions>
   </CartItemSkeletonWrapper>
 )
