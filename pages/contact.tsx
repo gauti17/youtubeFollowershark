@@ -454,36 +454,6 @@ const ContactPage: React.FC = () => {
               </ContactDetail>
             </ContactCard>
 
-            <ContactCard>
-              <ContactIcon>💬</ContactIcon>
-              <ContactTitle>Live Chat</ContactTitle>
-              <ContactDetail>Sofortige Hilfe im Chat</ContactDetail>
-              <ContactDetail>Mo-Fr: 9:00 - 18:00 Uhr</ContactDetail>
-              <ContactDetail style={{ marginTop: '12px' }}>
-                <ContactLink href="#" onClick={(e) => {
-                  e.preventDefault();
-                  showFeedback('Live Chat wird in Kürze verfügbar sein!', 'info');
-                }}>
-                  Chat starten
-                </ContactLink>
-              </ContactDetail>
-            </ContactCard>
-
-            <ContactCard>
-              <ContactIcon>📱</ContactIcon>
-              <ContactTitle>WhatsApp Support</ContactTitle>
-              <ContactDetail>Support via WhatsApp</ContactDetail>
-              <ContactDetail>+49 (0) 123 456 789</ContactDetail>
-              <ContactDetail style={{ marginTop: '12px' }}>
-                <ContactLink 
-                  href="https://wa.me/49123456789?text=Hallo%2C%20ich%20habe%20eine%20Frage%20zu%20youshark"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  WhatsApp öffnen
-                </ContactLink>
-              </ContactDetail>
-            </ContactCard>
           </ContactInfo>
         </ContentGrid>
 
