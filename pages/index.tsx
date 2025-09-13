@@ -176,16 +176,16 @@ const ReviewCount = styled.div`
 `
 
 const HeroContent = styled.div`
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   position: relative;
   z-index: 1;
 
   @media (min-width: 640px) {
-    margin-bottom: 60px;
+    margin-bottom: 40px;
   }
 
   @media (min-width: 1024px) {
-    margin-bottom: 80px;
+    margin-bottom: 50px;
   }
 `
 
@@ -215,7 +215,7 @@ const HeroTitle = styled.h1`
   font-size: clamp(1.75rem, 8vw, 4rem);
   font-weight: 800;
   line-height: 1.1;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -226,13 +226,13 @@ const HeroTitle = styled.h1`
   padding: 0 8px;
 
   @media (min-width: 640px) {
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     max-width: 600px;
     padding: 0 16px;
   }
 
   @media (min-width: 1024px) {
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     max-width: 900px;
     padding: 0;
   }
@@ -1220,14 +1220,13 @@ const HomePage: React.FC = () => {
             </HeroSubtitle>
             
             <HeroTitle>
-              <span className="primary-text">Werde zum</span><br />
-              <span className="accent-text">Social Media Star</span><br className="hidden sm:block" />
-              <span className="primary-text"> auf </span><span className="accent-text">YouTube, TikTok & Instagram!</span>
+              <span className="primary-text">Werde zum </span>
+              <span className="accent-text">Social Media Star</span><br />
+              <span className="primary-text">auf </span><span className="accent-text">YouTube, TikTok & Instagram!</span>
             </HeroTitle>
             
             <HeroDescription>
-              <strong>Millionen von Views, Likes und Followern</strong> warten auf dich! Verwandle deine Social Media Präsenz in eine<br className="hidden sm:block" />
-              <strong>Erfolgsgeschichte</strong> - mit echten Ergebnissen, die deinen Content viral gehen lassen. <strong>Starte heute!</strong>
+              <strong>Viral gehen war noch nie so einfach.</strong>
             </HeroDescription>
 
             <CTASection>
