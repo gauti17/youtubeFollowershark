@@ -9,7 +9,7 @@ export interface Product {
   discount?: number
   speedOptions: SpeedOption[]
   quantityOptions: number[]
-  inputType: 'video' | 'channel' | 'tiktok' | 'instagram'
+  inputType: 'video' | 'channel' | 'tiktok' | 'instagram' | 'instagram-profile'
   inputPlaceholder: string
   category: 'views' | 'likes' | 'subscribers' | 'tiktok-views' | 'tiktok-likes' | 'tiktok-shares' | 'tiktok-comments' | 'instagram-followers' | 'instagram-likes' | 'instagram-views' | 'instagram-comments'
   targetOptions?: TargetOption[]
@@ -390,7 +390,7 @@ export const products: Product[] = [
       }
     ],
     quantityOptions: [50, 100, 250, 500, 1000, 2500, 5000, 10000, 20000],
-    inputType: 'instagram',
+    inputType: 'instagram-profile',
     inputPlaceholder: 'https://www.instagram.com/dein-profil/',
     category: 'instagram-followers'
   },
