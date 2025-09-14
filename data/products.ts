@@ -325,7 +325,7 @@ export const products: Product[] = [
       'Premium-Qualität für Creator-Accounts',
       '24/7 Premium-Support'
     ],
-    basePrice: 0.08,
+    basePrice: 0.024,
     discount: 15,
     speedOptions: [
       {
