@@ -1,6 +1,30 @@
 {
   "version": 3,
   "middleware": {},
-  "functions": {},
+  "functions": {
+    "/api/auth/wp-password-reset": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/auth/wp-password-reset.js"
+      ],
+      "name": "pages/api/auth/wp-password-reset",
+      "page": "/api/auth/wp-password-reset",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/wp\\-password\\-reset$",
+          "originalSource": "/api/auth/wp-password-reset"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "TXruI_lntJYo3qdy6UopC",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3sNvgPn7AETPI8SrXi7DlX6i8usZTsBtEQpV9uP1nV0=",
+        "__NEXT_PREVIEW_MODE_ID": "1d559144117b77bd7eb592dc37ae343f",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "a3606fa04bbc4ab7b8d962d1e3175e22b6bc2e1a98c3d547d2ab004c5b3841f5",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "53d05496e5ecb50e0fb4ae675917fd8114955ee58f6b17e7e539d2f2211e1ec5"
+      }
+    }
+  },
   "sortedMiddleware": []
 }

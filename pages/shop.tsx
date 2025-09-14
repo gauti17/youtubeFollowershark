@@ -405,7 +405,7 @@ const ShopPage: React.FC = () => {
           product.category === 'tiktok-views' || 
           product.category === 'tiktok-likes' || 
           product.category === 'tiktok-shares' || 
-          product.category === 'tiktok-comments'
+          product.category === 'tiktok-followers'
         )
       } else if (activeFilter === 'instagram') {
         // Show all Instagram products

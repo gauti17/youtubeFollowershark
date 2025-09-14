@@ -2,7 +2,7 @@
 export interface ValidationResult {
   isValid: boolean
   error?: string
-  urlType?: 'video' | 'channel' | 'tiktok' | 'instagram'
+  urlType?: 'video' | 'channel' | 'tiktok' | 'tiktok-profile' | 'instagram' | 'instagram-profile'
   cleanUrl?: string
 }
 
@@ -128,18 +128,18 @@ export class YouTubeUrlValidator {
   /**
    * Generic validator that determines URL type and validates accordingly
    */
-  static validateYouTubeUrl(url: string, expectedType?: 'video' | 'channel' | 'tiktok' | 'instagram'): ValidationResult {
+  static validateYouTubeUrl(url: string, expectedType?: 'video' | 'channel' | 'tiktok' | 'tiktok-profile' | 'instagram' | 'instagram-profile'): ValidationResult {
     if (!url || url.trim().length === 0) {
       return { isValid: false, error: 'URL ist erforderlich' }
     }
 
     // If TikTok type is expected, use TikTok validator
-    if (expectedType === 'tiktok') {
+    if (expectedType === 'tiktok' || expectedType === 'tiktok-profile') {
       return this.validateTikTokUrl(url)
     }
 
     // If Instagram type is expected, use Instagram validator
-    if (expectedType === 'instagram') {
+    if (expectedType === 'instagram' || expectedType === 'instagram-profile') {
       return this.validateInstagramUrl(url)
     }
 
