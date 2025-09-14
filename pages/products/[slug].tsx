@@ -1986,6 +1986,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
               {product.inputType === 'video' ? 'Youtube Videolink:' : 
                product.inputType === 'channel' ? 'Youtube Channellink:' : 
                product.inputType === 'tiktok' ? 'TikTok Videolink:' :
+               product.inputType === 'tiktok-profile' ? 'TikTok Profillink:' :
                product.inputType === 'instagram-profile' ? 'Instagram Profillink:' :
                'Instagram Videolink:'} *
             </SectionTitle>
@@ -1993,6 +1994,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
               <VideoIcon>
                 {product.inputType === 'video' || product.inputType === 'channel' ? '📺' : 
                  product.inputType === 'tiktok' ? '🎵' : 
+                 product.inputType === 'tiktok-profile' ? '👤' :
                  product.inputType === 'instagram-profile' ? '👤' : '📷'}
               </VideoIcon>
               <VideoInput

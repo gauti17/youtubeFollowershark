@@ -70,7 +70,7 @@ export class ProductService {
         meta_data: [
           { key: '_youshark_product_slug', value: productSlug },
           { key: '_youshark_product_category', value: localProduct.category },
-          { key: '_youshark_service_type', value: localProduct.category.startsWith('tiktok-') ? 'tiktok_growth' : 'youtube_growth' },
+          { key: '_youshark_service_type', value: localProduct.category.startsWith('tiktok-') ? 'tiktok_growth' : localProduct.category.startsWith('instagram-') ? 'instagram_growth' : 'youtube_growth' },
           { key: '_virtual_service', value: 'yes' },
           { key: '_tax_status', value: 'none' },
           { key: '_platform', value: localProduct.inputType }

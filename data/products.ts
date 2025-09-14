@@ -9,9 +9,9 @@ export interface Product {
   discount?: number
   speedOptions: SpeedOption[]
   quantityOptions: number[]
-  inputType: 'video' | 'channel' | 'tiktok' | 'instagram' | 'instagram-profile'
+  inputType: 'video' | 'channel' | 'tiktok' | 'tiktok-profile' | 'instagram' | 'instagram-profile'
   inputPlaceholder: string
-  category: 'views' | 'likes' | 'subscribers' | 'tiktok-views' | 'tiktok-likes' | 'tiktok-shares' | 'tiktok-comments' | 'instagram-followers' | 'instagram-likes' | 'instagram-views' | 'instagram-comments'
+  category: 'views' | 'likes' | 'subscribers' | 'tiktok-views' | 'tiktok-likes' | 'tiktok-shares' | 'tiktok-followers' | 'instagram-followers' | 'instagram-likes' | 'instagram-views' | 'instagram-comments'
   targetOptions?: TargetOption[]
 }
 
@@ -312,50 +312,39 @@ export const products: Product[] = [
     category: 'tiktok-shares'
   },
   {
-    id: 'tiktok-comments',
-    name: 'TikTok Kommentare',
-    slug: 'tiktok-comments',
-    icon: '💬',
-    description: 'Belebe deine TikTok Videos mit echten Kommentaren. Deutsche und englische Kommentare von realen Nutzern.',
+    id: 'tiktok-followers',
+    name: 'TikTok Followers',
+    slug: 'tiktok-followers',
+    icon: '👥',
+    description: 'Baue deine TikTok-Community mit echten Followern auf. Hochwertige, aktive Accounts für nachhaltiges Wachstum.',
     features: [
-      'Deutsche und englische Kommentare',
-      'Echte TikTok-Accounts kommentieren',
-      'Personalisierte und relevante Kommentare',
-      'Geschwindigkeit: 500 Kommentare/Tag',
-      'Premium Qualität und Service',
-      'Lifetime Garantie auf alle Kommentare'
+      'Echte TikTok-Accounts mit hoher Aktivität',
+      'Permanente Follower mit Lifetime-Garantie',
+      'Natürliche Lieferung für Algorithmus-Sicherheit',
+      'Geschwindigkeit: 2.000 Follower/Tag',
+      'Premium-Qualität für Creator-Accounts',
+      '24/7 Premium-Support'
     ],
-    basePrice: 0.15,
+    basePrice: 0.08,
+    discount: 15,
     speedOptions: [
       {
         id: 'standard',
-        name: 'Standard',
+        name: 'Standard Lieferung',
         price: 0,
-        description: 'Normale Liefergeschwindigkeit'
+        description: '1.000-2.000 Follower/Tag'
       },
       {
         id: 'premium',
-        name: 'Premium',
-        price: 15.99,
-        description: 'Hochwertige Kommentare mit schnellerer Lieferung'
+        name: 'Premium Lieferung',
+        price: 10.99,
+        description: 'Bis zu 3.000 Follower/Tag'
       }
     ],
-    quantityOptions: [5, 10, 25, 50, 100, 250, 500, 1000],
-    inputType: 'tiktok',
-    inputPlaceholder: 'https://www.tiktok.com/@username/video/...',
-    category: 'tiktok-comments',
-    targetOptions: [
-      {
-        id: 'mixed',
-        name: 'Gemischt (Deutsch/Englisch)',
-        price: 0
-      },
-      {
-        id: 'german',
-        name: 'Nur Deutsche Kommentare',
-        price: 0.05
-      }
-    ]
+    quantityOptions: [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000],
+    inputType: 'tiktok-profile',
+    inputPlaceholder: 'https://www.tiktok.com/@dein-profil',
+    category: 'tiktok-followers'
   },
 
   // Instagram Products - Premium positioning with 20-30% higher pricing than TikTok
