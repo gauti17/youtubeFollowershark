@@ -1,5 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
+import TopBar from './TopBar'
 import Header from './Header'
 import Footer from './Footer'
 import GDPRBanner from './GDPRBanner'
@@ -60,6 +61,7 @@ const Layout: React.FC<LayoutProps> = ({
         </Head>
       )}
       
+      <TopBar />
       <Header />
       <MainContainer>{children}</MainContainer>
       <Footer />
