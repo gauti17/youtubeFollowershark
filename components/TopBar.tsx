@@ -1,8 +1,17 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+const scroll = keyframes`
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+`
 
 const TopBarContainer = styled.div`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
   color: white;
   padding: 8px 0;
   text-align: center;
@@ -10,6 +19,7 @@ const TopBarContainer = styled.div`
   font-weight: 500;
   position: relative;
   z-index: 1000;
+  overflow: hidden;
   
   @media (max-width: 768px) {
     font-size: 12px;
@@ -27,7 +37,10 @@ const TopBarText = styled.div`
   gap: 8px;
   
   @media (max-width: 768px) {
-    padding: 0 16px;
+    padding: 0;
+    animation: ${scroll} 15s linear infinite;
+    white-space: nowrap;
+    justify-content: flex-start;
   }
 `
 
