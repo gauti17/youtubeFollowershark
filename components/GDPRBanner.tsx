@@ -21,12 +21,16 @@ const BannerContainer = styled.div.withConfig({
   transform: translateY(${props => props.$show ? '0' : '100%'});
   transition: transform 0.3s ease;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 50vh;
+  overflow-y: auto;
   
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 12px;
-    padding: 16px 20px;
+    padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px)) 20px;
     text-align: center;
+    min-height: auto;
+    box-sizing: border-box;
   }
 `
 
@@ -48,11 +52,13 @@ const ButtonGroup = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-shrink: 0;
   
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 8px;
     width: 100%;
+    max-width: 100%;
   }
 `
 
@@ -67,6 +73,8 @@ const AcceptButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  min-height: 40px;
+  box-sizing: border-box;
   
   &:hover {
     background: #F7931E;
@@ -75,6 +83,9 @@ const AcceptButton = styled.button`
   
   @media (max-width: 768px) {
     width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    font-size: 14px;
   }
 `
 
@@ -89,6 +100,8 @@ const RejectButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  min-height: 40px;
+  box-sizing: border-box;
   
   &:hover {
     background: #374151;
@@ -98,6 +111,9 @@ const RejectButton = styled.button`
   
   @media (max-width: 768px) {
     width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    font-size: 14px;
   }
 `
 
