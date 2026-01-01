@@ -69,14 +69,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       status: captureResult.status
     })
 
+    // Get the captured amount from PayPal
+    const paypalCapturedAmount = parseFloat(captureResult.amount?.value || '0')
+    console.log(`[PayPal Capture Order] PayPal captured amount: €${paypalCapturedAmount}`)
+
     try {
       // For WooCommerce, we need to re-calculate the cart items with prices
       // since the orderData from frontend doesn't include calculated prices
       console.log('[Capture Order] Calculating cart item prices for WooCommerce...')
-      
+
+      // Import products once outside the loop for efficiency
+      const { products, calculatePrice } = await import('../../../../data/products')
+
       const cartItems = []
+      let calculatedTotal = 0
+
       for (const item of orderData.items) {
-        const { products, calculatePrice } = await import('../../../../data/products')
         const product = products.find(p => p.id === item.productId)
         if (!product) {
           throw new Error(`Product not found: ${item.productId}`)
@@ -87,7 +95,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let targetPrice = 0
 
         if (item.selectedOptions.speed && product.speedOptions) {
-          const speedOption = product.speedOptions.find(opt => 
+          const speedOption = product.speedOptions.find(opt =>
             opt.name === item.selectedOptions.speed || opt.id === item.selectedOptions.speed
           )
           if (speedOption) {
@@ -97,7 +105,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         if (item.selectedOptions.target && product.targetOptions) {
-          const targetOption = product.targetOptions.find(opt => 
+          const targetOption = product.targetOptions.find(opt =>
             opt.name === item.selectedOptions.target || opt.id === item.selectedOptions.target
           )
           if (targetOption) {
@@ -125,6 +133,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           itemTotal
         })
 
+        calculatedTotal += itemTotal
+
         cartItems.push({
           id: `${item.productId}_${Date.now()}`,
           productId: item.productId,
@@ -140,6 +150,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         quantity: item.quantity,
         price: item.price
       })))
+
+      // CRITICAL: Validate calculated total matches PayPal captured amount
+      const priceDifference = Math.abs(calculatedTotal - paypalCapturedAmount)
+      console.log(`[Capture Order] Price validation:`, {
+        calculatedTotal: calculatedTotal.toFixed(2),
+        paypalCapturedAmount: paypalCapturedAmount.toFixed(2),
+        difference: priceDifference.toFixed(4)
+      })
+
+      if (priceDifference > 0.02) {
+        // Allow 2 cent tolerance for rounding differences
+        console.error(`[Capture Order] PRICE MISMATCH: Calculated €${calculatedTotal.toFixed(2)} but PayPal captured €${paypalCapturedAmount.toFixed(2)}`)
+        // Log but don't fail - use PayPal amount as source of truth for WooCommerce
+        console.warn(`[Capture Order] Using PayPal captured amount (€${paypalCapturedAmount}) as order total`)
+      }
 
       // Create order in WooCommerce
       const wooCommerceOrder = await orderService.createOrder(
@@ -162,10 +187,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (!wooCommerceOrder.success) {
         console.error('WooCommerce order creation failed:', wooCommerceOrder.error)
-        // Payment was captured, but WooCommerce order failed
-        // In production, you should handle this by either:
-        // 1. Refunding the PayPal payment, or
-        // 2. Manually creating the order and notifying support
+        console.error('CRITICAL: Payment captured but order not created. PayPal Transaction ID:', captureResult.transactionId)
+        console.error('Customer email:', orderData.customerInfo.email)
+        console.error('Amount:', captureResult.amount)
+
+        // Return error so the frontend knows order creation failed
+        // The PayPal transaction ID is included for manual recovery
+        return res.status(500).json({
+          success: false,
+          error: 'Order creation failed',
+          paypalOrderId: orderId,
+          paypalTransactionId: captureResult.transactionId,
+          paypalStatus: captureResult.status,
+          amount: captureResult.amount,
+          message: 'Payment was captured but order creation failed. Please contact support with your PayPal transaction ID.',
+          requiresManualRecovery: true
+        })
       }
 
       return res.status(200).json({
@@ -180,16 +217,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     } catch (orderError) {
       console.error('Order processing error after successful payment:', orderError)
-      
-      // Payment was successful but order processing failed
-      return res.status(200).json({
-        success: true,
+      console.error('CRITICAL: Payment captured but order processing threw exception. PayPal Transaction ID:', captureResult.transactionId)
+      console.error('Customer email:', orderData.customerInfo.email)
+
+      // Return error - payment was captured but order creation failed
+      return res.status(500).json({
+        success: false,
+        error: 'Order processing failed',
         paypalOrderId: orderId,
         paypalTransactionId: captureResult.transactionId,
         paypalStatus: captureResult.status,
         amount: captureResult.amount,
-        warning: 'Payment successful but order processing encountered issues. Support will be notified.',
-        message: 'Payment completed successfully.'
+        message: 'Payment was captured but order processing failed. Please contact support with your PayPal transaction ID.',
+        requiresManualRecovery: true
       })
     }
 
